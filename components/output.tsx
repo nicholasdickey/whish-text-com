@@ -14,19 +14,32 @@ import ToolbarGenerate from "./toolbar-generate";
 import { toBlob } from "html-to-image";
 import ImageStrip, { ImageData } from "./image-strip";
 import { CldImage } from 'next-cloudinary';
+import html2canvas from "html2canvas";
 //@ts-ignore
 import FileSaver from "file-saver";
-const InnerOutput = styled.div<{ imageUrl?: string; length: number }>`
+
+const InnerOutput = styled.div<{ imageUrl?: string; length: number, height: number, width: number, div: any, horizontal: boolean }>`
   position: relative;
   display: flex; 
   flex-direction: column;
+  overflow-wrap: break-word;
   //align-items: flex-start;
-  font-size: ${({ length }) =>
-    `${length < 600 ? "14" : length < 500 ? "15" : length < 400 ? "16" : "12"}`}px;
-  margin-top: 10px;
+  font-size: ${({ length, horizontal }) =>
+    `${length < 600 ? horizontal ? "17" : "19" : length < 500 ? horizontal ? "18" : "20" : length < 400 ? horizontal ? "19" : "21" : horizontal ? "16" : "18"}`}px;
+  //margin-top: 10px;
   width: 100%;
-  min-height: 440px;
-  border-radius: 30px;
+  @media(max-width:990px){
+    font-weight: 400;
+    font-size: ${({ length, horizontal }) =>
+    `${length < 600 ? horizontal ? "9" : "14" : length < 500 ? horizontal ? "10" : "15" : length < 400 ? horizontal ? "11" : "16" : horizontal ? "7" : "12"}`}px;
+  
+  }
+  height: ${({ div, width, height }) => {
+    const ratio: number = height / width;
+    console.log("ratio1", div ? div.clientWidth : 0, div ? div.clientHeight * ratio : 0, width, height, ratio);
+    return div ? div.clientWidth * ratio : height;
+  }}px;
+  //border-radius: 26px;
 
   &::before {
     content: "";
@@ -34,10 +47,20 @@ const InnerOutput = styled.div<{ imageUrl?: string; length: number }>`
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    //margin-top:-4px;
+   // height: ${({ height }) => height}px; //100%
+
+    height: ${({ div, width, height }) => {
+    const ratio = height / width;
+    console.log("ratio1", div ? div.clientWidth : 0, div ? div.clientHeight * ratio : 0, width, height, ratio);
+    return div ? div.clientWidth * ratio+1 : height;
+  }}px;
     //background-color: rgba(0, 0, 0, 0.2);
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.6) 60%, rgba(0, 0, 0, 1.0) 100%);
-    border-radius: 27px;
+    //margin-top: 6px;
+    //padding:4px;
+    width: 100%;
+    //border-radius: 26px;
     z-index: 4;
   }
 
@@ -47,21 +70,27 @@ const InnerOutput = styled.div<{ imageUrl?: string; length: number }>`
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
-    background-size: cover;
+ 
+   // background-size: cover;
     //opacity: 0.9;
-    border-radius: 30px;
+    //border-radius: 26px;
     z-index: 4;
   }
 
   & p {
-    padding: 10px;
-    opacity: 0.8;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top:10px;
+    opacity: 0.9;
     margin-top: auto;
     bottom: 0;
     color: white;
-    position: relative;
+    //position: relative;
     z-index: 4;
+    overflow-wrap: break-word;
+    text-align: left;
+    font-family: PingFangSC-Regular, 'Roboto', sans-serif;;
+    letter-spacing: 0.01px;
   }
 
   & div#adintro {
@@ -72,43 +101,60 @@ const InnerOutput = styled.div<{ imageUrl?: string; length: number }>`
     z-index: 4;
   }
 `;
+const BackgroundWrapper=styled.div`
+  //padding:10px;
+  //border-radius: 26px;
+  width:100%;
+`;
+interface StyledImageProps {
+  height: number;
+  width: number;
+  div: any
+}
 const StyledImage = styled(Image)`
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
+  //object-fit: cover;
   //opacity: 0.9;
-  border-radius: 66px;
+  //border-radius: 66px;
   z-index: 0;
   margin-top: 6px;
   width: 100%;
   min-height: 420px;
-  border-radius: 44px;
-  padding-right: 10px;
-  padding-left: 10px;
-  padding-top: 14px;
-  padding-bottom: 17px;
+  border-radius: 24px;
+  //padding-right: 10px;
+  //padding-left: 10px;
+  //padding-top: 14px;
+  //padding-bottom: 17px;
 `;
-const BackgroundImage = styled.img`
+const BackgroundImage = styled.img<StyledImageProps>`
+box-sizing: border-box;
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+
+  height:${({ height }) => height}px;
+  //object-fit: cover;
   //opacity: 0.9;
-  border-radius: 66px;
-  z-index: 0;
-  margin-top: 6px;
+  //border-radius: 26px;
+  z-index: 1;
+  //margin-top: 6px;
   width: 100%;
-  min-height: 420px;
-  border-radius: 44px;
-  padding-right: 10px;
-  padding-left: 10px;
-  padding-top: 14px;
-  padding-bottom: 17px;
+  height: ${({ div, width, height }) => {
+    const ratio = height / width;
+    console.log("ratio3", div ? div.clientWidth : 0, div ? div.clientWidth * ratio : 0, width, height, ratio);
+    return div ? div.clientWidth * ratio : height;
+  }}px;
+  //min-height: 420px;
+  //Sborder-radius: 44px;
+ // padding-right: 10px;
+ // padding-left: 10px;
+ // padding-top: 14px;
+  //padding-bottom: 17px;
 `;
 const BackgroundImage1 = styled.img`
   position: absolute;
@@ -185,32 +231,44 @@ export default function Output({
     original_filename: ''
   });
   const [images, setImages] = useState<ImageData[]>([]);
-  const [convertedImage,setConvertedImage]=useState('');
+  const [convertedImage, setConvertedImage] = useState('');
   const [greeting, setGreeting] = useState(session.greeting || "");
   const canvasRef = useRef(null);
-/*
+  const horizontal = (selectedImage.width > selectedImage.height) ? true : false
+  /*
+    const convertDivToPng = async (div: any) => {
+      const data = await toPng(div, {
+        cacheBust: true,
+        canvasWidth: div.clientWidth,
+        canvasHeight: div.clientHeight,
+      });
+      return data;
+    };
+  */
   const convertDivToPng = async (div: any) => {
-    const data = await toPng(div, {
+    /*const data = await toBlob(div, {
       cacheBust: true,
       canvasWidth: div.clientWidth,
       canvasHeight: div.clientHeight,
+      quality:0.2
+    });*/
+    const canvas = await html2canvas(div, { useCORS: true, logging: true, width: div.width, height: div.height,scale: window.devicePixelRatio,
+     /* onclone: (document: Document) => {
+        Array.from(
+          document?.querySelector(".inner-output")?.children[0]?.querySelectorAll("*")
+        ).forEach((e) => {
+          let existingStyle = e.getAttribute("style") || "";
+          e.setAttribute("style", existingStyle + "; font-family: Helvetica, sans-serif !important");
+        });
+      }*/
     });
-    return data;
+    const image = canvas.toDataURL("image/png", 1.0);
+
+    return image;
   };
-*/
-const convertDivToPng = async (div: any) => {
-  const data = await toBlob(div, {
-    cacheBust: true,
-    canvasWidth: div.clientWidth,
-    canvasHeight: div.clientHeight,
-    quality:0.2
-  });
-  return data;
-};
   const stripClickHandler = (image: ImageData) => {
     setSelectedImage(image);
   };
-
   const handleGenerate = async () => {
     if (loading) return;
 
@@ -243,27 +301,27 @@ const convertDivToPng = async (div: any) => {
   const handleDownload = async () => {
     try {
       const data = await convertDivToPng(canvasRef.current);
-/*
-      if (data) {
-        setConvertedImage(data);
-        const link = document.createElement("a");
-        link.href = data;
-        var randomstring = () => Math.random().toString(8).substring(2, 7) + Math.random().toString(8).substring(2, 7);
-
-        link.download = `${randomstring()}-wish-text.png`;
-        link.click();
-      }*/
+      /*
+            if (data) {
+              setConvertedImage(data);
+              const link = document.createElement("a");
+              link.href = data;
+              var randomstring = () => Math.random().toString(8).substring(2, 7) + Math.random().toString(8).substring(2, 7);
+      
+              link.download = `${randomstring()}-wish-text.png`;
+              link.click();
+            }*/
       var randomstring = () => Math.random().toString(8).substring(2, 7) + Math.random().toString(8).substring(2, 7);
-     
+
       const filename = `${randomstring()}-wt2.png`;
       //@ts-ignore
       if (window.saveAs) {
         //@ts-ignore
-        window.saveAs(data, 'a'+filename);
+        window.saveAs(data, 'a' + filename);
       } else {
         //@ts-ignore
-       FileSaver.saveAs(data, filename);
-     }
+        FileSaver.saveAs(data, filename);
+      }
     } catch (e) {
       console.log(e);
     }
@@ -295,9 +353,9 @@ const convertDivToPng = async (div: any) => {
     <>
       <ToolbarGenerate onGenerateClick={handleGenerate} onUploadClick={onUpload} />
       <Box sx={{ my: 1, width: { xs: 1 } }} textAlign="center">
-        <div ref={canvasRef} >
-          <div style={{ padding: 10, position: "relative" }} >
-            <InnerOutput imageUrl="" data-id="GreetingsOutput:InnerOutput" length={greeting.length}>
+        <div>
+          <div style={{ position: "relative" }} ref={canvasRef} >
+            <InnerOutput className="inner-output" div={canvasRef.current} height={selectedImage.height} width={selectedImage.width} imageUrl="" data-id="GreetingsOutput:InnerOutput" length={greeting.length} horizontal={horizontal}>
               {!loading ? (
                 <ReactMarkdown rehypePlugins={[rehypeRaw]}>{loading ? "Generating..." : greeting}</ReactMarkdown>
               ) : (
@@ -329,11 +387,11 @@ const convertDivToPng = async (div: any) => {
                   />
                 </div>
               )}
-              
+
             </InnerOutput>
-             <StyledImage src={selectedImage.url} width={400} height={800} alt={'background image'}/>       
-            {false? <BackgroundImage  src={selectedImage.url || "https://res.cloudinary.com/dhmqojhnk/image/upload/v1685538545/kauoss2fzcq8wokfkwdf.jpg"} />:null}
-          
+            {false ? <StyledImage src={selectedImage.url} width={400} height={800} alt={'background image'} /> : null}
+            <BackgroundWrapper><BackgroundImage div={canvasRef.current} height={selectedImage.height} width={selectedImage.width} src={selectedImage.url || "https://res.cloudinary.com/dhmqojhnk/image/upload/v1685538545/kauoss2fzcq8wokfkwdf.jpg"} /></BackgroundWrapper>
+
           </div>
         </div>
         {greeting && !loading && <ToolbarAccept onDownloadClick={handleDownload} onAcceptClick={handleAccept} onCopyClick={handleCopy} />}

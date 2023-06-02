@@ -9,6 +9,7 @@ const ToolbarContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 100;
 `;
 
 const ToolbarButton = styled(IconButton)`
@@ -36,11 +37,11 @@ const Toolbar: React.FC<ToolbarProps> = ({
     <ToolbarContainer>
       <ToolbarButton onClick={onDownloadClick}>
         <CloudDownloadIcon />
-        <ToolbarText>Download</ToolbarText>
+        <ToolbarText> Download Card</ToolbarText>
       </ToolbarButton>
       <ToolbarButton onClick={onCopyClick}>
         <FileCopyIcon />
-        <ToolbarText>Copy to Clipboard</ToolbarText>
+        <ToolbarText>Copy Text to Clipboard</ToolbarText>
       </ToolbarButton>
       <ToolbarButton onClick={onAcceptClick}>
         <CheckIcon />
