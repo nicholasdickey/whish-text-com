@@ -2,17 +2,20 @@ import axios from 'axios';
 import { Options } from './with-session';
 
 
-export const getWishText = async ({ style, from, to, occasion, reflections,  fresh }: { style: string, from: string, to: string, occasion: string, reflections: string, fresh?: boolean }) => {
+export const getWishText = async ({ style, from, to, occasion, reflections,instructions,inastyleof,language,  fresh }: { style: string, from: string, to: string, occasion: string, reflections: string, instructions:string,inastyleof:string,language:string,fresh?: boolean }) => {
     from = encodeURIComponent(from || '');
     to = encodeURIComponent(to || '');
     occasion = encodeURIComponent(occasion || '');
     reflections = encodeURIComponent(reflections || '');
-    style = encodeURIComponent(style || '');
+    instructions = encodeURIComponent(instructions || '');
+    inastyleof = encodeURIComponent(inastyleof || '');
+    language = encodeURIComponent(language || '');
+    
     fresh = fresh || false;
 
     if (!from && !to && !occasion)
         return '';
-    let url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/openai/wish-text?from=${from}&to=${to}&occasion=${occasion}&reflections=${reflections}&style=${style}${fresh ? '&fresh=1' : ''}`;
+    let url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/openai/wish-text?from=${from}&to=${to}&occasion=${occasion}&reflections=${reflections}&instructions=${instructions}&inastyleof=${inastyleof}&language=${language}${fresh ? '&fresh=1' : ''}`;
     console.log("url:", url);
     let recovery = '';
     while (true) {
@@ -29,15 +32,13 @@ export const getWishText = async ({ style, from, to, occasion, reflections,  fre
         }
     }
 }
-export const getGiftsText = async ({ from, to, occasion, reflections, interests, fresh }: { from: string, to: string, occasion: string, reflections: string, interests: string, fresh?: boolean }) => {
+export const getGiftsText = async ({ from, to, occasion, reflections, interests, fresh }:{from:string,to:string,occasion:string,reflections:string,interests:string,fresh?:boolean}) => {
     from = encodeURIComponent(from || '');
     to = encodeURIComponent(to || '');
     occasion = encodeURIComponent(occasion || '');
     reflections = encodeURIComponent(reflections || '');
     interests = encodeURIComponent(interests || '');
-
-
-
+   
     fresh = fresh || false;
     if (!from && !to && !occasion && !interests)
         return '';

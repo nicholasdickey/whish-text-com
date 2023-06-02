@@ -28,18 +28,20 @@ const ToolbarText = styled.span`
 interface ToolbarProps {
   onGenerateClick: () => void;
   onUploadClick:  (result:any,widget:any) => void;
+  hasGreeting:boolean
 }
 
 const Toolbar: React.FC<ToolbarProps> = ({
   onGenerateClick,
   onUploadClick,
+  hasGreeting
 }) => {
   return (
     <ToolbarContainer data-id="toolbar-generate">
       <ToolbarButton onClick={onGenerateClick}>
      
         <TextFieldsIcon />
-        <ToolbarText>Generate Wish Text</ToolbarText>
+        <ToolbarText>{hasGreeting?'Suggest New':'Suggest'} Wish Text</ToolbarText>
       </ToolbarButton>
       <CldUploadWidget onUpload={onUploadClick} uploadPreset="pkgopg2z">
           {({ open }) => {

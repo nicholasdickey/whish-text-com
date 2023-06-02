@@ -18,25 +18,28 @@ import html2canvas from "html2canvas";
 //@ts-ignore
 import FileSaver from "file-saver";
 
-const InnerOutput = styled.div<{ imageUrl?: string; length: number, height: number, width: number, div: any, horizontal: boolean }>`
+interface InnerOutputProps {
+ length: number, height: number, width: number, div: any, horiz?: boolean
+}
+const InnerOutput = styled.div<InnerOutputProps>`
   position: relative;
   display: flex; 
   flex-direction: column;
   overflow-wrap: break-word;
   //align-items: flex-start;
-  font-size: ${({ length, horizontal }) =>
-    `${length < 600 ? horizontal ? "17" : "19" : length < 500 ? horizontal ? "18" : "20" : length < 400 ? horizontal ? "19" : "21" : horizontal ? "16" : "18"}`}px;
+  font-size: ${({ length, horiz }) =>
+    `${length < 600 ? horiz ? "17" : "19" : length < 500 ? horiz ? "18" : "20" : length < 400 ? horiz ? "19" : "21" : horiz ? "16" : "18"}`}px;
   //margin-top: 10px;
   width: 100%;
   @media(max-width:990px){
     font-weight: 400;
-    font-size: ${({ length, horizontal }) =>
-    `${length < 600 ? horizontal ? "9" : "14" : length < 500 ? horizontal ? "10" : "15" : length < 400 ? horizontal ? "11" : "16" : horizontal ? "7" : "12"}`}px;
+    font-size: ${({ length, horiz }) =>
+    `${length < 600 ? horiz ? "9" : "14" : length < 500 ? horiz ? "10" : "15" : length < 400 ? horiz ? "11" : "16" : horiz ? "7" : "12"}`}px;
   
   }
   height: ${({ div, width, height }) => {
     const ratio: number = height / width;
-    console.log("ratio1", div ? div.clientWidth : 0, div ? div.clientHeight * ratio : 0, width, height, ratio);
+    //console.log("ratio1", div ? div.clientWidth : 0, div ? div.clientHeight * ratio : 0, width, height, ratio);
     return div ? div.clientWidth * ratio : height;
   }}px;
   //border-radius: 26px;
@@ -52,8 +55,8 @@ const InnerOutput = styled.div<{ imageUrl?: string; length: number, height: numb
 
     height: ${({ div, width, height }) => {
     const ratio = height / width;
-    console.log("ratio1", div ? div.clientWidth : 0, div ? div.clientHeight * ratio : 0, width, height, ratio);
-    return div ? div.clientWidth * ratio+1 : height;
+    //console.log("ratio1", div ? div.clientWidth : 0, div ? div.clientHeight * ratio : 0, width, height, ratio);
+    return div ? div.clientWidth * ratio + 1 : height;
   }}px;
     //background-color: rgba(0, 0, 0, 0.2);
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.6) 60%, rgba(0, 0, 0, 1.0) 100%);
@@ -101,7 +104,7 @@ const InnerOutput = styled.div<{ imageUrl?: string; length: number, height: numb
     z-index: 4;
   }
 `;
-const BackgroundWrapper=styled.div`
+const BackgroundWrapper = styled.div`
   //padding:10px;
   //border-radius: 26px;
   width:100%;
@@ -146,7 +149,7 @@ box-sizing: border-box;
   width: 100%;
   height: ${({ div, width, height }) => {
     const ratio = height / width;
-    console.log("ratio3", div ? div.clientWidth : 0, div ? div.clientWidth * ratio : 0, width, height, ratio);
+    //console.log("ratio3", div ? div.clientWidth : 0, div ? div.clientWidth * ratio : 0, width, height, ratio);
     return div ? div.clientWidth * ratio : height;
   }}px;
   //min-height: 420px;
@@ -211,6 +214,9 @@ export default function Output({
   to,
   occasion,
   reflections,
+  instructions,
+  inastyleof,
+  language
 }: {
   setLoadReady: any;
   session: Options;
@@ -219,6 +225,10 @@ export default function Output({
   to: string;
   occasion: string;
   reflections: string;
+  instructions: string;
+  inastyleof: string;
+  language: string;
+
 }) {
   const [value, setValue] = useState("");
   const [loading, setLoading] = useState(false);
@@ -234,36 +244,12 @@ export default function Output({
   const [convertedImage, setConvertedImage] = useState('');
   const [greeting, setGreeting] = useState(session.greeting || "");
   const canvasRef = useRef(null);
-  const horizontal = (selectedImage.width > selectedImage.height) ? true : false
-  /*
-    const convertDivToPng = async (div: any) => {
-      const data = await toPng(div, {
-        cacheBust: true,
-        canvasWidth: div.clientWidth,
-        canvasHeight: div.clientHeight,
-      });
-      return data;
-    };
-  */
+  const horiz:boolean = (selectedImage.width > selectedImage.height) ? true : false
   const convertDivToPng = async (div: any) => {
-    /*const data = await toBlob(div, {
-      cacheBust: true,
-      canvasWidth: div.clientWidth,
-      canvasHeight: div.clientHeight,
-      quality:0.2
-    });*/
-    const canvas = await html2canvas(div, { useCORS: true, logging: true, width: div.width, height: div.height,scale: window.devicePixelRatio,
-     /* onclone: (document: Document) => {
-        Array.from(
-          document?.querySelector(".inner-output")?.children[0]?.querySelectorAll("*")
-        ).forEach((e) => {
-          let existingStyle = e.getAttribute("style") || "";
-          e.setAttribute("style", existingStyle + "; font-family: Helvetica, sans-serif !important");
-        });
-      }*/
+    const canvas = await html2canvas(div, {
+      useCORS: true, logging: true, width: div.width, height: div.height, scale: window.devicePixelRatio,
     });
     const image = canvas.toDataURL("image/png", 1.0);
-
     return image;
   };
   const stripClickHandler = (image: ImageData) => {
@@ -271,16 +257,18 @@ export default function Output({
   };
   const handleGenerate = async () => {
     if (loading) return;
-
     setLoading(true);
     setLoadReady(true);
-    console.log("handleGenerate clicked")
+    console.log("handleGenerate clicked", { instructions, reflections, occasion, inastyleof, language })
     const result = await getWishText({
       style: "",
       from,
       to,
       occasion,
       reflections,
+      instructions,
+      inastyleof,
+      language,
       fresh: value ? true : false,
     });
     console.log("getWishText result: ", result);
@@ -301,16 +289,7 @@ export default function Output({
   const handleDownload = async () => {
     try {
       const data = await convertDivToPng(canvasRef.current);
-      /*
-            if (data) {
-              setConvertedImage(data);
-              const link = document.createElement("a");
-              link.href = data;
-              var randomstring = () => Math.random().toString(8).substring(2, 7) + Math.random().toString(8).substring(2, 7);
-      
-              link.download = `${randomstring()}-wish-text.png`;
-              link.click();
-            }*/
+
       var randomstring = () => Math.random().toString(8).substring(2, 7) + Math.random().toString(8).substring(2, 7);
 
       const filename = `${randomstring()}-wt2.png`;
@@ -351,11 +330,11 @@ export default function Output({
 
   return (
     <>
-      <ToolbarGenerate onGenerateClick={handleGenerate} onUploadClick={onUpload} />
+      <ToolbarGenerate onGenerateClick={handleGenerate} onUploadClick={onUpload} hasGreeting={greeting ? true : false} />
       <Box sx={{ my: 1, width: { xs: 1 } }} textAlign="center">
         <div>
           <div style={{ position: "relative" }} ref={canvasRef} >
-            <InnerOutput className="inner-output" div={canvasRef.current} height={selectedImage.height} width={selectedImage.width} imageUrl="" data-id="GreetingsOutput:InnerOutput" length={greeting.length} horizontal={horizontal}>
+            <InnerOutput className="inner-output" div={canvasRef.current} height={selectedImage.height} width={selectedImage.width} data-id="GreetingsOutput:InnerOutput" length={greeting.length} horiz={horiz}>
               {!loading ? (
                 <ReactMarkdown rehypePlugins={[rehypeRaw]}>{loading ? "Generating..." : greeting}</ReactMarkdown>
               ) : (
@@ -390,7 +369,7 @@ export default function Output({
 
             </InnerOutput>
             {false ? <StyledImage src={selectedImage.url} width={400} height={800} alt={'background image'} /> : null}
-            <BackgroundWrapper><BackgroundImage div={canvasRef.current} height={selectedImage.height} width={selectedImage.width} src={selectedImage.url || "https://res.cloudinary.com/dhmqojhnk/image/upload/v1685538545/kauoss2fzcq8wokfkwdf.jpg"} /></BackgroundWrapper>
+             <BackgroundWrapper><BackgroundImage div={canvasRef.current} height={selectedImage.height} width={selectedImage.width} src={selectedImage.url || "https://res.cloudinary.com/dhmqojhnk/image/upload/v1685538545/kauoss2fzcq8wokfkwdf.jpg"} /></BackgroundWrapper>
 
           </div>
         </div>

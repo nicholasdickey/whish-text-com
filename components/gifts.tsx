@@ -1,12 +1,13 @@
 import React, { useState, FormEvent, useEffect } from "react";
 import { styled } from "styled-components";
-
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
 import { getGiftsText } from "../lib/api";
 
 import AmazonIdeaSearch from "./amazonIdeaSearch";
 import { Options } from "../lib/with-session";
-
-import FormField from "./form-field";
+import ToobarGifts from "./toolbar-gifts";
+import Typography from '@mui/material/Typography';
 
 const Container = styled.div`
     display: flex;
@@ -121,7 +122,7 @@ const processGiftSuggestions = (valueGiftSuggestions: string) => {
 }
 
 export default function Output({ loadReady, session, updateSession2, from, to, occasion, reflections, interests, onInterestsChange }: { loadReady: boolean, session: Options, updateSession2: any, from: string, to: string, occasion: string, reflections: string, interests: string, onInterestsChange: any }) {
-    const [value, setValue] = useState('');
+    const [value, setValue] = useState();
     const [loading, setLoading] = useState(false);
 
 
@@ -130,16 +131,16 @@ export default function Output({ loadReady, session, updateSession2, from, to, o
     console.log("GIFT SUGGESTIONS:", value, 'giftSuggestions', giftSuggestions);
     // generate code to parse the value for double quoted strings
     //  
-    const output = !loading&&value ? <><GiftSuggesstionHeader><h1>Gift Suggestions:</h1></GiftSuggesstionHeader><div> {giftSuggestions.map((suggest: GiftSuggestion, i: number) => {
+    const output = !loading && value ? <><GiftSuggesstionHeader><h1>Gift Suggestions:</h1></GiftSuggesstionHeader><div> {giftSuggestions.map((suggest: GiftSuggestion, i: number) => {
         // if (i >0)
         //   return null;
         console.log("suggest", suggest, 'i', i)
         return <AmazonIdeaSearch key={`amazon-idea-search-${i}`} search={suggest.search} text={suggest.text} />
     })}</div></> : null;
-    console.log("generated output",output)
+    //console.log("generated output", output)
     useEffect(() => {
-        console.log("INSIDE LOAD EFFECT",loadReady, value)
-        if (loadReady && !value){
+        console.log("INSIDE LOAD EFFECT", loadReady, value)
+        if (loadReady && !value) {
             console.log("calling load   ")
             load();
         }
@@ -163,28 +164,35 @@ export default function Output({ loadReady, session, updateSession2, from, to, o
             setValue(result);
         }
     }
-    console.log("ready to display",output);
+    //console.log("ready to display", output);
     return <OuterWrap>
-        {value ?  <FormContainer>
-            <FormField value={interests} label="Additional Gift Selection Considerations" onChange={onInterestsChange} help="For example: &ldquo;a middle-aged woman, likes square dancing, horse riding, sparkling wine.&rdquo;, &ldquo;a 16 year-old girl who likes music.&rdquo; &ldquo; Christian familiy man, loves fishing and hunting&ldquo;" />
+        {value ? <FormContainer>
+            <Box sx={{ my: 4 }}>
+                <TextField
+                    sx={{
+                        width: { xs: 1 },
 
-
-           <ButtonContainer><Button loading={loading}><a onClick={async () => {
+                    }}
+                    id="to"
+                    label="Additional Gift Selection Considerations"
+                    defaultValue={interests}
+                    onChange={onInterestsChange}
+                    helperText="For example: &ldquo;a middle-aged woman, likes square dancing, horse riding, sparkling wine.&rdquo;, &ldquo;a 16 year-old girl who likes music.&rdquo; &ldquo; Christian familiy man, loves fishing and hunting&ldquo;"
+                />
+            </Box>
+            <ToobarGifts onRegenerateClick={async () => {
 
                 if (loading)
                     return;
                 await load();
-            }}>{value ? 'Re-generate Gifts Suggestions' : 'Update Gift Suggestions'}!</a></Button>
+            }} />
+
+        </FormContainer> : null}
 
 
-            </ButtonContainer> 
-        </FormContainer>: null}
-        <Container>
-
-
-            {loading ? <GeneratingPlaceholder>We are generating the gift suggestions for you. Unfortunately, the AI is an expensive, and a limited availability resource, and it takes time.</GeneratingPlaceholder> :
-                <InnerGifts>{output}</InnerGifts>}
-
-        </Container> </OuterWrap>
+        <Typography>{loading ? <GeneratingPlaceholder>Generating gift suggestions...</GeneratingPlaceholder> :
+            output?<InnerGifts>{output}</InnerGifts>:null}
+        </Typography>
+    </OuterWrap>
 
 }
