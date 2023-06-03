@@ -47,7 +47,7 @@ const AmazonIdeaSearch = ({ search, text }: { search: string; text: string }) =>
         <Grid container spacing={6}>
           {amazonSearch?.map((s, i) => (
           
-              <RichLink imageUrl={s.image} title={s.title} price={s.price} link={s.link} />
+              <RichLink key={s.title} imageUrl={s.image} title={s.title} price={s.price} link={s.link} />
           
           ))}
         </Grid>

@@ -11,8 +11,6 @@ export const Container = styled.div`
   padding-bottom: 60px;
 `;
 
-
-
 const Image = styled(CardMedia)`
   width: 100px;
   height: auto;
@@ -38,7 +36,7 @@ const Title = styled(Typography)`
 const Price = styled(Typography)`
   color: #fff;
   font-weight: bold;
-  margin:right:20px;
+  margin-right:20px;
 `;
 
 const Right = styled.div`
@@ -47,7 +45,6 @@ const Right = styled.div`
   justify-content: space-between;
   align-items: flex-end;
 `;
-
 
 const RichLinkContainer = styled.a`
   text-decoration: none;
@@ -73,14 +70,14 @@ export const RichLink: React.FC<RichLinkProps> = ({ title, imageUrl, price, link
         <Card>
         <RichLinkContainer href={link}>
           <MediaWrapper>
-            <Image component="img" image={imageUrl} alt={title} />
+            <Image image={imageUrl}  />
           </MediaWrapper>
           <CardContent>
-            <Title variant="subtitle1" component="div">
+            <Title variant="subtitle1">
               {title}
             </Title>
             <RichLinkContainer href={link}>
-              <Price variant="body2" component="p">
+              <Price variant="body2">
                 {price}
               </Price>
               <AmazonLogo src="https://st3.depositphotos.com/1001860/16375/i/600/depositphotos_163757632-stock-photo-amazon-logo-on-a-white.jpg" />

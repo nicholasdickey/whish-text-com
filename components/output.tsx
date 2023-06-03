@@ -383,7 +383,7 @@ export default function Output({
       <Box sx={{ my: 4, width: { xs: 1 } }} textAlign="center">
         {images.length > 1 && <ImageStrip images={images} onImageClick={stripClickHandler} />}
       </Box>
-      <img src={convertedImage} style={{ width: "100%" }} />
+      <img src={convertedImage} alt="image" style={{ width: "100%" }} />
     </>
   );
 }

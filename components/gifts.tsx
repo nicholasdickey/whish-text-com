@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import { getGiftsText } from "../lib/api";
 
-import AmazonIdeaSearch from "./amazon-idea-searxh";
+import AmazonIdeaSearch from "./amazon-idea-search";
 import { Options } from "../lib/with-session";
 import ToobarGifts from "./toolbar-gifts";
 import Typography from '@mui/material/Typography';
@@ -138,17 +138,6 @@ export default function Output({ loadReady, session, updateSession2, from, to, o
         return <AmazonIdeaSearch key={`amazon-idea-search-${i}`} search={suggest.search} text={suggest.text} />
     })}</div></> : null;
     //console.log("generated output", output)
-    useEffect(() => {
-        console.log("INSIDE LOAD EFFECT", loadReady, value)
-        if (loadReady && !value) {
-            console.log("calling load   ")
-            load();
-        }
-        if(session.giftSuggestions && !value){
-            setValue(session.giftSuggestions);
-            setGiftSuggestions(processGiftSuggestions(session.giftSuggestions));
-        }
-    }, [from, to, occasion, reflections, interests, loadReady, value]);
     const load = async () => {
         console.log("calling GIFT api with", from, to, occasion, reflections, interests);
         setLoading(true);
@@ -168,6 +157,18 @@ export default function Output({ loadReady, session, updateSession2, from, to, o
             setValue(result);
         }
     }
+    useEffect(() => {
+        console.log("INSIDE LOAD EFFECT", loadReady, value)
+        if (loadReady && !value) {
+            console.log("calling load   ")
+            load();
+        }
+        if(session.giftSuggestions && !value){
+            setValue(session.giftSuggestions);
+            setGiftSuggestions(processGiftSuggestions(session.giftSuggestions));
+        }
+    }, [from, to, occasion, reflections, interests, loadReady, value,load,session.giftSuggestions]);
+   
     //console.log("ready to display", output);
     return <OuterWrap>
         {value ? <FormContainer>
