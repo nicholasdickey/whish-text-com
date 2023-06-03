@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
 import styled from 'styled-components';
 import { IconButton } from '@mui/material';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
-import CheckIcon from '@mui/icons-material/Check'; 
-
+import CheckIcon from '@mui/icons-material/Check';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+//import { CopyToClipboard } from 'react-copy-to-clipboard';
+import useCopyToClipboard  from '../lib/copy-to-clipboard'
 const ToolbarContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -23,26 +25,37 @@ const ToolbarText = styled.span`
 `;
 
 interface ToolbarProps {
+  text: string;
   onDownloadClick: () => void;
   onCopyClick: () => void;
   onAcceptClick: () => void;
 }
 
 const Toolbar: React.FC<ToolbarProps> = ({
+  text,
   onDownloadClick,
   onCopyClick,
   onAcceptClick,
 }) => {
+  const [copied, setCopied] = React.useState(false);
+  const [value,copy]=useCopyToClipboard();
+  useEffect(() => {
+    // if (content!=text) {
+    setTimeout(() => setCopied(false), 2000);
+    //}
+  }, [copied]);
   return (
     <ToolbarContainer>
       <ToolbarButton onClick={onDownloadClick}>
         <CloudDownloadIcon />
         <ToolbarText> Download Card</ToolbarText>
       </ToolbarButton>
-      <ToolbarButton onClick={onCopyClick}>
-        <FileCopyIcon />
-        <ToolbarText>Copy Text to Clipboard</ToolbarText>
-      </ToolbarButton>
+     
+        <ToolbarButton onClick={()=>{setCopied(true); copy(text) }}>
+          {copied ? <FileCopyIcon /> : <ContentCopyIcon />}
+          <ToolbarText>Copy Text to Clipboard</ToolbarText>
+        </ToolbarButton>
+   
       <ToolbarButton onClick={onAcceptClick}>
         <CheckIcon />
         <ToolbarText>Accept</ToolbarText>

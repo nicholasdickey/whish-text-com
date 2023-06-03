@@ -413,7 +413,7 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
                   label="Instructions to AI"
                   defaultValue={instructions}
                   onChange={onInstructionsChange}
-                  helperText="Example: 'Keep it very short','Do not wish cake'"
+                  helperText="Example: 'Keep it very short', 'Do not wish cake', 'No special day'"
                 />
               </Box>
               <Box sx={{ my: 4 }}>
@@ -442,9 +442,6 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
                   helperText="Example: 'French', 'Ukrainian'."
                 />
               </Box>
-
-
-
             </AccordionDetails>
           </Accordion>
           <GreetingOutput setLoadReady={setLoadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} reflections={reflections} instructions={instructions} inastyleof={inastyleof} language={language}/>

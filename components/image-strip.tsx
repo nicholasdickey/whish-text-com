@@ -15,7 +15,7 @@ export interface ImageData {
 
 interface ImageStripProps {
   images: ImageData[];
-  onImageClick: (image: ImageData) => void;
+  onImageClick: (image: ImageData | null) => void;
 }
 
 const ImageStripContainer = styled.div`
@@ -24,7 +24,6 @@ const ImageStripContainer = styled.div`
   overflow-x: auto;
   padding: 16px;
   margin: 0 -8px;
- // background-color: #eee;
 `;
 
 const ImageContainer = styled.div`
@@ -48,6 +47,23 @@ const Image = styled.img`
   &:hover {
     border-color: #aaa;
   }
+`;
+
+const PlaceholderContainer = styled.div`
+  width: 70px;
+  height: 60px;
+  background-color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid transparent;
+  border-radius: 4px;
+`;
+
+const PlaceholderText = styled.p`
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
 `;
 
 const ArrowButton = styled(IconButton)`
@@ -82,7 +98,7 @@ const ImageStrip: React.FC<ImageStripProps> = ({ images, onImageClick }) => {
     }
   };
 
-  const handleImageClick = (image: ImageData) => {
+  const handleImageClick = (image: ImageData | null) => {
     if (onImageClick) {
       onImageClick(image);
     }
@@ -91,6 +107,11 @@ const ImageStrip: React.FC<ImageStripProps> = ({ images, onImageClick }) => {
   return (
     <Box>
       <ImageStripContainer ref={scrollContainerRef}>
+        <ImageContainer onClick={() => handleImageClick(null)}>
+          <PlaceholderContainer>
+            <PlaceholderText>No Image</PlaceholderText>
+          </PlaceholderContainer>
+        </ImageContainer>
         {images.map((image) => (
           <ImageContainer key={image.publicId} onClick={() => handleImageClick(image)}>
             <Image src={image.thumbnailUrl} alt={image.publicId} />
@@ -98,12 +119,16 @@ const ImageStrip: React.FC<ImageStripProps> = ({ images, onImageClick }) => {
         ))}
       </ImageStripContainer>
       <Box display="flex" justifyContent="space-between" alignItems="center" marginTop={1}>
-       {false? <ArrowButton onClick={handleScrollLeft} aria-label="Scroll Left">
-          <ArrowLeft />
-        </ArrowButton>:null}
-        {false?<ArrowButton onClick={handleScrollRight} aria-label="Scroll Right">
-          <ArrowRight />
-        </ArrowButton>:null}
+        {false ? (
+          <ArrowButton onClick={handleScrollLeft} aria-label="Scroll Left">
+            <ArrowLeft />
+          </ArrowButton>
+        ) : null}
+        {false ? (
+          <ArrowButton onClick={handleScrollRight} aria-label="Scroll Right">
+            <ArrowRight />
+          </ArrowButton>
+        ) : null}
       </Box>
     </Box>
   );

@@ -11,7 +11,7 @@ export const Container = styled.div`
   padding-bottom: 60px;
 `;
 
-const Image = styled(CardMedia)`
+const ProductImage = styled(CardMedia)`
   width: 100px;
   height: auto;
 `;
@@ -70,7 +70,7 @@ export const RichLink: React.FC<RichLinkProps> = ({ title, imageUrl, price, link
         <Card>
         <RichLinkContainer href={link}>
           <MediaWrapper>
-            <Image image={imageUrl}  />
+            <ProductImage><CardMedia component='img' image={imageUrl}  /></ProductImage>
           </MediaWrapper>
           <CardContent>
             <Title variant="subtitle1">

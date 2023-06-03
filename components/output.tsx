@@ -17,9 +17,9 @@ import { CldImage } from 'next-cloudinary';
 import html2canvas from "html2canvas";
 //@ts-ignore
 import FileSaver from "file-saver";
-
+import TextEditor,{TextEditorProps,ImageProps} from "./text-editor";
 interface InnerOutputProps {
- length: number, height: number, width: number, div: any, horiz?: boolean
+  length: number, height: number, width: number, div: any, horiz?: boolean
 }
 const InnerOutput = styled.div<InnerOutputProps>`
   position: relative;
@@ -244,7 +244,7 @@ export default function Output({
   const [convertedImage, setConvertedImage] = useState('');
   const [greeting, setGreeting] = useState(session.greeting || "");
   const canvasRef = useRef(null);
-  const horiz:boolean = (selectedImage.width > selectedImage.height) ? true : false
+  const horiz: boolean = (selectedImage.width > selectedImage.height) ? true : false
   const convertDivToPng = async (div: any) => {
     const canvas = await html2canvas(div, {
       useCORS: true, logging: true, width: div.width, height: div.height, scale: window.devicePixelRatio,
@@ -252,8 +252,19 @@ export default function Output({
     const image = canvas.toDataURL("image/png", 1.0);
     return image;
   };
-  const stripClickHandler = (image: ImageData) => {
-    setSelectedImage(image);
+  const stripClickHandler = (image: ImageData | null) => {
+    if (image == null) {
+      setSelectedImage({
+        url: '',
+        publicId: '',
+        height: 0,
+        width: 0,
+        thumbnailUrl: '',
+        original_filename: ''
+      });
+    }
+    else
+      setSelectedImage(image);
   };
   const handleGenerate = async () => {
     if (loading) return;
@@ -327,53 +338,13 @@ export default function Output({
     setImages(session.imagesString ? JSON.parse(session.imagesString) : []);
     setSelectedImage(session.selectedImage ? JSON.parse(session.selectedImage) : { url: "", publicId: "" });
   }, [session.imagesString, session.selectedImage]);
-
+  console.log("selectedImage", selectedImage);
   return (
     <>
       <ToolbarGenerate onGenerateClick={handleGenerate} onUploadClick={onUpload} hasGreeting={greeting ? true : false} />
       <Box sx={{ my: 1, width: { xs: 1 } }} textAlign="center">
-        <div>
-          <div style={{ position: "relative" }} ref={canvasRef} >
-            <InnerOutput className="inner-output" div={canvasRef.current} height={selectedImage.height} width={selectedImage.width} data-id="GreetingsOutput:InnerOutput" length={greeting.length} horiz={horiz}>
-              {!loading ? (
-                <ReactMarkdown rehypePlugins={[rehypeRaw]}>{loading ? "Generating..." : greeting}</ReactMarkdown>
-              ) : (
-                <div style={{ width: "100%", position: "relative" }} id="adintro">
-                  <AdIntro
-                    ad={{
-                      text: [
-                        "This Amazing AI experience",
-                        "Brought to you",
-                        "By",
-                        "THE",
-                        "AMERICAN",
-                        "OUDOORSMAN",
-                        "NEWS",
-                        "www.american-outdoorsman.news",
-                      ],
-                      bottomLink: "https://www.american-outdoorsman.news",
-                      loadingText: [
-                        "Preparing the inputs",
-                        "Connecting to the NSA supercomputer in Provo, UT",
-                        "Inserting rods",
-                        "Cooling jets",
-                        "Turning the crankshaft",
-                        "Waiting for the blinking lights",
-                        "Negotiating the protocol",
-                        "Streaming the response",
-                      ],
-                    }}
-                  />
-                </div>
-              )}
-
-            </InnerOutput>
-            {false ? <StyledImage src={selectedImage.url} width={400} height={800} alt={'background image'} /> : null}
-             <BackgroundWrapper><BackgroundImage div={canvasRef.current} height={selectedImage.height} width={selectedImage.width} src={selectedImage.url || "https://res.cloudinary.com/dhmqojhnk/image/upload/v1685538545/kauoss2fzcq8wokfkwdf.jpg"} /></BackgroundWrapper>
-
-          </div>
-        </div>
-        {greeting && !loading && <ToolbarAccept onDownloadClick={handleDownload} onAcceptClick={handleAccept} onCopyClick={handleCopy} />}
+        <TextEditor text={greeting} onChange={(text:string)=>{setGreeting(text);updateSession2({ greeting: text });}} image={selectedImage} loading={loading} canvasRef={canvasRef}  />    
+        {greeting && !loading && <ToolbarAccept text={greeting} onDownloadClick={handleDownload} onAcceptClick={handleAccept} onCopyClick={handleCopy} />}
         {!loading && false && (
           <BottomLink>
             <Link href="https://www.american-outdoorsman.news">Sponsor: www.american-outdoorsman.news</Link>
@@ -381,9 +352,9 @@ export default function Output({
         )}
       </Box>
       <Box sx={{ my: 4, width: { xs: 1 } }} textAlign="center">
-        {images.length > 1 && <ImageStrip images={images} onImageClick={stripClickHandler} />}
+        {images.length > 0 && <ImageStrip images={images} onImageClick={stripClickHandler} />}
       </Box>
-      <img src={convertedImage} alt="image" style={{ width: "100%" }} />
+
     </>
   );
 }
