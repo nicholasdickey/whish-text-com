@@ -109,7 +109,7 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   }, [session]);
 
   const updateRoute = ({ to, from, occasion, reflections, instructions, inastyleof, language,interests }: { to: string, from: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language:string,interests: string }) => {
-    const params = `/?occasion=${encodeURIComponent(occasion)}${reflections ? `&reflections=${encodeURIComponent(reflections)}` : ``}}${instructions ? `&instructions=${encodeURIComponent(instructions)}` : ``}}${inastyleof ? `&inastyleof=${encodeURIComponent(inastyleof)}` : ``}${language ? `&language=${encodeURIComponent(language)}` : ``}${to ? `&to=${encodeURIComponent(to)}` : ``}${from ? `&from=${encodeURIComponent(from)}` : ``}${interests ? `&interests=${encodeURIComponent(interests)}` : ``}`;
+    const params = `/?occasion=${encodeURIComponent(occasion)}${reflections ? `&reflections=${encodeURIComponent(reflections)}` : ``}${instructions ? `&instructions=${encodeURIComponent(instructions)}` : ``}${inastyleof ? `&inastyleof=${encodeURIComponent(inastyleof)}` : ``}${language ? `&language=${encodeURIComponent(language)}` : ``}${to ? `&to=${encodeURIComponent(to)}` : ``}${from ? `&from=${encodeURIComponent(from)}` : ``}${interests ? `&interests=${encodeURIComponent(interests)}` : ``}`;
     router.push(params, params, { shallow: true })
   }
   const onOccasionChange = (event: any) => {

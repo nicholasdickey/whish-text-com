@@ -60,6 +60,6 @@ export default async (
     // remove items over 3
    
     items=items.filter(i=>i.title && i.price && i.image && i.link);
-    items=items.slice(0,6);
+    items=items.slice(0,3);
     return res.status(200).json({ items })
 }

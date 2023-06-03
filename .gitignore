@@ -35,3 +35,5 @@ yarn-error.log*
 
 # local history
 .history
+components/amazon-idea-search-back.tsx
+components/rich-link-back.tsx

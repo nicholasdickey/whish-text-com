@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import { getGiftsText } from "../lib/api";
 
-import AmazonIdeaSearch from "./amazonIdeaSearch";
+import AmazonIdeaSearch from "./amazon-idea-searxh";
 import { Options } from "../lib/with-session";
 import ToobarGifts from "./toolbar-gifts";
 import Typography from '@mui/material/Typography';
@@ -122,7 +122,7 @@ const processGiftSuggestions = (valueGiftSuggestions: string) => {
 }
 
 export default function Output({ loadReady, session, updateSession2, from, to, occasion, reflections, interests, onInterestsChange }: { loadReady: boolean, session: Options, updateSession2: any, from: string, to: string, occasion: string, reflections: string, interests: string, onInterestsChange: any }) {
-    const [value, setValue] = useState();
+    const [value, setValue] = useState('');
     const [loading, setLoading] = useState(false);
 
 
@@ -143,6 +143,10 @@ export default function Output({ loadReady, session, updateSession2, from, to, o
         if (loadReady && !value) {
             console.log("calling load   ")
             load();
+        }
+        if(session.giftSuggestions && !value){
+            setValue(session.giftSuggestions);
+            setGiftSuggestions(processGiftSuggestions(session.giftSuggestions));
         }
     }, [from, to, occasion, reflections, interests, loadReady, value]);
     const load = async () => {
