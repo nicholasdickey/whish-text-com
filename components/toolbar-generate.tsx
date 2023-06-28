@@ -43,7 +43,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
         <TextFieldsIcon />
         <ToolbarText>{hasGreeting?'Suggest New':'Suggest'} Wish Text</ToolbarText>
       </ToolbarButton>
-      <CldUploadWidget onUpload={onUploadClick} uploadPreset="pkgopg2z">
+      {hasGreeting&&<CldUploadWidget onUpload={onUploadClick} uploadPreset="pkgopg2z">
           {({ open }) => {
             function handleOnClick(e: any) {
               e.preventDefault();
@@ -56,7 +56,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
               </ToolbarButton>
             );
           }}
-        </CldUploadWidget>
+        </CldUploadWidget>}
     </ToolbarContainer>
   );
 };

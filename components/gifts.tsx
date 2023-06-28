@@ -171,6 +171,9 @@ export default function Output({ loadReady, session, updateSession2, from, to, o
    
     //console.log("ready to display", output);
     return <OuterWrap>
+        <Typography>{loading ? <GeneratingPlaceholder>Generating gift suggestions...</GeneratingPlaceholder> :
+            output?<InnerGifts>{output}</InnerGifts>:null}
+        </Typography>
         {value ? <FormContainer>
             <Box sx={{ my: 4 }}>
                 <TextField
@@ -182,7 +185,7 @@ export default function Output({ loadReady, session, updateSession2, from, to, o
                     label="Additional Gift Selection Considerations"
                     defaultValue={interests}
                     onChange={onInterestsChange}
-                    helperText="For example: &ldquo;a middle-aged woman, likes square dancing, horse riding, sparkling wine.&rdquo;, &ldquo;a 16 year-old girl who likes music.&rdquo; &ldquo; Christian familiy man, loves fishing and hunting&ldquo;"
+                    helperText="For example: &ldquo;a middle-aged woman, likes square dancing, horse riding, sparkling wine.&rdquo;, &ldquo;a 16 year-old girl who likes music.&rdquo; &ldquo; Christian familiy man, loves fishing and hunting.&rdquo; &ldquo;Not Star Trek&rdquo;"
                 />
             </Box>
             <ToobarGifts onRegenerateClick={async () => {
@@ -195,9 +198,7 @@ export default function Output({ loadReady, session, updateSession2, from, to, o
         </FormContainer> : null}
 
 
-        <Typography>{loading ? <GeneratingPlaceholder>Generating gift suggestions...</GeneratingPlaceholder> :
-            output?<InnerGifts>{output}</InnerGifts>:null}
-        </Typography>
+        
     </OuterWrap>
 
 }

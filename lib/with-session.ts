@@ -6,6 +6,7 @@ import {
     NextApiHandler,
 } from "next";
 
+
 declare module "iron-session" {
     interface IronSessionData {
         sessionid:string,
@@ -46,5 +47,12 @@ export interface Options{
     noExplain:false,
     imagesString?:string;
     selectedImage?:string;
-
+    from?:string;
+    to?:string;
+    occasion?:string;
+    reflections?:string;
+    instructions?:string;
+    inastyleof?:string;
+    language?:string;
+    interests?:string;
  }

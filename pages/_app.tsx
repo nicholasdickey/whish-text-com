@@ -2,6 +2,7 @@ import * as React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider,createTheme } from '@mui/material/styles';
 import type { AppProps } from 'next/app';
+import { SessionProvider } from "next-auth/react"
 import Head from 'next/head';
 //import theme from '../src/theme';
 const darkTheme = createTheme({
@@ -10,7 +11,7 @@ const darkTheme = createTheme({
   },
 })
 export default function MyApp(props: AppProps) {
-  const { Component, pageProps } = props;
+  const { Component, pageProps: { session, ...pageProps } } = props;
   return (
     <React.Fragment>
       <Head>
@@ -20,7 +21,9 @@ export default function MyApp(props: AppProps) {
       </Head>
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
+        <SessionProvider session={session}>
         <Component {...pageProps} />
+        </SessionProvider>
       </ThemeProvider>
     </React.Fragment>
   );

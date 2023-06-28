@@ -29,6 +29,7 @@ interface ToolbarProps {
   onDownloadClick: () => void;
   onCopyClick: () => void;
   onAcceptClick: () => void;
+  images:any;
 }
 
 const Toolbar: React.FC<ToolbarProps> = ({
@@ -36,6 +37,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
   onDownloadClick,
   onCopyClick,
   onAcceptClick,
+  images,
 }) => {
   const [copied, setCopied] = React.useState(false);
   const [value,copy]=useCopyToClipboard();
@@ -46,19 +48,19 @@ const Toolbar: React.FC<ToolbarProps> = ({
   }, [copied]);
   return (
     <ToolbarContainer>
-      <ToolbarButton onClick={onDownloadClick}>
+      {images&&images.length>0&&<ToolbarButton onClick={onDownloadClick}>
         <CloudDownloadIcon />
         <ToolbarText> Download Card</ToolbarText>
-      </ToolbarButton>
+      </ToolbarButton>}
      
         <ToolbarButton onClick={()=>{setCopied(true); copy(text) }}>
           {copied ? <FileCopyIcon /> : <ContentCopyIcon />}
           <ToolbarText>Copy Text to Clipboard</ToolbarText>
         </ToolbarButton>
    
-      <ToolbarButton onClick={onAcceptClick}>
+      <ToolbarButton disabled={true} onClick={onAcceptClick}>
         <CheckIcon />
-        <ToolbarText>Accept</ToolbarText>
+        <ToolbarText>Accept To History</ToolbarText>
       </ToolbarButton>
     </ToolbarContainer>
   );

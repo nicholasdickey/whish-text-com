@@ -4,15 +4,7 @@ import { Box, IconButton } from '@mui/material';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 
-export interface ImageData {
-  url: string;
-  publicId: string;
-  height: number;
-  width: number;
-  thumbnailUrl: string;
-  original_filename: string;
-}
-
+import ImageData from '../lib/image-data'
 interface ImageStripProps {
   images: ImageData[];
   onImageClick: (image: ImageData | null) => void;

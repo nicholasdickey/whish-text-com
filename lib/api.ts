@@ -105,3 +105,21 @@ export const fetchSession = async (sessionid: string) => {
     console.log("fetchSession", sessionid,res.data.session)
     return res.data.session;
 }
+export const saveToHistory = async (username: string, greeting: string,image:string,to:string,occasion:string,gift:string) => {
+    const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/history/upsert?username=${username}&greeting=${greeting}&image=${image}&to=${to}&occasion=${occasion}&gift=${gift}`; 
+    const res = await axios.get(url);
+    console.log("saveToHistory", username,res.data.success);
+    return res.data.success;
+}
+export const deleteHistory = async (username: string,to:string,time:number) => {
+    const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/history/delete?username=${username}&to=${to}&time=${time}`; 
+    const res = await axios.get(url);
+    console.log("saveToHistory", username,res.data.success);
+    return res.data.success;
+}
+export const getHistories = async (username: string, page:number,pagesize:number) => {
+    const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/history/get?username=${username}&page=${page}&pagesize=${pagesize}`; 
+    const res = await axios.get(url);
+    console.log("getHistories", username,res.data.success);
+    return res.data;
+}
