@@ -42,7 +42,7 @@ const ResponsiveButton = styled.div`
 `;
 
 export default function Home({ from: startFrom, to: startTo, occasion: startOccasion, reflections: startReflections, instructions: startInstructions, inastyleof: startInastyleof, language: startLanguage, interests: startInterests, ironsession: startSession }: { from: string, to: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string, ironsession: Options }) {
-    const selectedImage=session.s
+   // const selectedImage=session.s
     const { data: session } = useSession()
     useEffect(() => {
         let image='';
