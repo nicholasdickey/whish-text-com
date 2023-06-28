@@ -81,7 +81,7 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   const [from, setFrom] = useState(startFrom);
   const [to, setTo] = useState(startTo);
   const [interests, setInterests] = useState(startInterests);
-  const [loadReady, setLoadReady] = useState(false);
+  const [loadReady, setLoadReady] = useState(true);
   const { data: authSession } = useSession();
   const router = useRouter();
   // const { window } = props;

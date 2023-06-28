@@ -84,7 +84,10 @@ const FormContainer = styled.div`
   align-items: center;
   margin-top:40px;
 `;
-
+const PlaceholderOuterContainer = styled.div`
+  display:flex;
+  justify-content:center;
+`;
 function splitStringByNumberedSentences(input: string): string[] {
     //const regex = /^\d+\.(.*?\.)/gm;
     const regex = /^\d+\.(.*)$/gm;
@@ -163,16 +166,16 @@ export default function Output({ loadReady, session, updateSession2, from, to, o
             console.log("calling load   ")
             load();
         }
-        if(session.giftSuggestions && !value){
+        if (session.giftSuggestions && !value) {
             setValue(session.giftSuggestions);
             setGiftSuggestions(processGiftSuggestions(session.giftSuggestions));
         }
-    }, [from, to, occasion, reflections, interests, loadReady, value,load,session.giftSuggestions]);
-   
+    }, [from, to, occasion, reflections, interests, loadReady, value, load, session.giftSuggestions]);
+
     //console.log("ready to display", output);
     return <OuterWrap>
-        <Typography>{loading ? <GeneratingPlaceholder>Generating gift suggestions...</GeneratingPlaceholder> :
-            output?<InnerGifts>{output}</InnerGifts>:null}
+        <Typography>{loading ? <PlaceholderOuterContainer><GeneratingPlaceholder>Generating gift suggestions...</GeneratingPlaceholder></PlaceholderOuterContainer> :
+            output ? <InnerGifts>{output}</InnerGifts> : null}
         </Typography>
         {value ? <FormContainer>
             <Box sx={{ my: 4 }}>
@@ -198,7 +201,7 @@ export default function Output({ loadReady, session, updateSession2, from, to, o
         </FormContainer> : null}
 
 
-        
+
     </OuterWrap>
 
 }

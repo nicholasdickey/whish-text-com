@@ -138,6 +138,7 @@ export default function Output({
       updateSession2({ greeting: result });
       //setGreeting(result);
       setValue(result);
+      setLoadReady(true);
     }
   };
   const handleAccept: () => void = async () => {
