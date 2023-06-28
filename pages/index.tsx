@@ -134,7 +134,9 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   const container = undefined;// window !== undefined ? () => window.document.body : undefined;
   //saves the changes to the session on the local web server. 
   const updateSession2 = useCallback(async (updSession: object) => {
-    // console.log('===>pdate session:', updSession);
+    console.log('===>pdate session:', updSession);
+    if(!updSession)
+    return;
     const assigned = { ...Object.assign(session, updSession) }
     // console.log('===>pdate session:', assigned);
     setSession(assigned);
@@ -434,6 +436,10 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
               language: '',
               interests: '',
               greeting: '',
+              giftSuggestions: '',
+              imagesString:'',
+              selectedImage: '',
+
             });
             setFrom('');
             setTo('');
@@ -446,7 +452,7 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
 
           }}>
             <ClearIcon />
-            <ClearText>Clear all inputs</ClearText>
+            <ClearText>Clear all</ClearText>
           </ClearButton>
           <Box sx={{ mb: 4, mt: 3 }}>
             <TextField

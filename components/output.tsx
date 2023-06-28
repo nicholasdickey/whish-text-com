@@ -83,7 +83,7 @@ export default function Output({
   };
 
 
-  const stripClickHandler = (image: ImageData | null) => {
+  const stripClickHandler = (image: ImageData | null):void => {
     if (image == null) {
       image = {
         url: '',
@@ -97,14 +97,17 @@ export default function Output({
     }
 
     setSelectedImage(image);
-    updateSession2({ selectedImage: JSON.stringify(image) });
+    if(image?.url)
+      updateSession2({ selectedImage: JSON.stringify(image) });
 
   };
 
   useEffect(() => {
     console.log("useEffect", greeting)
-    if (!greeting && selectedImage)
+    if (!greeting && selectedImage?.url){
+      console.log("useEffect stripClickHandler null")
       stripClickHandler(null);
+    }
   }, [greeting, selectedImage]);
 
   const handleGenerate = async () => {
@@ -131,7 +134,7 @@ export default function Output({
     setLoading(false);
     setLoadReady(false);
 
-    if (result !== value) {
+    if (result !== value&&result) {
       updateSession2({ greeting: result });
       //setGreeting(result);
       setValue(result);
