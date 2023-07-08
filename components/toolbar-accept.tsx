@@ -58,10 +58,10 @@ const Toolbar: React.FC<ToolbarProps> = ({
           <ToolbarText>Copy Text to Clipboard</ToolbarText>
         </ToolbarButton>
    
-      <ToolbarButton disabled={true} onClick={onAcceptClick}>
+      {false?<ToolbarButton disabled={true} onClick={onAcceptClick}>
         <CheckIcon />
         <ToolbarText>Accept To History</ToolbarText>
-      </ToolbarButton>
+      </ToolbarButton>:null}
     </ToolbarContainer>
   );
 };

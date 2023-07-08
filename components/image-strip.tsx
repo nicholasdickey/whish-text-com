@@ -43,13 +43,14 @@ const Image = styled.img`
 
 const PlaceholderContainer = styled.div`
   width: 70px;
-  height: 60px;
+  height: 58px;
   background-color: black;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 2px solid transparent;
   border-radius: 4px;
+  margin-top:-6px;
 `;
 
 const PlaceholderText = styled.p`

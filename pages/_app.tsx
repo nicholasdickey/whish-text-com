@@ -5,9 +5,15 @@ import type { AppProps } from 'next/app';
 import { SessionProvider } from "next-auth/react"
 import Head from 'next/head';
 //import theme from '../src/theme';
+import { palette } from '../lib/palette';
+import { blueGrey } from '@mui/material/colors'
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
+    background: {
+      default: blueGrey[900],
+      paper: blueGrey[600],
+    },
   },
 })
 export default function MyApp(props: AppProps) {

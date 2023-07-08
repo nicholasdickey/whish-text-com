@@ -50,7 +50,7 @@ interface LoadingProps {
 const Button = styled.button<LoadingProps>`
   background:#048080;
   padding:6px 20px;
-  color:${({ loading }) => !loading ? 'white' : 'grey'};
+ // color:${({ loading }) => !loading ? 'white' : 'grey'};
   border-radius:10px;
   &:hover{
     background:${({ loading }) => !loading ? '#037070' : '#048080'};

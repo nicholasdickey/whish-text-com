@@ -6,10 +6,10 @@ import rehypeRaw from "rehype-raw";
 import MarkdownIt from "markdown-it";
 import MdEditor from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
-
+import { useTheme } from '@mui/material/styles';
 const BackgroundWrapper = styled.div`
   width: 100%;
-  background-color: #000; /* Add black background color */
+  //background-color: #000; /* Add black background color */
   display:flex;
   flex-direction:column;
   height:auto;
@@ -47,6 +47,7 @@ interface InnerOutputProps {
   div: any;
   horiz?: boolean;
   editable: boolean;
+  image:string;
 }
 
 const InnerOutput = styled.div<InnerOutputProps>`
@@ -78,7 +79,7 @@ const InnerOutput = styled.div<InnerOutputProps>`
     left: 0;
     width: 100%;
     height: 100%; /* Set the height to 100% */
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.6) 60%, rgba(0, 0, 0, 1.0) 100%);
+    background: ${({image})=>image?`linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.6) 60%, rgba(0, 0, 0, 1.0) 100%)`:null};
     z-index: 4;
   }
 
@@ -99,7 +100,7 @@ const InnerOutput = styled.div<InnerOutputProps>`
     margin-top: auto;
     margin-bottom: 10px; /* Add margin-bottom to prevent text overflow */
     bottom: 0;
-    color: white;
+    color:${({image})=>image?'white':null};
     z-index: 4;
     overflow-wrap: break-word;
     text-align: left;
@@ -165,7 +166,8 @@ const TextEditor: React.FC<TextEditorProps> = ({ image, text, loading, onChange,
   const horiz: boolean = image.width > image.height;
   const mdParser = new MarkdownIt();
   const [editing, setEditing] = useState(false);
-console.log("texteditor",text);
+  const theme = useTheme();
+  console.log("texteditor",text);
   const handleTextClick = () => {
     setEditing(true);
   };
@@ -192,11 +194,11 @@ const handleTextChange = ({ text }: { text: string }) => {
     };
   }, [canvasRef]);
  text=text.replaceAll('\n\n','\n');
-console.log("texteditor",text )
+console.log("texteditor",text,image )
   return (
     <div>
       <div style={{ position: "relative" }} ref={canvasRef}>
-        <InnerOutput ref={ref} className="inner-output" div={canvasRef.current}  height={image.height +(text.length>400?horiz?150:50:0)} width={image.width} data-id="GreetingsOutput:InnerOutput" length={text.length} horiz={horiz} editable={editing}>
+        <InnerOutput image={image.url} ref={ref} className="inner-output" div={canvasRef.current}  height={image.height +(text.length>400?horiz?150:50:0)} width={image.width} data-id="GreetingsOutput:InnerOutput" length={text.length} horiz={horiz} editable={editing}>
           {!editing ? (
             <div style={{zIndex:4}} onClick={()=>handleTextClick()} >
               <ReactMarkdown>

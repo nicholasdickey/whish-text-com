@@ -6,6 +6,7 @@ import useSWRImmutable from 'swr/immutable';
 import Grid from "@mui/material/Grid";
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
+
 const Results = styled.div`
 
  // width: 100%;
@@ -37,12 +38,13 @@ const Text = styled.div`
 `;
 
 const AmazonIdeaSearch = ({ search, text }: { search: string; text: string }) => {
+
   console.log("AmazonIdeaSearch",search,text)
   const { data: amazonSearch, error } = useSWRImmutable({ search }, getAmazonSearch);
   console.log("AmazonIdeaSearch",amazonSearch);
   return (
     <Results>
-      <Title elevation={12} ><Typography>  {text}</Typography></Title>
+      <Title elevation={2} ><Typography>  {text}</Typography></Title>
       
         <Grid container spacing={6}>
           {amazonSearch?.map((s, i) => (
