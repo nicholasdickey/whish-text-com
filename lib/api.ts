@@ -65,7 +65,7 @@ export interface Item {
     image: string;
     link: string;
 }
-export const getAmazonSearch = async ({ search }: { search: string }) => {
+ export const getAmazonSearch = async ({ search }: { search: string }) => {
     if (!search) return [];
     const url = `/api/amazon-search?search=${encodeURIComponent(search)}`;
     console.log("url:", url);

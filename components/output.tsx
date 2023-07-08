@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { styled } from "styled-components";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
@@ -97,14 +97,14 @@ export default function Output({
     if (image?.url)
       updateSession2({ selectedImage: JSON.stringify(image) });
   };
-
+  const sch=useCallback(stripClickHandler, [updateSession2]);
   useEffect(() => {
     console.log("useEffect", greeting)
     if (!greeting && selectedImage?.url) {
       console.log("useEffect stripClickHandler null")
-      stripClickHandler(null);
+      sch(null);
     }
-  }, [greeting, selectedImage]);
+  }, [greeting, selectedImage, sch]);
 
   const handleGenerate = async () => {
     if (loading) return;

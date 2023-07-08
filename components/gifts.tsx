@@ -1,4 +1,4 @@
-import React, { useState, FormEvent, useEffect } from "react";
+import React, { useState, FormEvent, useEffect, useCallback } from "react";
 import { styled } from "styled-components";
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
@@ -160,17 +160,18 @@ export default function Output({ loadReady, session, updateSession2, from, to, o
             setValue(result);
         }
     }
+    const ld= useCallback(load, [updateSession2,from, to, occasion, reflections, interests,  value]);
     useEffect(() => {
         console.log("INSIDE LOAD EFFECT", loadReady, value)
         if (loadReady && !value) {
             console.log("calling load   ")
-            load();
+            ld();
         }
         if (session.giftSuggestions && !value) {
             setValue(session.giftSuggestions);
             setGiftSuggestions(processGiftSuggestions(session.giftSuggestions));
         }
-    }, [from, to, occasion, reflections, interests, loadReady, value, load, session.giftSuggestions]);
+    }, [from, to, occasion, reflections, interests,ld,loadReady, value,  session.giftSuggestions]);
 
     //console.log("ready to display", output);
     return <OuterWrap>

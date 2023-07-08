@@ -14,7 +14,7 @@ function truncateString(text: string, maxLength: number): string {
     return text.slice(0, maxLength) + '...';
   }
   
-export default async (
+const amazonSearch=async (
     req: NextApiRequest,
     res: NextApiResponse) => {
 
@@ -63,3 +63,4 @@ export default async (
     items=items.slice(0,3);
     return res.status(200).json({ items })
 }
+export default amazonSearch;
