@@ -49,13 +49,18 @@ import GiftsOutput from "../components/gifts";
 import AvatarMenu from "../components/avatar-menu";
 const ClearButton = styled(IconButton)`
 margin-top:20px;
-  display: flex;
-  width: 100%;
+ // display: flex;
+  width: auto;
+ 
  // flex-direction: column;
   //align-items: center;
-  justify-content: flex-end;
+ 
 `;
-
+const ClearButtonContainer= styled.div`
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+`;
 const ClearText = styled.span`
   font-size: 12px;
 `;
@@ -341,7 +346,7 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
                       return;
                     }
                     if(item=='History'||item=='Share'||item=='Contact'){
-                      return <Button key={item} sx={{ color: '#888' }} onClick={() => handleMenuClick(item)}>
+                      return <Button key={item} sx={{ color: '#888' }} /*onClick={() => handleMenuClick(item)}*/>
                         {item}
                       </Button>
                     }
@@ -414,7 +419,7 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
             />
 
           </Box>
-          <ClearButton onClick={() => {
+          <ClearButtonContainer><ClearButton onClick={() => {
             updateRoute({
               from: '',
               to: '',
@@ -453,7 +458,7 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
           }}>
             <ClearIcon />
             <ClearText>Clear all</ClearText>
-          </ClearButton>
+          </ClearButton></ClearButtonContainer>
           <Box sx={{ mb: 4, mt: 3 }}>
             <TextField
               sx={{

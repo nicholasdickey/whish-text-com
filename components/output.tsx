@@ -4,15 +4,12 @@ import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Image from "next/image";
 import { getWishText, saveToHistory } from "../lib/api";
-
-
 import { Options } from "../lib/with-session";
 import ToolbarAccept from "./toolbar-accept";
 import ToolbarGenerate from "./toolbar-generate";
 import ImageStrip from "./image-strip";
 import ImageData from "../lib/image-data";
 import html2canvas from "html2canvas";
-//@ts-ignore
 import FileSaver from "file-saver";
 import TextEditor, { TextEditorProps, ImageProps } from "./text-editor";
 
@@ -53,7 +50,6 @@ export default function Output({
   language: string;
   greeting: string;
   authSession: any;
-
 }) {
   const [value, setValue] = useState("");
   const [loading, setLoading] = useState(false);
@@ -70,20 +66,22 @@ export default function Output({
   const [images, setImages] = useState<ImageData[]>([]);
   const [convertedImage, setConvertedImage] = useState('');
 
-
-  // const [greeting, setGreeting] = useState(session.greeting || "");
   const canvasRef = useRef<HTMLDivElement>(null);
-  const horiz: boolean = (selectedImage.width > selectedImage.height) ? true : false
+  const horiz: boolean = selectedImage.width > selectedImage.height;
+
   const convertDivToPng = async (div: any) => {
     const canvas = await html2canvas(div, {
-      useCORS: true, logging: true, width: div.width, height: div.height, scale: window.devicePixelRatio,
+      useCORS: true,
+      logging: true,
+      width: div.width,
+      height: div.height,
+      scale: window.devicePixelRatio,
     });
     const image = canvas.toDataURL("image/png", 1.0);
     return image;
   };
 
-
-  const stripClickHandler = (image: ImageData | null):void => {
+  const stripClickHandler = (image: ImageData | null): void => {
     if (image == null) {
       image = {
         url: '',
@@ -93,18 +91,16 @@ export default function Output({
         thumbnailUrl: '',
         original_filename: ''
       }
-
     }
 
     setSelectedImage(image);
-    if(image?.url)
+    if (image?.url)
       updateSession2({ selectedImage: JSON.stringify(image) });
-
   };
 
   useEffect(() => {
     console.log("useEffect", greeting)
-    if (!greeting && selectedImage?.url){
+    if (!greeting && selectedImage?.url) {
       console.log("useEffect stripClickHandler null")
       stripClickHandler(null);
     }
@@ -118,7 +114,6 @@ export default function Output({
     }
     setLoading(true);
     setLoadReady(true);
-    console.log("handleGenerate clicked", { instructions, reflections, occasion, inastyleof, language })
     const result = await getWishText({
       style: "",
       from,
@@ -130,27 +125,27 @@ export default function Output({
       language,
       fresh: value ? true : false,
     });
-    console.log("getWishText result: ", result);
     setLoading(false);
     setLoadReady(false);
 
-    if (result !== value&&result) {
+    if (result !== value && result) {
       updateSession2({ greeting: result });
-      //setGreeting(result);
       setValue(result);
       setLoadReady(true);
     }
   };
+
   const handleAccept: () => void = async () => {
     let image = '';
     if (selectedImage.url) {
       image = await convertDivToPng(canvasRef.current);
     }
     await saveToHistory(authSession.username, greeting, occasion, to, image, gift);
+  };
 
-  }
   const handleCopy: () => void = () => {
-  }
+    // Add your implementation here
+  };
 
   const handleDownload = async () => {
     try {
@@ -159,12 +154,10 @@ export default function Output({
       var randomstring = () => Math.random().toString(8).substring(2, 7) + Math.random().toString(8).substring(2, 7);
 
       const filename = `${randomstring()}-wt2.png`;
-      //@ts-ignore
+
       if (window.saveAs) {
-        //@ts-ignore
         window.saveAs(data, 'a' + filename);
       } else {
-        //@ts-ignore
         FileSaver.saveAs(data, filename);
       }
     } catch (e) {
@@ -193,7 +186,7 @@ export default function Output({
     setImages(session.imagesString ? JSON.parse(session.imagesString) : []);
     setSelectedImage(session.selectedImage ? JSON.parse(session.selectedImage) : { url: "", publicId: "" });
   }, [session.imagesString, session.selectedImage]);
-  console.log("selectedImage", selectedImage);
+
   return (
     <>
       <ToolbarGenerate onGenerateClick={handleGenerate} onUploadClick={onUpload} hasGreeting={session.greeting ? true : false} />
@@ -209,7 +202,6 @@ export default function Output({
       <Box sx={{ my: 4, width: { xs: 1 } }} textAlign="center">
         {images.length > 0 && <ImageStrip images={images} onImageClick={stripClickHandler} />}
       </Box>
-
     </>
   );
 }
