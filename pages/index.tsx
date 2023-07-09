@@ -29,6 +29,7 @@ import styled from 'styled-components';
 import ClearIcon from '@mui/icons-material/Clear';
 import { RWebShare } from "react-web-share";
 import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined';
+import Script from 'next/script'
 import Tooltip from '@mui/material/Tooltip';
 import {
   GetServerSidePropsContext,
@@ -59,7 +60,7 @@ margin-top:20px;
   //align-items: center;
  
 `;
-const ClearButtonContainer= styled.div`
+const ClearButtonContainer = styled.div`
   display: flex;
   justify-content: flex-end;
   width: 100%;
@@ -148,8 +149,8 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   //saves the changes to the session on the local web server. 
   const updateSession2 = useCallback(async (updSession: object) => {
     console.log('===>pdate session:', updSession);
-    if(!updSession)
-    return;
+    if (!updSession)
+      return;
     const assigned = { ...Object.assign(session, updSession) }
     // console.log('===>pdate session:', assigned);
     setSession(assigned);
@@ -160,7 +161,7 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
     router.push(params, params, { shallow: true })
   }, [router]);
   //const ur=useCallback(updateRoute, [router])
- 
+
   useEffect(() => {
     updateRoute({ to, from, occasion, reflections, instructions, inastyleof, language, interests });
   }, [to, from, occasion, reflections, instructions, inastyleof, language, interests]);
@@ -325,7 +326,7 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
           <CssBaseline />
           <AppBar position="fixed" component="nav">
             <Toolbar>
-              {false?<IconButton
+              {false ? <IconButton
                 color="inherit"
                 aria-label="open drawer"
                 edge="start"
@@ -333,7 +334,7 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
                 sx={{ mr: 2, display: { sm: 'none' } }}
               >
                 <MenuIcon />
-              </IconButton>:null}
+              </IconButton> : null}
               <Typography
                 variant="h6"
                 component="div"
@@ -350,21 +351,21 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
               </Typography>
               <Box sx={{ display: { xs: 'block', sm: 'block' } }}>
                 <AppMenu color={theme.palette.text.primary}>
-                <RWebShare
-                data={{
-                    text: session.greeting||'',
-                    url: `/?occasion=${encodeURIComponent(session.occasion||'')}${session.reflections ? `&reflections=${encodeURIComponent(session.reflections)}` : ``}${session.instructions ? `&instructions=${encodeURIComponent(session.instructions)}` : ``}${session.inastyleof ? `&inastyleof=${encodeURIComponent(session.inastyleof)}` : ``}${session.language ? `&language=${encodeURIComponent(session.language)}` : ``}${session.to ? `&to=${encodeURIComponent(session.to)}` : ``}${session.from ? `&from=${encodeURIComponent(session.from)}` : ``}${session.interests ? `&interests=${encodeURIComponent(session.interests)}` : ``}`,
-                    title:'Wish-Text.Com -  Wish Text Composer',
-                }}
-                onClick={() => console.log("shared successfully!")}
-            >
-                <Button> <IosShareOutlinedIcon/></Button>
-            </RWebShare>
-         
+                  <RWebShare
+                    data={{
+                      text: session.greeting || '',
+                      url: `/?occasion=${encodeURIComponent(session.occasion || '')}${session.reflections ? `&reflections=${encodeURIComponent(session.reflections)}` : ``}${session.instructions ? `&instructions=${encodeURIComponent(session.instructions)}` : ``}${session.inastyleof ? `&inastyleof=${encodeURIComponent(session.inastyleof)}` : ``}${session.language ? `&language=${encodeURIComponent(session.language)}` : ``}${session.to ? `&to=${encodeURIComponent(session.to)}` : ``}${session.from ? `&from=${encodeURIComponent(session.from)}` : ``}${session.interests ? `&interests=${encodeURIComponent(session.interests)}` : ``}`,
+                      title: 'Wish-Text.Com -  Wish Text Composer',
+                    }}
+                    onClick={() => console.log("shared successfully!")}
+                  >
+                    <Button> <IosShareOutlinedIcon /></Button>
+                  </RWebShare>
+
 
                 </AppMenu>
               </Box>
-              {false&&authSession && <Box key="login" >
+              {false && authSession && <Box key="login" >
                 <IconButton
                   // onClick={handleClick}
                   size="small"
@@ -398,18 +399,18 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
           </Box>
 
           <Toolbar />
-          <Box sx={{ my:2, padding: 1, width: 1, color: noExplain?'normal':'white', backgroundColor: noExplain ? 'normal' : 'secondary' }}>
+          <Box sx={{ my: 2, padding: 1, width: 1, color: noExplain ? 'normal' : 'white', backgroundColor: noExplain ? 'normal' : 'secondary' }}>
             {!noExplain ? <Typography
               variant="body2"
               component="div"
               sx={{ flexGrow: 1, display: { xs: 'block', sm: 'block' } }}
             >
               <p>Create the &quot;wishing&quot; or greeting text for you to paste into your favorite messaging app.
-              AI will provide the helpful suggestions that you can edit by clicking on the suggestion.</p>
+                AI will provide the helpful suggestions that you can edit by clicking on the suggestion.</p>
 
               Additionally, Wish Text can generate a &apos;postcard&apos; greeting over an uploaded image. You can download the card and share from any device.
-              <p>Utilizing AI, it also provides the gift suggestions.</p> 
-              
+              <p>Utilizing AI, it also provides the gift suggestions.</p>
+
             </Typography> : null}
 
 
@@ -449,7 +450,7 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
               interests: '',
               greeting: '',
               giftSuggestions: '',
-              imagesString:'',
+              imagesString: '',
               selectedImage: '',
 
             });
@@ -466,10 +467,10 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
             <ClearIcon />
             <ClearText>Clear all</ClearText>
           </ClearButton></ClearButtonContainer>
-          <Box sx={{ mb: 4, mt: 3 }}>
+          <Box sx={{ mb: 4, mt: 3, background: theme.palette.background.default }}>
             <TextField
               sx={{
-                width: { xs: 1 },
+                width: { xs: 1, background: theme.palette.background.default },
 
               }}
               error={missingOccasion}
@@ -480,7 +481,7 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
               helperText="Required for a meaningful result. For example: &ldquo;8th Birthday&rdquo;, &ldquo;Sweet Sixteen&rdquo;, &ldquo;Illness&rdquo; &ldquo;Death in the family&rdquo;, &ldquo;Christmas&rdquo;, &ldquo;Graduation&ldquo;"
             />
           </Box>
-          <Accordion expanded={expanded === 'custom'} onChange={handleAccordeonChange('custom')}>
+          <Accordion sx={{ background: theme.palette.background.default }} expanded={expanded === 'custom'} onChange={handleAccordeonChange('custom')}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel4bh-content"
@@ -519,7 +520,7 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
 
             </AccordionDetails>
           </Accordion>
-          <Accordion expanded={expanded === 'advanced'} onChange={handleAccordeonChange('advanced')}>
+          <Accordion sx={{ background: theme.palette.background.default }} expanded={expanded === 'advanced'} onChange={handleAccordeonChange('advanced')}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel4bh-content"
@@ -582,9 +583,21 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
               </Box>
             </AccordionDetails>
           </Accordion>
-          <GreetingOutput greeting={session.greeting||''} setMissingOccasion={setMissingOccasion} setLoadReady={setLoadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} reflections={reflections} instructions={instructions} inastyleof={inastyleof} language={language} authSession={authSession}/>
+          <GreetingOutput greeting={session.greeting || ''} setMissingOccasion={setMissingOccasion} setLoadReady={setLoadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} reflections={reflections} instructions={instructions} inastyleof={inastyleof} language={language} authSession={authSession} />
           {session.greeting && <GiftsOutput loadReady={loadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} reflections={reflections} interests={interests} onInterestsChange={onInterestsChange} />}
         </Container>
+        <div className="container">
+          <Script src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID" />
+          <Script id="google-analytics">
+            {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+ 
+          gtag('config', 'G-BY034CWJ6P');
+        `}
+          </Script>
+        </div>
       </main>
     </>
   )
