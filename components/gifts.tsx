@@ -186,7 +186,7 @@ export default function Output({ loadReady, session, updateSession2, from, to, o
 
                     }}
                     id="to"
-                    label="Additional Gift Selection Considerations"
+                    label="Additional Gift Considerations"
                     defaultValue={interests}
                     onChange={onInterestsChange}
                     helperText="For example: &ldquo;a middle-aged woman, likes square dancing, horse riding, sparkling wine.&rdquo;, &ldquo;a 16 year-old girl who likes music.&rdquo; &ldquo; Christian familiy man, loves fishing and hunting.&rdquo; &ldquo;Not Star Trek&rdquo;"
