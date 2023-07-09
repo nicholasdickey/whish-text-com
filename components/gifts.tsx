@@ -141,7 +141,7 @@ export default function Output({ loadReady, session, updateSession2, from, to, o
         return <AmazonIdeaSearch key={`amazon-idea-search-${i}`} search={suggest.search} text={suggest.text} />
     })}</div></> : null;
     //console.log("generated output", output)
-    const load = async () => {
+    const load = useCallback(async () => {
         console.log("calling GIFT api with", from, to, occasion, reflections, interests);
         setLoading(true);
         const result = await getGiftsText({ from, to, occasion, reflections, interests, fresh: value ? true : false });
@@ -159,19 +159,19 @@ export default function Output({ loadReady, session, updateSession2, from, to, o
             console.log("setting after processGiftSuggestions", processGiftSuggestions(valueGiftSuggestions));
             setValue(result);
         }
-    }
-    const ld= useCallback(load, [updateSession2,from, to, occasion, reflections, interests,  value]);
+    },[from, to, occasion, reflections, interests, value, updateSession2])
+    //const ld= useCallback(load, [updateSession2,from, to, occasion, reflections, interests,  value]);
     useEffect(() => {
         console.log("INSIDE LOAD EFFECT", loadReady, value)
         if (loadReady && !value) {
             console.log("calling load   ")
-            ld();
+            load();
         }
         if (session.giftSuggestions && !value) {
             setValue(session.giftSuggestions);
             setGiftSuggestions(processGiftSuggestions(session.giftSuggestions));
         }
-    }, [from, to, occasion, reflections, interests,ld,loadReady, value,  session.giftSuggestions]);
+    }, [load,from, to, occasion, reflections, interests,loadReady, value,  session.giftSuggestions]);
 
     //console.log("ready to display", output);
     return <OuterWrap>

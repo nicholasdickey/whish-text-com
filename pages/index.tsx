@@ -155,15 +155,15 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
     setSession(assigned);
     await axios.post(`/api/session/save`, { session: assigned });
   }, [session]);
-  const updateRoute = ({ to, from, occasion, reflections, instructions, inastyleof, language, interests }: { to: string, from: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string }) => {
+  const updateRoute = useCallback(({ to, from, occasion, reflections, instructions, inastyleof, language, interests }: { to: string, from: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string }) => {
     const params = `/?occasion=${encodeURIComponent(occasion)}${reflections ? `&reflections=${encodeURIComponent(reflections)}` : ``}${instructions ? `&instructions=${encodeURIComponent(instructions)}` : ``}${inastyleof ? `&inastyleof=${encodeURIComponent(inastyleof)}` : ``}${language ? `&language=${encodeURIComponent(language)}` : ``}${to ? `&to=${encodeURIComponent(to)}` : ``}${from ? `&from=${encodeURIComponent(from)}` : ``}${interests ? `&interests=${encodeURIComponent(interests)}` : ``}`;
     router.push(params, params, { shallow: true })
-  }
+  }, [router]);
   //const ur=useCallback(updateRoute, [router])
  
   useEffect(() => {
     updateRoute({ to, from, occasion, reflections, instructions, inastyleof, language, interests });
-  }, [router,to, from, occasion, reflections, instructions, inastyleof, language, interests]);
+  }, [to, from, occasion, reflections, instructions, inastyleof, language, interests]);
   const onOccasionChange = (event: any) => {
     const value = event.target.value;
     // console.log('set occasion:', value);
