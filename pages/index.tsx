@@ -327,7 +327,7 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
         <title>Wish Text Composer</title>
         <meta name="description" content="Helps to create greetings and wishes with appropriate gift suggestions" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/wish-text-logo.png" />
+        <link rel="icon" href="/w-t-logo.png" />
 
       </Head>
       <main className={roboto.className} >
