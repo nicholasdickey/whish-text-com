@@ -22,7 +22,7 @@ export default function MyApp(props: AppProps) {
     <React.Fragment>
       <Head>
         <title>Wish Text Composer</title>
-        <link href="/favicon.ico" rel="icon" />
+        <link href="/wish-text-logo.png" rel="icon" />
         <meta content="minimum-scale=1, initial-scale=1, width=device-width" name="viewport" />
       </Head>
       <ThemeProvider theme={darkTheme}>
