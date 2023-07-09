@@ -8,6 +8,7 @@ import AmazonIdeaSearch from "./amazon-idea-search";
 import { Options } from "../lib/with-session";
 import ToobarGifts from "./toolbar-gifts";
 import Typography from '@mui/material/Typography';
+import * as ga from '../lib/ga';
 
 const Container = styled.div`
     display: flex;
@@ -138,7 +139,7 @@ export default function Output({ loadReady, session, updateSession2, from, to, o
         // if (i >0)
         //   return null;
         console.log("suggest", suggest, 'i', i)
-        return <AmazonIdeaSearch key={`amazon-idea-search-${i}`} search={suggest.search} text={suggest.text} />
+        return <AmazonIdeaSearch key={`amazon-idea-search-${i}`} session={session} search={suggest.search} text={suggest.text} />
     })}</div></> : null;
     //console.log("generated output", output)
     const load = useCallback(async () => {
@@ -159,6 +160,13 @@ export default function Output({ loadReady, session, updateSession2, from, to, o
             console.log("setting after processGiftSuggestions", processGiftSuggestions(valueGiftSuggestions));
             setValue(result);
         }
+        ga.event({
+            action: "giftSuggestions",
+            params : {
+              sessionid: session.sessionid,
+              result: result,
+            }
+          }) 
     },[from, to, occasion, reflections, interests, value, updateSession2])
     //const ld= useCallback(load, [updateSession2,from, to, occasion, reflections, interests,  value]);
     useEffect(() => {

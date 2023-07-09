@@ -12,7 +12,7 @@ import ImageData from "../lib/image-data";
 import html2canvas from "html2canvas";
 import FileSaver from "file-saver";
 import TextEditor, { TextEditorProps, ImageProps } from "./text-editor";
-
+import * as ga from '../lib/ga'
 const BottomLink = styled.div`
   padding: 10px;
 
@@ -82,6 +82,13 @@ export default function Output({
   };
 
   const stripClickHandler = (image: ImageData | null): void => {
+    ga.event({
+      action: "stipClickHandler",
+      params : {
+        sessionid: session.sessionid,
+        image: image?.url,
+      }
+    })
     if (image == null) {
       image = {
         url: '',
@@ -134,6 +141,21 @@ export default function Output({
       setValue(result);
       setLoadReady(true);
     }
+    ga.event({
+      action: "generate",
+      params : {
+        sessionid: session.sessionid,
+        greeting: result,
+        occasion,
+        from,
+        to,
+        reflections,
+        instructions,
+        inastyleof,
+        language,
+        fresh: value ? true : false,
+      }
+    })
   };
 
   const handleAccept: () => void = async () => {
@@ -155,7 +177,13 @@ export default function Output({
       var randomstring = () => Math.random().toString(8).substring(2, 7) + Math.random().toString(8).substring(2, 7);
 
       const filename = `${randomstring()}-wt2.png`;
-
+      ga.event({
+        action: "download",
+        params : {
+          sessionid: session.sessionid,
+      
+        }
+      })
       if (window.saveAs) {
         window.saveAs(data, 'a' + filename);
       } else {
@@ -168,7 +196,14 @@ export default function Output({
 
   const onUpload = (result: any, widget: any) => {
     const { secure_url: url, public_id: publicId, height, width, thumbnail_url: thumbnailUrl, original_filename: originalFilename } = result.info;
-
+    ga.event({
+      action: "upload",
+      params : {
+        sessionid: session.sessionid,
+        url: url,
+        original_filename: originalFilename,
+      }
+    })
     const newImage: ImageData = {
       url,
       publicId,

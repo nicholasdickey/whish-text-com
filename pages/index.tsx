@@ -50,6 +50,7 @@ import GreetingOutput from "../components/output";
 import GiftsOutput from "../components/gifts";
 import AvatarMenu from "../components/avatar-menu";
 import { useTheme } from '@mui/material/styles';
+import * as ga from '../lib/ga'
 const Copyright =styled.div`
   display:flex;
   justify-content:center;
@@ -126,6 +127,12 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   const handleNoExplanChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNoExplain(event.target.checked);
     updateSession2({ noExplain: event.target.checked });
+    ga.event({
+      action: "setNoExplain",
+      params : {
+        sessionid: session.sessionid
+      }
+    })
   }
 
   // copilot fix the type to match the onClick signature
@@ -180,6 +187,13 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   const onOccasionChange = (event: any) => {
     const value = event.target.value;
     // console.log('set occasion:', value);
+    ga.event({
+      action: "occasionChange",
+      params : {
+        sessionid: session.sessionid,
+        occasion: value
+      }
+    })
     setMissingOccasion(false);
     updateRoute({
       from,
@@ -197,6 +211,13 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   const onReflectionsChange = (event: any) => {
     const value = event.target.value;
     //  console.log('set reflections:', value);
+    ga.event({
+      action: "reflectionsChange",
+      params : {
+        sessionid: session.sessionid,
+        occasion: value
+      }
+    })
     updateRoute({
       from,
       to,
@@ -213,6 +234,13 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   const onInstructionsChange = (event: any) => {
     const value = event.target.value;
     // console.log('set instructions:', value);
+    ga.event({
+      action: "instructionsChange",
+      params : {
+        sessionid: session.sessionid,
+        occasion: value
+      }
+    })
     updateRoute({
       from,
       to,
@@ -229,6 +257,13 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   const onInastyleofChange = (event: any) => {
     const value = event.target.value;
     // console.log('set inastyleof:', value);
+    ga.event({
+      action: "inastyleofChange",
+      params : {
+        sessionid: session.sessionid,
+        occasion: value
+      }
+    })
     updateRoute({
       from,
       to,
@@ -245,6 +280,13 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   const onLanguageChange = (event: any) => {
     const value = event.target.value;
     //  console.log('set language:', value);
+    ga.event({
+      action: "languageChange",
+      params : {
+        sessionid: session.sessionid,
+        occasion: value
+      }
+    })
     updateRoute({
       from,
       to,
@@ -264,6 +306,13 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   const onFromChange = (event: any) => {
     const value = event.target.value;
     // console.log(value);
+    ga.event({
+      action: "fromChange",
+      params : {
+        sessionid: session.sessionid,
+        occasion: value
+      }
+    })
     updateRoute({
       from: value,
       to,
@@ -282,6 +331,13 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   const onToChange = (event: any) => {
     const value = event.target.value;
     //  console.log(value);
+    ga.event({
+      action: "toChange",
+      params : {
+        sessionid: session.sessionid,
+        occasion: value
+      }
+    })
     updateRoute({
       from,
       to: value,
@@ -299,6 +355,13 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   const onInterestsChange = (event: any) => {
     const value = event.target.value;
     //  console.log(value);
+    ga.event({
+      action: "interestsChange",
+      params : {
+        sessionid: session.sessionid,
+        occasion: value
+      }
+    })
     updateRoute({
       from,
       to,
@@ -369,7 +432,17 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
                       url: `/?occasion=${encodeURIComponent(session.occasion || '')}${session.reflections ? `&reflections=${encodeURIComponent(session.reflections)}` : ``}${session.instructions ? `&instructions=${encodeURIComponent(session.instructions)}` : ``}${session.inastyleof ? `&inastyleof=${encodeURIComponent(session.inastyleof)}` : ``}${session.language ? `&language=${encodeURIComponent(session.language)}` : ``}${session.to ? `&to=${encodeURIComponent(session.to)}` : ``}${session.from ? `&from=${encodeURIComponent(session.from)}` : ``}${session.interests ? `&interests=${encodeURIComponent(session.interests)}` : ``}`,
                       title: 'Wish-Text.Com -  Wish Text Composer',
                     }}
-                    onClick={() => console.log("shared successfully!")}
+                    onClick={() => {
+                      console.log("shared successfully!");
+                      ga.event({
+                        action: "share",
+                        params : {
+                          sessionid: session.sessionid,
+                          
+                        }
+                      })}
+                    
+                    }
                   >
                     <Button> <IosShareOutlinedIcon /></Button>
                   </RWebShare>
@@ -440,6 +513,13 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
 
           </Box>
           <ClearButtonContainer><ClearButton onClick={() => {
+            ga.event({
+              action: "clearAll",
+              params : {
+                sessionid: session.sessionid,
+             
+              }
+            })
             updateRoute({
               from: '',
               to: '',
@@ -606,14 +686,14 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
         </Typography></Sub></Copyright>
         </Container>
         <div className="container">
-          <Script src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID" />
+          <Script src={`https://www.googletagmanager.com/gtag/js?${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`} />
           <Script id="google-analytics">
             {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
  
-          gtag('config', 'G-BY034CWJ6P');
+          gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}');
         `}
           </Script>
         </div>

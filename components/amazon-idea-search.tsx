@@ -37,7 +37,7 @@ const Text = styled.div`
   margin-top: 20px;
 `;
 
-const AmazonIdeaSearch = ({ search, text }: { search: string; text: string }) => {
+const AmazonIdeaSearch = ({ session,search, text }: { session:any,search: string; text: string }) => {
 
   console.log("AmazonIdeaSearch",search,text)
   const { data: amazonSearch, error } = useSWRImmutable({ search }, getAmazonSearch);
@@ -49,7 +49,7 @@ const AmazonIdeaSearch = ({ search, text }: { search: string; text: string }) =>
         <Grid container spacing={6}>
           {amazonSearch?.map((s, i) => (
           
-              <RichLink key={s.title} imageUrl={s.image} title={s.title} price={s.price} link={s.link} />
+              <RichLink session={session} key={s.title} imageUrl={s.image} title={s.title} price={s.price} link={s.link} />
           
           ))}
         </Grid>

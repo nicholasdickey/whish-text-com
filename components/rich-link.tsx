@@ -6,6 +6,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import { useTheme } from '@mui/material/styles';
+import * as ga from '../lib/ga';
 export const Container = styled.div`
   margin-top: 10px;
   padding-bottom: 60px;
@@ -64,15 +65,26 @@ interface RichLinkProps {
   imageUrl: string;
   price: string;
   link: string;
+  session: any;
 }
-export const RichLink: React.FC<RichLinkProps> = ({ title, imageUrl, price, link }) => {
+export const RichLink: React.FC<RichLinkProps> = ({ session,title, imageUrl, price, link }) => {
   const theme = useTheme();
   return (
    
     <Grid item xs={12} key={`rich-link-${title}`}>
      
         <Card variant="outlined">
-        <RichLinkContainer href={link}>
+        <RichLinkContainer href={link} onClick={()=>{
+           ga.event({
+            action: "AmazonClick",
+            params : {
+              sessionid: session.sessionid,
+              title,
+              price,
+              link 
+            }
+          })
+        }}>
           <MediaWrapper>
             <ProductImage><CardMedia component='img' image={imageUrl}  /></ProductImage>
           </MediaWrapper>
