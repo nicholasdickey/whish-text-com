@@ -50,6 +50,18 @@ import GreetingOutput from "../components/output";
 import GiftsOutput from "../components/gifts";
 import AvatarMenu from "../components/avatar-menu";
 import { useTheme } from '@mui/material/styles';
+const Copyright =styled.div`
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-wrap: wrap;
+  margin-top:20px;
+  color:grey;
+
+  `;
+const Sub=styled.div`
+  margin:20px;
+`;  
 const ClearButton = styled(IconButton)`
 
 margin-top:20px;
@@ -585,6 +597,13 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
           </Accordion>
           <GreetingOutput greeting={session.greeting || ''} setMissingOccasion={setMissingOccasion} setLoadReady={setLoadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} reflections={reflections} instructions={instructions} inastyleof={inastyleof} language={language} authSession={authSession} />
           {session.greeting && <GiftsOutput loadReady={loadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} reflections={reflections} interests={interests} onInterestsChange={onInterestsChange} />}
+                 
+                  <Copyright> <Sub> <Typography variant="caption"  gutterBottom>
+                  Copyright: Wish-Text.Com
+        </Typography></Sub>
+        <Sub><Typography variant="caption" gutterBottom>
+        Contact: support@hudsonwilde.com
+        </Typography></Sub></Copyright>
         </Container>
         <div className="container">
           <Script src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID" />

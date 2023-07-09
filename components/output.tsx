@@ -124,6 +124,7 @@ export default function Output({
       inastyleof,
       language,
       fresh: value ? true : false,
+      sessionid:session.sessionid,
     });
     setLoading(false);
     setLoadReady(false);
