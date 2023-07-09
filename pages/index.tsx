@@ -311,7 +311,7 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   return (
     <>
       <Head>
-        <title>Free Wish Text Composer</title>
+        <title>Wish Text Composer</title>
         <meta name="description" content="Helps to create greetings and wishes with appropriate gift suggestions" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
@@ -352,9 +352,9 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
                 <AppMenu color={theme.palette.text.primary}>
                 <RWebShare
                 data={{
-                    text: session.greeting||'blah',
+                    text: session.greeting||'',
                     url: `/?occasion=${encodeURIComponent(session.occasion||'')}${session.reflections ? `&reflections=${encodeURIComponent(session.reflections)}` : ``}${session.instructions ? `&instructions=${encodeURIComponent(session.instructions)}` : ``}${session.inastyleof ? `&inastyleof=${encodeURIComponent(session.inastyleof)}` : ``}${session.language ? `&language=${encodeURIComponent(session.language)}` : ``}${session.to ? `&to=${encodeURIComponent(session.to)}` : ``}${session.from ? `&from=${encodeURIComponent(session.from)}` : ``}${session.interests ? `&interests=${encodeURIComponent(session.interests)}` : ``}`,
-                    title:'Free Wish Text Generator',
+                    title:'Wish-Text.Com -  Wish Text Composer',
                 }}
                 onClick={() => console.log("shared successfully!")}
             >
