@@ -393,10 +393,10 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
         <meta name="twitter:title" content="Wish Text Composer"/>
         <meta name="twitter:description" content="Are you tired of struggling to find the right words and perfect gifts for various occasions? Look no further! With WISH-TEXT.COM, our free AI-powered Assistant is here to make your life easier.
 Whether it's birthdays, graduations, holidays, or moments of illness or loss, WISH-TEXT.COM provides personalized messages and thoughtful gift recommendations, all at absolutely no cost."/>
-        <meta name="twitter:image" content="https://ucarecdn.com/68d2ab3d-f58d-4015-beaf-4f2f7737643b/wishtextad1.png"/>
+        <meta name="twitter:image" content="https://ucarecdn.com/d2cf70ef-7ffd-40d7-9e25-31e66927086e/wishtextad2.png"/>
         <meta name="title" content="Wish Text Composer" />
         <meta property="og:title" content="Wish Text Composer" />
-        <meta property="og:image" content="https://ucarecdn.com/68d2ab3d-f58d-4015-beaf-4f2f7737643b/wishtextad1.png" />
+        <meta property="og:image" content="https://ucarecdn.com/d2cf70ef-7ffd-40d7-9e25-31e66927086e/wishtextad2.png" />
         <meta name="description" content="Are you tired of struggling to find the right words and perfect gifts for various occasions? Look no further! With WISH-TEXT.COM, our free AI-powered Assistant is here to make your life easier.
 Whether it's birthdays, graduations, holidays, or moments of illness or loss, WISH-TEXT.COM provides personalized messages and thoughtful gift recommendations, all at absolutely no cost." />
         <meta property="og:description" content="Are you tired of struggling to find the right words and perfect gifts for various occasions? Look no further! With WISH-TEXT.COM, our free AI-powered Assistant is here to make your life easier.
