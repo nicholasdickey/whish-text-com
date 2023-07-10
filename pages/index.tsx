@@ -389,6 +389,7 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
       <Head>
         <title>Wish Text Composer</title>
         <meta name="twitter:card" content="summary_large_image"></meta>
+        <meta name="twitter:site" content="@wishtext" />
         <meta name="twitter:title" content="Wish Text Composer"></meta>
         <meta name="twitter:description" content="Are you tired of struggling to find the right words and perfect gifts for various occasions? Look no further! With WISH-TEXT.COM, our free AI-powered Assistant is here to make your life easier.
 Whether it's birthdays, graduations, holidays, or moments of illness or loss, WISH-TEXT.COM provides personalized messages and thoughtful gift recommendations, all at absolutely no cost."></meta>
