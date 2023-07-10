@@ -389,7 +389,7 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
       <Head>
         <title>Wish Text Composer</title>
         <meta name="title" content="Wish Text Composer" />
-        <meta property="pg:title" content="Wish Text Composer" />
+        <meta property="og:title" content="Wish Text Composer" />
         <meta property="og:image" content="https://ucarecdn.com/76039561-e7f3-499b-9894-ea06abef4dc4/wishtextad.png" />
         <meta name="description" content="Are you tired of struggling to find the right words and perfect gifts for various occasions? Look no further! With WISH-TEXT.COM, our free AI-powered Assistant is here to make your life easier.
 Whether it's birthdays, graduations, holidays, or moments of illness or loss, WISH-TEXT.COM provides personalized messages and thoughtful gift recommendations, all at absolutely no cost." />
