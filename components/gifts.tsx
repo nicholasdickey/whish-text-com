@@ -145,7 +145,7 @@ export default function Output({ loadReady, session, updateSession2, from, to, o
     const load = useCallback(async () => {
         console.log("calling GIFT api with", from, to, occasion, reflections, interests);
         setLoading(true);
-        const result = await getGiftsText({ from, to, occasion, reflections, interests, fresh: value ? true : false });
+        const result = await getGiftsText({ sessionid:session.sessionid,from, to, occasion, reflections, interests, fresh: value ? true : false });
         setLoading(false);
         console.log("result", result, 'value:', value);
         if (result != value) {

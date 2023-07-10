@@ -32,7 +32,7 @@ export const getWishText = async ({ style, from, to, occasion, reflections,instr
         }
     }
 }
-export const getGiftsText = async ({ from, to, occasion, reflections, interests, fresh }:{from:string,to:string,occasion:string,reflections:string,interests:string,fresh?:boolean}) => {
+export const getGiftsText = async ({ from, to, occasion, reflections, interests, fresh,sessionid }:{from:string,to:string,occasion:string,reflections:string,interests:string,fresh?:boolean,sessionid?:string}) => {
     from = encodeURIComponent(from || '');
     to = encodeURIComponent(to || '');
     occasion = encodeURIComponent(occasion || '');
@@ -42,7 +42,7 @@ export const getGiftsText = async ({ from, to, occasion, reflections, interests,
     fresh = fresh || false;
     if (!from && !to && !occasion && !interests)
         return '';
-    let url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/openai/gifts-text?from=${from}&to=${to}&occasion=${occasion}&reflections=${reflections}&interests=${interests}${fresh ? '&fresh=1' : ''}`;
+    let url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/openai/gifts-text?sessionid=${sessionid||''}&from=${from}&to=${to}&occasion=${occasion}&reflections=${reflections}&interests=${interests}${fresh ? '&fresh=1' : ''}`;
     console.log("url:", url);
     let recovery = '';
     while (true) {
