@@ -187,13 +187,13 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   const onOccasionChange = (event: any) => {
     const value = event.target.value;
     // console.log('set occasion:', value);
-    ga.event({
+   /* ga.event({
       action: "occasionChange",
       params : {
         sessionid: session.sessionid,
         occasion: value
       }
-    })
+    }) */
     setMissingOccasion(false);
     updateRoute({
       from,
@@ -211,13 +211,13 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   const onReflectionsChange = (event: any) => {
     const value = event.target.value;
     //  console.log('set reflections:', value);
-    ga.event({
+   /* ga.event({
       action: "reflectionsChange",
       params : {
         sessionid: session.sessionid,
         occasion: value
       }
-    })
+    })*/
     updateRoute({
       from,
       to,
@@ -234,13 +234,13 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   const onInstructionsChange = (event: any) => {
     const value = event.target.value;
     // console.log('set instructions:', value);
-    ga.event({
+   /* ga.event({
       action: "instructionsChange",
       params : {
         sessionid: session.sessionid,
         occasion: value
       }
-    })
+    })*/
     updateRoute({
       from,
       to,
@@ -257,13 +257,13 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   const onInastyleofChange = (event: any) => {
     const value = event.target.value;
     // console.log('set inastyleof:', value);
-    ga.event({
+    /*ga.event({
       action: "inastyleofChange",
       params : {
         sessionid: session.sessionid,
         occasion: value
       }
-    })
+    })*/
     updateRoute({
       from,
       to,
@@ -280,13 +280,13 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   const onLanguageChange = (event: any) => {
     const value = event.target.value;
     //  console.log('set language:', value);
-    ga.event({
+   /* ga.event({
       action: "languageChange",
       params : {
         sessionid: session.sessionid,
         occasion: value
       }
-    })
+    })*/
     updateRoute({
       from,
       to,
@@ -306,13 +306,13 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   const onFromChange = (event: any) => {
     const value = event.target.value;
     // console.log(value);
-    ga.event({
+   /* ga.event({
       action: "fromChange",
       params : {
         sessionid: session.sessionid,
         occasion: value
       }
-    })
+    }) */
     updateRoute({
       from: value,
       to,
@@ -331,13 +331,13 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   const onToChange = (event: any) => {
     const value = event.target.value;
     //  console.log(value);
-    ga.event({
+   /* ga.event({
       action: "toChange",
       params : {
         sessionid: session.sessionid,
         occasion: value
       }
-    })
+    }) */
     updateRoute({
       from,
       to: value,
@@ -355,13 +355,13 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   const onInterestsChange = (event: any) => {
     const value = event.target.value;
     //  console.log(value);
-    ga.event({
+   /* ga.event({
       action: "interestsChange",
       params : {
         sessionid: session.sessionid,
         occasion: value
       }
-    })
+    }) */
     updateRoute({
       from,
       to,
@@ -513,13 +513,13 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
 
           </Box>
           <ClearButtonContainer><ClearButton onClick={() => {
-            ga.event({
+           /* ga.event({
               action: "clearAll",
               params : {
                 sessionid: session.sessionid,
              
               }
-            })
+            })*/
             updateRoute({
               from: '',
               to: '',

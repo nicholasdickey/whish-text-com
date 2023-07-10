@@ -227,8 +227,8 @@ export default function Output({
     <>
       <ToolbarGenerate onGenerateClick={handleGenerate} onUploadClick={onUpload} hasGreeting={session.greeting ? true : false} />
       <Box sx={{ my: 1, width: { xs: 1 } }} textAlign="center">
-        <TextEditor text={session.greeting || ''} onChange={(text: string) => { updateSession2({ greeting: text }); }} image={selectedImage} loading={loading} canvasRef={canvasRef} />
-        {session.greeting && !loading && <ToolbarAccept text={session.greeting} images={images} onDownloadClick={handleDownload} onAcceptClick={handleAccept} onCopyClick={handleCopy} />}
+        <TextEditor session={session} text={session.greeting || ''} onChange={(text: string) => { updateSession2({ greeting: text }); }} image={selectedImage} loading={loading} canvasRef={canvasRef} />
+        {session.greeting && !loading && <ToolbarAccept session={session} text={session.greeting} images={images} onDownloadClick={handleDownload} onAcceptClick={handleAccept} onCopyClick={handleCopy} />}
         {!loading && false && (
           <BottomLink>
             <Link href="https://www.american-outdoorsman.news">Sponsor: www.american-outdoorsman.news</Link>

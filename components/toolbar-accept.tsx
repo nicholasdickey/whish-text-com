@@ -6,7 +6,8 @@ import FileCopyIcon from '@mui/icons-material/FileCopy';
 import CheckIcon from '@mui/icons-material/Check';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 //import { CopyToClipboard } from 'react-copy-to-clipboard';
-import useCopyToClipboard  from '../lib/copy-to-clipboard'
+import useCopyToClipboard  from '../lib/copy-to-clipboard';
+import * as ga from '../lib/ga';
 const ToolbarContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -30,6 +31,7 @@ interface ToolbarProps {
   onCopyClick: () => void;
   onAcceptClick: () => void;
   images:any;
+  session:any;
 }
 
 const Toolbar: React.FC<ToolbarProps> = ({
@@ -38,12 +40,25 @@ const Toolbar: React.FC<ToolbarProps> = ({
   onCopyClick,
   onAcceptClick,
   images,
+  session
 }) => {
   const [copied, setCopied] = React.useState(false);
   const [value,copy]=useCopyToClipboard();
   useEffect(() => {
     // if (content!=text) {
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => {
+      setCopied(false);
+      ga.event({
+        action: "copyToClipboard",
+        params : {
+          sessionid: session.sessionid,
+          value: value,
+        }
+      }) 
+    }
+      
+      , 2000);
+      
     //}
   }, [copied]);
   return (

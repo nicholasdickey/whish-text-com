@@ -7,6 +7,7 @@ import MarkdownIt from "markdown-it";
 import MdEditor from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
 import { useTheme } from '@mui/material/styles';
+import * as ga from '../lib/ga';
 const BackgroundWrapper = styled.div`
   width: 100%;
   //background-color: #000; /* Add black background color */
@@ -131,6 +132,7 @@ export interface TextEditorProps {
   loading: boolean;
   onChange: (text: string) => void;
   canvasRef: React.RefObject<HTMLDivElement>;
+  session:any
 }
 const editorStyles = {
  // background:"transparent",// "#262644", // Dark background color
@@ -162,13 +164,20 @@ const MarkdownEditorWrap = styled.div`
     overflow:auto;
   }
 `;
-const TextEditor: React.FC<TextEditorProps> = ({ image, text, loading, onChange, canvasRef }) => {
+const TextEditor: React.FC<TextEditorProps> = ({ session,image, text, loading, onChange, canvasRef }) => {
   const horiz: boolean = image.width > image.height;
   const mdParser = new MarkdownIt();
   const [editing, setEditing] = useState(false);
   const theme = useTheme();
   console.log("texteditor",text);
   const handleTextClick = () => {
+    ga.event({
+      action: "textClick",
+      params : {
+        sessionid: session.sessionid,
+        text: text,
+      }
+    }) 
     setEditing(true);
   };
 
@@ -177,6 +186,13 @@ const TextEditor: React.FC<TextEditorProps> = ({ image, text, loading, onChange,
   };
 */
 const handleTextChange = ({ text }: { text: string }) => {
+  ga.event({
+    action: "textEditorChange",
+    params : {
+      sessionid: session.sessionid,
+      text: text,
+    }
+  }) 
   onChange(text);
 };
   let ref=useRef<HTMLDivElement>(null);
