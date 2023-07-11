@@ -10,11 +10,14 @@ import * as ga from '../lib/ga';
 export const Container = styled.div`
   margin-top: 10px;
   padding-bottom: 60px;
+
+ 
 `;
 
 const ProductImage = styled(CardMedia)`
   width: 100px;
   height: auto;
+  border-radius: 30px;
 `;
 
 const AmazonLogo = styled.img`
@@ -54,11 +57,15 @@ const RichLinkContainer = styled.a`
   display: flex;
   align-items: center;
   padding:4px;
+ 
+
 `;
 
 const MediaWrapper = styled.div`
   flex-shrink: 0;
   margin-right: 10px;
+  padding:15px;
+ 
 `;
 interface RichLinkProps {
   title: string;

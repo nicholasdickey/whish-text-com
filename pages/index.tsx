@@ -6,7 +6,6 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Box from '@mui/material/Box';
-
 import { AppBar } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -49,8 +48,21 @@ import { useTheme } from '@mui/material/styles';
 import * as ga from '../lib/ga'
 import Combo from "../components/combo-text";
 import { light } from '@mui/material/styles/createPalette';
-
-
+const Logo= styled.div`
+position:relative;
+width:100%;
+height:100%;
+display:flex;
+  align-items:center;
+  justify-content: center;
+`;
+const LogoContainer= styled.div`
+  //position:absolute;
+  //top:0px;
+  //right:0px;
+ 
+  z-index:-1;
+  `;
 const Copyright = styled.div`
   display:flex;
   justify-content:center;
@@ -65,7 +77,7 @@ const Sub = styled.div`
 `;
 const ClearButton = styled(IconButton)`
 
-margin-top:20px;
+//margin-top:20px;
   width: auto;
  `;
 const ClearButtonContainer = styled.div`
@@ -351,7 +363,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
 Whether it's birthdays, graduations, holidays, or moments of illness or loss, WISH-TEXT.COM provides personalized messages and thoughtful gift recommendations, all at absolutely no cost." />
 
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/w-t-logo.png" />
+        <link rel="icon" href="https://ucarecdn.com/3150242f-569d-4a42-8efb-d4b82ca1c6bb/wishtextlogo.png" />
 
       </Head>
       <main className={roboto.className} >
@@ -404,6 +416,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                   >
                     <Button> <IosShareOutlinedIcon /></Button>
                   </RWebShare>
+                  
                 </AppMenu>
               </Box>
               {false && authSession && <Box key="login" >
@@ -435,7 +448,15 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             </Drawer>
           </Box>
           <Toolbar />
-          <Box sx={{ my: 2, padding: 1, width: 1, color: noExplain ? 'normal' : 'white', backgroundColor: noExplain ? 'normal' : 'secondary' }}>
+          <Logo><LogoContainer><Image 
+                  
+                  width={250}
+                  height={250}
+                  alt="Picture of the author"
+                  src={'https://ucarecdn.com/3150242f-569d-4a42-8efb-d4b82ca1c6bb/wishtextlogo.png'}/>
+              </LogoContainer></Logo> 
+          <Box sx={{ my: 0, padding: 1, width: 1, color: noExplain ? 'normal' : 'white', backgroundColor: noExplain ? 'normal' : 'secondary' }}>
+         
             {!noExplain ? <Typography
               variant="body2"
               component="div"
@@ -447,6 +468,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               Additionally, Wish Text can generate a &apos;postcard&apos; greeting over an uploaded image. You can download the card and share from any device.
               <p>Utilizing AI, it also provides the gift suggestions.</p>
             </Typography> : null}
+          
             <FormControlLabel
               label="Do not show the description"
               control={
@@ -458,6 +480,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               }
             />
           </Box>
+          
           <ClearButtonContainer><ClearButton onClick={() => {
             updateRoute({
               from: '',
@@ -603,6 +626,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             </AccordionDetails>
           </Accordion>
           <GreetingOutput greeting={session.greeting || ''} setMissingOccasion={setMissingOccasion} setLoadReady={setLoadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} naive={naive} reflections={reflections} instructions={instructions} inastyleof={inastyleof} language={language} authSession={authSession} />
+          
           {session.greeting && <GiftsOutput loadReady={loadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} reflections={reflections} interests={interests} onInterestsChange={onInterestsChange} />}
 
           <Copyright> <Sub> <Typography variant="caption" gutterBottom>

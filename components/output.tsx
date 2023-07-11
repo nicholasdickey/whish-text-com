@@ -11,9 +11,21 @@ import ImageStrip from "./image-strip";
 import ImageData from "../lib/image-data";
 import html2canvas from "html2canvas";
 import FileSaver from "file-saver";
+
 import TextEditor, { TextEditorProps, ImageProps } from "./text-editor";
 import * as ga from '../lib/ga'
-
+const Logo= styled.div`
+position:relative;
+width:100%;
+height:100%;
+`;
+const LogoContainer= styled.div`
+  position:absolute;
+  top:50px;
+  right:0px;
+  align-items:center;
+  z-index:-1;
+  `;
 const BottomLink = styled.div`
   padding: 10px;
 
