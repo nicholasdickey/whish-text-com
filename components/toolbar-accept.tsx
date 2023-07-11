@@ -6,7 +6,7 @@ import FileCopyIcon from '@mui/icons-material/FileCopy';
 import CheckIcon from '@mui/icons-material/Check';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 //import { CopyToClipboard } from 'react-copy-to-clipboard';
-import useCopyToClipboard  from '../lib/copy-to-clipboard';
+import useCopyToClipboard from '../lib/copy-to-clipboard';
 import * as ga from '../lib/ga';
 const ToolbarContainer = styled.div`
   display: flex;
@@ -30,8 +30,8 @@ interface ToolbarProps {
   onDownloadClick: () => void;
   onCopyClick: () => void;
   onAcceptClick: () => void;
-  images:any;
-  session:any;
+  images: any;
+  session: any;
 }
 
 const Toolbar: React.FC<ToolbarProps> = ({
@@ -43,40 +43,44 @@ const Toolbar: React.FC<ToolbarProps> = ({
   session
 }) => {
   const [copied, setCopied] = React.useState(false);
-  const [value,copy]=useCopyToClipboard();
+  const [value, copy] = useCopyToClipboard();
   useEffect(() => {
     // if (content!=text) {
     setTimeout(() => {
       setCopied(false);
-      ga.event({
-        action: "copyToClipboard",
-        params : {
-          sessionid: session.sessionid,
-          value: value,
-        }
-      }) 
+
     }
-      
+
       , 2000);
-      
+
     //}
   }, [copied]);
   return (
     <ToolbarContainer>
-      {images&&images.length>0&&<ToolbarButton onClick={onDownloadClick}>
+      {images && images.length > 0 && <ToolbarButton onClick={onDownloadClick}>
         <CloudDownloadIcon />
         <ToolbarText> Download Card</ToolbarText>
       </ToolbarButton>}
-     
-        <ToolbarButton onClick={()=>{setCopied(true); copy(text) }}>
-          {copied ? <FileCopyIcon /> : <ContentCopyIcon />}
-          <ToolbarText>Copy Text to Clipboard</ToolbarText>
-        </ToolbarButton>
-   
-      {false?<ToolbarButton disabled={true} onClick={onAcceptClick}>
+
+      <ToolbarButton onClick={() => {
+        ga.event({
+          action: "copyToClipboard",
+          params: {
+            sessionid: session.sessionid,
+            value: value,
+          }
+        })
+        setCopied(true);
+        copy(text)
+      }}>
+        {copied ? <FileCopyIcon /> : <ContentCopyIcon />}
+        <ToolbarText>Copy Text to Clipboard</ToolbarText>
+      </ToolbarButton>
+
+      {false ? <ToolbarButton disabled={true} onClick={onAcceptClick}>
         <CheckIcon />
         <ToolbarText>Accept To History</ToolbarText>
-      </ToolbarButton>:null}
+      </ToolbarButton> : null}
     </ToolbarContainer>
   );
 };
