@@ -2,11 +2,12 @@ import axios from 'axios';
 import { Options } from './with-session';
 
 // Retrieves wish text from the server
-export const getWishText = async ({ style, from, to, occasion, reflections, instructions, inastyleof, language, fresh, sessionid }: { style: string, from: string, to: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, fresh?: boolean, sessionid?: string }) => {
+export const getWishText = async ({ style, from, to, occasion, naive, reflections, instructions, inastyleof, language, fresh, sessionid }: { style: string, from: string, to: string, occasion: string, naive:boolean,reflections: string, instructions: string, inastyleof: string, language: string, fresh?: boolean, sessionid?: string }) => {
   // Encode the URL parameters
   from = encodeURIComponent(from || '');
   to = encodeURIComponent(to || '');
   occasion = encodeURIComponent(occasion || '');
+  naive = naive || false;
   reflections = encodeURIComponent(reflections || '');
   instructions = encodeURIComponent(instructions || '');
   inastyleof = encodeURIComponent(inastyleof || '');
@@ -18,7 +19,7 @@ export const getWishText = async ({ style, from, to, occasion, reflections, inst
     return '';
 
   // Construct the URL
-  let url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/openai/wish-text?sessionid=${sessionid}&from=${from}&to=${to}&occasion=${occasion}&reflections=${reflections}&instructions=${instructions}&inastyleof=${inastyleof}&language=${language}${fresh ? '&fresh=1' : ''}`;
+  let url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/openai/wish-text?sessionid=${sessionid}&from=${from}&to=${to}&occasion=${occasion}&naive=${naive}&reflections=${reflections}&instructions=${instructions}&inastyleof=${inastyleof}&language=${language}${fresh ? '&fresh=1' : ''}`;
   console.log("url:", url);
 
   let recovery = '';

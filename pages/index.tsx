@@ -48,6 +48,7 @@ import AvatarMenu from "../components/avatar-menu";
 import { useTheme } from '@mui/material/styles';
 import * as ga from '../lib/ga'
 import Combo from "../components/combo-text";
+import { light } from '@mui/material/styles/createPalette';
 
 
 const Copyright = styled.div`
@@ -86,11 +87,12 @@ const AppMenu = styled.div<ColorProps>`
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 
-export default function Home({ from: startFrom, to: startTo, occasion: startOccasion, reflections: startReflections, instructions: startInstructions, inastyleof: startInastyleof, language: startLanguage, interests: startInterests, ironsession: startSession }: { from: string, to: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string, ironsession: Options }) {
+export default function Home({ naive:startNaive,from: startFrom, to: startTo, occasion: startOccasion, reflections: startReflections, instructions: startInstructions, inastyleof: startInastyleof, language: startLanguage, interests: startInterests, ironsession: startSession }: { naive:boolean,from: string, to: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string, ironsession: Options }) {
   console.log("CLIENT START SESSION", startSession)
   const [session, setSession] = useState(startSession);
   const [noExplain, setNoExplain] = useState(session.noExplain || false);
   const [occasion, setOccasion] = useState(startOccasion);
+  const [naive, setNaive] = useState(startNaive);
   const [reflections, setReflections] = useState(startReflections);
   const [instructions, setInstructions] = useState(startInstructions);
   const [inastyleof, setInastyleof] = useState(startInastyleof);
@@ -171,15 +173,15 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
     setSession(assigned);
     await axios.post(`/api/session/save`, { session: assigned });
   }, [session]);
-  const updateRoute = useCallback(({ to, from, occasion, reflections, instructions, inastyleof, language, interests }: { to: string, from: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string }) => {
-    const params = `/?occasion=${encodeURIComponent(occasion)}${reflections ? `&reflections=${encodeURIComponent(reflections)}` : ``}${instructions ? `&instructions=${encodeURIComponent(instructions)}` : ``}${inastyleof ? `&inastyleof=${encodeURIComponent(inastyleof)}` : ``}${language ? `&language=${encodeURIComponent(language)}` : ``}${to ? `&to=${encodeURIComponent(to)}` : ``}${from ? `&from=${encodeURIComponent(from)}` : ``}${interests ? `&interests=${encodeURIComponent(interests)}` : ``}`;
+  const updateRoute = useCallback(({ to, from, occasion, naive,reflections, instructions, inastyleof, language, interests }: { to: string, from: string, occasion: string, naive:boolean,reflections: string, instructions: string, inastyleof: string, language: string, interests: string }) => {
+    const params = `/?occasion=${encodeURIComponent(occasion)}${naive?`&naive=true`:''}${reflections ? `&reflections=${encodeURIComponent(reflections)}` : ``}${instructions ? `&instructions=${encodeURIComponent(instructions)}` : ``}${inastyleof ? `&inastyleof=${encodeURIComponent(inastyleof)}` : ``}${language ? `&language=${encodeURIComponent(language)}` : ``}${to ? `&to=${encodeURIComponent(to)}` : ``}${from ? `&from=${encodeURIComponent(from)}` : ``}${interests ? `&interests=${encodeURIComponent(interests)}` : ``}`;
     router.push(params, params, { shallow: true })
 
   }, [router]);
 
   useEffect(() => {
-    updateRoute({ to, from, occasion, reflections, instructions, inastyleof, language, interests });
-  }, [to, from, occasion, reflections, instructions, inastyleof, language, interests]);
+    updateRoute({ to, from, occasion, naive,reflections, instructions, inastyleof, language, interests });
+  }, [to, from, occasion, naive,reflections, instructions, inastyleof, language, interests]);
 
   const onOccasionChange = (id: string, value: string) => {
     setMissingOccasion(false);
@@ -187,6 +189,7 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
       from,
       to,
       occasion: value,
+      naive,
       reflections,
       instructions,
       inastyleof,
@@ -196,12 +199,30 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
     setOccasion(value);
     updateSession2({ occasion: value });
   }
+
+  const onNaiveChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = !event.target.checked;
+    updateRoute({
+      from,
+      to,
+      occasion,
+      naive: value,
+      reflections,
+      instructions,
+      inastyleof,
+      language,
+      interests,
+    })
+    setNaive(value);
+    updateSession2({ naive: value });
+  }
   const onReflectionsChange = (event: any) => {
     const value = event.target.value;
     updateRoute({
       from,
       to,
       occasion,
+      naive,
       reflections: value,
       instructions,
       inastyleof,
@@ -217,6 +238,7 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
       from,
       to,
       occasion,
+      naive,
       reflections,
       instructions: value,
       inastyleof,
@@ -232,6 +254,7 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
       from,
       to,
       occasion,
+      naive,
       reflections,
       instructions,
       inastyleof: value,
@@ -247,6 +270,7 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
       from,
       to,
       occasion,
+      naive,
       reflections,
       instructions,
       inastyleof,
@@ -262,6 +286,7 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
       from: value,
       to,
       occasion,
+      naive,
       reflections,
       instructions,
       inastyleof,
@@ -278,6 +303,7 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
       from,
       to: value,
       occasion,
+      naive,
       reflections,
       instructions,
       inastyleof,
@@ -294,6 +320,7 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
       from,
       to,
       occasion,
+      naive,
       reflections,
       instructions,
       inastyleof,
@@ -436,6 +463,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               from: '',
               to: '',
               occasion: '',
+              naive:false,
               reflections: '',
               instructions: '',
               inastyleof: '',
@@ -447,6 +475,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               from: '',
               to: '',
               occasion: '',
+              naive:false,
               reflections: '',
               instructions: '',
               inastyleof: '',
@@ -461,6 +490,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             setFrom('');
             setTo('');
             setOccasion('');
+            setNaive(false);
             setReflections('');
             setInstructions('');
             setInastyleof('');
@@ -518,6 +548,18 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               <Typography sx={{ width: '33%', flexShrink: 0 }}>Advanced Inputs</Typography>
             </AccordionSummary>
             <AccordionDetails>
+            <Box sx={{ mb: 4,color:'primary' }}>
+              <FormControlLabel
+                label={<Typography style={{color:theme.palette.text.secondary}}>Keep it light-hearted, if possible</Typography>}
+                control={
+                  <Checkbox
+                    sx={{ color: 'secondary' }}
+                    checked={!naive}
+                    onChange={onNaiveChange}
+                  />
+                }
+              />
+              </Box>
               <Box sx={{ mb: 4 }}>
                 <TextField
                   sx={{ width: { xs: 1 } }}
@@ -560,7 +602,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               </Box>
             </AccordionDetails>
           </Accordion>
-          <GreetingOutput greeting={session.greeting || ''} setMissingOccasion={setMissingOccasion} setLoadReady={setLoadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} reflections={reflections} instructions={instructions} inastyleof={inastyleof} language={language} authSession={authSession} />
+          <GreetingOutput greeting={session.greeting || ''} setMissingOccasion={setMissingOccasion} setLoadReady={setLoadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} naive={naive} reflections={reflections} instructions={instructions} inastyleof={inastyleof} language={language} authSession={authSession} />
           {session.greeting && <GiftsOutput loadReady={loadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} reflections={reflections} interests={interests} onInterestsChange={onInterestsChange} />}
 
           <Copyright> <Sub> <Typography variant="caption" gutterBottom>
@@ -589,13 +631,14 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps(context: GetServerSidePropsContext): Promise<any> {
     try {
-      let { from, to, occasion, reflections, instructions, inastyleof, language, age, interests, sex }: { from: string, to: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, age: string, interests: string, sex: string } = context.query as any;
+      let { from, to, occasion, naive,reflections, instructions, inastyleof, language, age, interests, sex }: { from: string, to: string, occasion: string, naive:boolean,reflections: string, instructions: string, inastyleof: string, language: string, age: string, interests: string, sex: string } = context.query as any;
       from = from || '';
       to = to || '';
       occasion = occasion || '';
       age = age || '';
       interests = interests || '';
       sex = sex || '';
+      naive=naive||false;
       reflections = reflections || '';
       instructions = instructions || '';
       inastyleof = inastyleof || '';
@@ -619,6 +662,7 @@ export const getServerSideProps = withSessionSsr(
       from = from || options.from || '';
       to = to || options.to || '';
       occasion = occasion || options.occasion || '';
+      naive = naive || options.naive || typeof options.naive ==='undefined'?false:true;
       reflections = reflections || options.reflections || '';
       instructions = instructions || options.instructions || '';
       inastyleof = inastyleof || options.inastyleof || '';
@@ -629,6 +673,7 @@ export const getServerSideProps = withSessionSsr(
           from: from,
           to: to,
           occasion: occasion,
+          naive: naive,
           reflections: reflections,
           instructions: instructions,
           inastyleof: inastyleof,

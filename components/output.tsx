@@ -31,6 +31,7 @@ export default function Output({
   from,
   to,
   occasion,
+  naive,
   reflections,
   instructions,
   inastyleof,
@@ -45,6 +46,7 @@ export default function Output({
   from: string;
   to: string;
   occasion: string;
+  naive: boolean;
   reflections: string;
   instructions: string;
   inastyleof: string;
@@ -127,6 +129,7 @@ export default function Output({
       from,
       to,
       occasion,
+      naive,
       reflections,
       instructions,
       inastyleof,

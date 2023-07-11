@@ -50,6 +50,7 @@ export interface Options{
     from?:string;
     to?:string;
     occasion?:string;
+    naive?:boolean;
     reflections?:string;
     instructions?:string;
     inastyleof?:string;
