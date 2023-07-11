@@ -120,6 +120,12 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   const handleAccordeonChange =
     (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
       setExpanded(isExpanded ? panel : false);
+      ga.event({
+        action: "accordion",
+        params : {
+          sessionid: session.sessionid
+        }
+      })
     };
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -178,6 +184,13 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   const updateRoute = useCallback(({ to, from, occasion, reflections, instructions, inastyleof, language, interests }: { to: string, from: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string }) => {
     const params = `/?occasion=${encodeURIComponent(occasion)}${reflections ? `&reflections=${encodeURIComponent(reflections)}` : ``}${instructions ? `&instructions=${encodeURIComponent(instructions)}` : ``}${inastyleof ? `&inastyleof=${encodeURIComponent(inastyleof)}` : ``}${language ? `&language=${encodeURIComponent(language)}` : ``}${to ? `&to=${encodeURIComponent(to)}` : ``}${from ? `&from=${encodeURIComponent(from)}` : ``}${interests ? `&interests=${encodeURIComponent(interests)}` : ``}`;
     router.push(params, params, { shallow: true })
+    ga.event({
+      action: "updateRoute",
+      params : {
+        sessionid: session.sessionid,
+        url: params
+      }
+    })
   }, [router]);
   //const ur=useCallback(updateRoute, [router])
 
@@ -187,13 +200,13 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   const onOccasionChange = (event: any) => {
     const value = event.target.value;
     // console.log('set occasion:', value);
-   /* ga.event({
+    ga.event({
       action: "occasionChange",
       params : {
         sessionid: session.sessionid,
         occasion: value
       }
-    }) */
+    })
     setMissingOccasion(false);
     updateRoute({
       from,
