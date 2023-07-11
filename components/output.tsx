@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import { styled } from "styled-components";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import Image from "next/image";
+import Image from "next/image"; 
 import { getWishText, saveToHistory } from "../lib/api";
 import { Options } from "../lib/with-session";
 import ToolbarAccept from "./toolbar-accept";
@@ -81,7 +81,7 @@ export default function Output({
     return image;
   };
 
-  const stripClickHandler = (image: ImageData | null): void => {
+  const stripClickHandler = useCallback((image: ImageData | null): void => {
     ga.event({
       action: "stipClickHandler",
       params : {
@@ -103,15 +103,15 @@ export default function Output({
     setSelectedImage(image);
     if (image?.url)
       updateSession2({ selectedImage: JSON.stringify(image) });
-  };
-  const sch=useCallback(stripClickHandler, [updateSession2]);
+  },[updateSession2, session.sessionid]);
+ 
   useEffect(() => {
     console.log("useEffect", greeting)
     if (!greeting && selectedImage?.url) {
       console.log("useEffect stripClickHandler null")
-      sch(null);
+      stripClickHandler(null);
     }
-  }, [greeting, selectedImage, sch]);
+  }, [greeting, selectedImage, stripClickHandler]);
 
   const handleGenerate = async () => {
     if (loading) return;

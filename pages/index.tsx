@@ -51,7 +51,10 @@ import GiftsOutput from "../components/gifts";
 import AvatarMenu from "../components/avatar-menu";
 import { useTheme } from '@mui/material/styles';
 import * as ga from '../lib/ga'
-const Copyright =styled.div`
+import Combo from "../components/combo-text";
+
+
+const Copyright = styled.div`
   display:flex;
   justify-content:center;
   align-items:center;
@@ -60,9 +63,9 @@ const Copyright =styled.div`
   color:grey;
 
   `;
-const Sub=styled.div`
+const Sub = styled.div`
   margin:20px;
-`;  
+`;
 const ClearButton = styled(IconButton)`
 
 margin-top:20px;
@@ -122,7 +125,7 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
       setExpanded(isExpanded ? panel : false);
       ga.event({
         action: "accordion",
-        params : {
+        params: {
           sessionid: session.sessionid
         }
       })
@@ -135,7 +138,7 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
     updateSession2({ noExplain: event.target.checked });
     ga.event({
       action: "setNoExplain",
-      params : {
+      params: {
         sessionid: session.sessionid
       }
     })
@@ -200,13 +203,37 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   const onOccasionChange = (event: any) => {
     const value = event.target.value;
     // console.log('set occasion:', value);
-   /* ga.event({
-      action: "occasionChange",
-      params : {
-        sessionid: session.sessionid,
-        occasion: value
-      }
-    })*/
+    /* ga.event({
+       action: "occasionChange",
+       params : {
+         sessionid: session.sessionid,
+         occasion: value
+       }
+     })*/
+    setMissingOccasion(false);
+    updateRoute({
+      from,
+      to,
+      occasion: value,
+      reflections,
+      instructions,
+      inastyleof,
+      language,
+      interests,
+    })
+    setOccasion(value);
+    updateSession2({ occasion: value });
+  }
+  const onOccasionChange2 = (id:string,value: string) => {
+  
+    // console.log('set occasion:', value);
+    /* ga.event({
+       action: "occasionChange",
+       params : {
+         sessionid: session.sessionid,
+         occasion: value
+       }
+     })*/
     setMissingOccasion(false);
     updateRoute({
       from,
@@ -224,13 +251,13 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   const onReflectionsChange = (event: any) => {
     const value = event.target.value;
     //  console.log('set reflections:', value);
-   /* ga.event({
-      action: "reflectionsChange",
-      params : {
-        sessionid: session.sessionid,
-        occasion: value
-      }
-    })*/
+    /* ga.event({
+       action: "reflectionsChange",
+       params : {
+         sessionid: session.sessionid,
+         occasion: value
+       }
+     })*/
     updateRoute({
       from,
       to,
@@ -247,13 +274,13 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   const onInstructionsChange = (event: any) => {
     const value = event.target.value;
     // console.log('set instructions:', value);
-   /* ga.event({
-      action: "instructionsChange",
-      params : {
-        sessionid: session.sessionid,
-        occasion: value
-      }
-    })*/
+    /* ga.event({
+       action: "instructionsChange",
+       params : {
+         sessionid: session.sessionid,
+         occasion: value
+       }
+     })*/
     updateRoute({
       from,
       to,
@@ -293,13 +320,13 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   const onLanguageChange = (event: any) => {
     const value = event.target.value;
     //  console.log('set language:', value);
-   /* ga.event({
-      action: "languageChange",
-      params : {
-        sessionid: session.sessionid,
-        occasion: value
-      }
-    })*/
+    /* ga.event({
+       action: "languageChange",
+       params : {
+         sessionid: session.sessionid,
+         occasion: value
+       }
+     })*/
     updateRoute({
       from,
       to,
@@ -319,13 +346,13 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   const onFromChange = (event: any) => {
     const value = event.target.value;
     // console.log(value);
-   /* ga.event({
-      action: "fromChange",
-      params : {
-        sessionid: session.sessionid,
-        occasion: value
-      }
-    }) */
+    /* ga.event({
+       action: "fromChange",
+       params : {
+         sessionid: session.sessionid,
+         occasion: value
+       }
+     }) */
     updateRoute({
       from: value,
       to,
@@ -344,13 +371,13 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   const onToChange = (event: any) => {
     const value = event.target.value;
     //  console.log(value);
-   /* ga.event({
-      action: "toChange",
-      params : {
-        sessionid: session.sessionid,
-        occasion: value
-      }
-    }) */
+    /* ga.event({
+       action: "toChange",
+       params : {
+         sessionid: session.sessionid,
+         occasion: value
+       }
+     }) */
     updateRoute({
       from,
       to: value,
@@ -368,13 +395,13 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   const onInterestsChange = (event: any) => {
     const value = event.target.value;
     //  console.log(value);
-   /* ga.event({
-      action: "interestsChange",
-      params : {
-        sessionid: session.sessionid,
-        occasion: value
-      }
-    }) */
+    /* ga.event({
+       action: "interestsChange",
+       params : {
+         sessionid: session.sessionid,
+         occasion: value
+       }
+     }) */
     updateRoute({
       from,
       to,
@@ -401,12 +428,12 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
     <>
       <Head>
         <title>Wish Text Composer</title>
-        <meta name="twitter:card" content="summary_large_image"/>
+        <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@wishtext" />
-        <meta name="twitter:title" content="Wish Text Composer"/>
+        <meta name="twitter:title" content="Wish Text Composer" />
         <meta name="twitter:description" content="Are you tired of struggling to find the right words and perfect gifts for various occasions? Look no further! With WISH-TEXT.COM, our free AI-powered Assistant is here to make your life easier.
 Whether it's birthdays, graduations, holidays, or moments of illness or loss, WISH-TEXT.COM provides personalized messages and thoughtful gift recommendations, all at absolutely no cost."/>
-        <meta name="twitter:image" content="https://ucarecdn.com/d2cf70ef-7ffd-40d7-9e25-31e66927086e/wishtextad2.png"/>
+        <meta name="twitter:image" content="https://ucarecdn.com/d2cf70ef-7ffd-40d7-9e25-31e66927086e/wishtextad2.png" />
         <meta name="title" content="Wish Text Composer" />
         <meta property="og:title" content="Wish Text Composer" />
         <meta property="og:image" content="https://ucarecdn.com/d2cf70ef-7ffd-40d7-9e25-31e66927086e/wishtextad2.png" />
@@ -414,7 +441,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
 Whether it's birthdays, graduations, holidays, or moments of illness or loss, WISH-TEXT.COM provides personalized messages and thoughtful gift recommendations, all at absolutely no cost." />
         <meta property="og:description" content="Are you tired of struggling to find the right words and perfect gifts for various occasions? Look no further! With WISH-TEXT.COM, our free AI-powered Assistant is here to make your life easier.
 Whether it's birthdays, graduations, holidays, or moments of illness or loss, WISH-TEXT.COM provides personalized messages and thoughtful gift recommendations, all at absolutely no cost." />
-       
+
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/w-t-logo.png" />
 
@@ -462,12 +489,13 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                       console.log("shared successfully!");
                       ga.event({
                         action: "share",
-                        params : {
+                        params: {
                           sessionid: session.sessionid,
-                          
+
                         }
-                      })}
-                    
+                      })
+                    }
+
                     }
                   >
                     <Button> <IosShareOutlinedIcon /></Button>
@@ -539,13 +567,13 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
 
           </Box>
           <ClearButtonContainer><ClearButton onClick={() => {
-           /* ga.event({
-              action: "clearAll",
-              params : {
-                sessionid: session.sessionid,
-             
-              }
-            })*/
+            /* ga.event({
+               action: "clearAll",
+               params : {
+                 sessionid: session.sessionid,
+              
+               }
+             })*/
             updateRoute({
               from: '',
               to: '',
@@ -585,20 +613,14 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             <ClearIcon />
             <ClearText>Clear all</ClearText>
           </ClearButton></ClearButtonContainer>
-          <Box sx={{ mb: 4, mt: 3, background: theme.palette.background.default }}>
-            <TextField
-              sx={{
-                width: { xs: 1, background: theme.palette.background.default },
-
-              }}
-              error={missingOccasion}
-              id="occasion"
-              label="Occasion"
-              value={occasion}
-              onChange={onOccasionChange}
-              helperText="Required for a meaningful result. For example: &ldquo;8th Birthday&rdquo;, &ldquo;Sweet Sixteen&rdquo;, &ldquo;Illness&rdquo; &ldquo;Death in the family&rdquo;, &ldquo;Christmas&rdquo;, &ldquo;Graduation&ldquo;"
-            />
-          </Box>
+          <Combo id="occasion"
+            label="Occasion"
+            value={occasion}
+            error={missingOccasion}
+            onChange={onOccasionChange2}
+            helperText="Required for a meaningful result. For example: &ldquo;8th Birthday&rdquo;, &ldquo;Sweet Sixteen&rdquo;, &ldquo;Illness&rdquo; &ldquo;Death in the family&rdquo;, &ldquo;Christmas&rdquo;, &ldquo;Graduation&ldquo;"
+          />
+        
           <Accordion sx={{ background: theme.palette.background.default }} expanded={expanded === 'custom'} onChange={handleAccordeonChange('custom')}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
@@ -703,13 +725,13 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
           </Accordion>
           <GreetingOutput greeting={session.greeting || ''} setMissingOccasion={setMissingOccasion} setLoadReady={setLoadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} reflections={reflections} instructions={instructions} inastyleof={inastyleof} language={language} authSession={authSession} />
           {session.greeting && <GiftsOutput loadReady={loadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} reflections={reflections} interests={interests} onInterestsChange={onInterestsChange} />}
-                 
-                  <Copyright> <Sub> <Typography variant="caption"  gutterBottom>
-                  Copyright: Wish-Text.Com
-        </Typography></Sub>
-        <Sub><Typography variant="caption" gutterBottom>
-        Contact: support@hudsonwilde.com
-        </Typography></Sub></Copyright>
+
+          <Copyright> <Sub> <Typography variant="caption" gutterBottom>
+            Copyright: Wish-Text.Com
+          </Typography></Sub>
+            <Sub><Typography variant="caption" gutterBottom>
+              Contact: support@hudsonwilde.com
+            </Typography></Sub></Copyright>
         </Container>
         <div className="container">
           <Script src={`https://www.googletagmanager.com/gtag/js?${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`} />

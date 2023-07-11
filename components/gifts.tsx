@@ -167,7 +167,7 @@ export default function Output({ loadReady, session, updateSession2, from, to, o
               result: result,
             }
           }) 
-    },[from, to, occasion, reflections, interests, value, updateSession2])
+    },[from, to, occasion, reflections, interests, value, updateSession2,session.sessionid])
     //const ld= useCallback(load, [updateSession2,from, to, occasion, reflections, interests,  value]);
     useEffect(() => {
         console.log("INSIDE LOAD EFFECT", loadReady, value)
