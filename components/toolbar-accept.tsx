@@ -56,12 +56,12 @@ const Toolbar: React.FC<ToolbarProps> = ({
   }, [copied]);
   return (
     <ToolbarContainer>
-      {images && images.length > 0 && <ToolbarButton onClick={onDownloadClick}>
+      {images && images.length > 0 && <ToolbarButton color="primary" onClick={onDownloadClick}>
         <CloudDownloadIcon />
         <ToolbarText> Download Card</ToolbarText>
       </ToolbarButton>}
 
-      <ToolbarButton onClick={() => {
+      <ToolbarButton color="primary" onClick={() => {
         ga.event({
           action: "copyToClipboard",
           params: {
@@ -76,7 +76,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
         <ToolbarText>Copy Text to Clipboard</ToolbarText>
       </ToolbarButton>
 
-      {false ? <ToolbarButton disabled={true} onClick={onAcceptClick}>
+      {false ? <ToolbarButton color="primary" disabled={true} onClick={onAcceptClick}>
         <CheckIcon />
         <ToolbarText>Accept To History</ToolbarText>
       </ToolbarButton> : null}

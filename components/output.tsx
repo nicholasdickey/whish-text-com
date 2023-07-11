@@ -223,10 +223,10 @@ export default function Output({
     setImages(session.imagesString ? JSON.parse(session.imagesString) : []);
     setSelectedImage(session.selectedImage ? JSON.parse(session.selectedImage) : { url: "", publicId: "" });
   }, [session.imagesString, session.selectedImage]);
-
+  console.log('error', occasion?.length>0?false:true)
   return (
     <>
-      <ToolbarGenerate onGenerateClick={handleGenerate} onUploadClick={onUpload} hasGreeting={session.greeting ? true : false} />
+      <ToolbarGenerate error={occasion?.length>0?false:true} onGenerateClick={handleGenerate} onUploadClick={onUpload} hasGreeting={session.greeting ? true : false} />
       <Box sx={{ my: 1, width: { xs: 1 } }} textAlign="center">
         <TextEditor session={session} text={session.greeting || ''} onChange={(text: string) => { updateSession2({ greeting: text }); }} image={selectedImage} loading={loading} canvasRef={canvasRef} />
         {session.greeting && !loading && <ToolbarAccept session={session} text={session.greeting} images={images} onDownloadClick={handleDownload} onAcceptClick={handleAccept} onCopyClick={handleCopy} />}

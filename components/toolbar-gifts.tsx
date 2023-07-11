@@ -32,7 +32,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
 }) => {
   return (
     <ToolbarContainer>
-      <ToolbarButton onClick={onRegenerateClick}>
+      <ToolbarButton color="primary" onClick={onRegenerateClick}>
         <CardGiftcardIcon />
         <ToolbarText> Regenerate Gift Suggestions</ToolbarText>
       </ToolbarButton>
