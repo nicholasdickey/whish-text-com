@@ -1,42 +1,48 @@
-import React, { useState, FormEvent } from "react";
+import React from "react";
 import { styled } from "styled-components";
-import { useSession, signIn, signOut } from "next-auth/react"
+import { useSession, signOut } from "next-auth/react";
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Logout from '@mui/icons-material/Logout';
+
 const Container = styled.div`
-    display: flex;
-   // justify-content: center;
-   // align-items: center;
-   // height: 100vh;
+  display: flex;
 `;
+
 interface AvatarMenuProps {
-    authSession: {user:{name:string, image:string}}
-};
-      
-const AvatarMenu: React.FC<AvatarMenuProps> = ({ authSession}) => {
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-      setAnchorEl(event.currentTarget);
-    };
-    const handleClose = (out?:boolean) => {
-        console.log("handleClose signOut")
-      setAnchorEl(null);
-      if(out) 
-        signOut();
-    };
+  authSession: { user: { name: string, image: string } };
+}
+
+const AvatarMenu: React.FC<AvatarMenuProps> = ({ authSession }) => {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = (logout?: boolean) => {
+    setAnchorEl(null);
+    if (logout) {
+      signOut();
+    }
+  };
+
   return (
     <Container>
-        <Avatar alt={authSession?.user?.name} src={authSession?.user?.image} onClick={handleClick} />
-        <Menu
+      <Avatar
+        alt={authSession?.user?.name}
+        src={authSession?.user?.image}
+        onClick={handleClick}
+      />
+      <Menu
         anchorEl={anchorEl}
         id="account-menu"
         open={open}
-        onClose={()=>handleClose(false)}
-        onClick={()=>handleClose(false)}
+        onClose={() => handleClose()}
+        onClick={() => handleClose()}
         PaperProps={{
           elevation: 0,
           sx: {
@@ -66,18 +72,15 @@ const AvatarMenu: React.FC<AvatarMenuProps> = ({ authSession}) => {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-       
-    
-        <MenuItem onClick={()=>handleClose(true)}>
+        <MenuItem onClick={() => handleClose(true)}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
           Logout
         </MenuItem>
       </Menu>
-  </Container>
-
- )
+    </Container>
+  );
 }
 
 export default AvatarMenu;

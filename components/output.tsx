@@ -13,6 +13,7 @@ import html2canvas from "html2canvas";
 import FileSaver from "file-saver";
 import TextEditor, { TextEditorProps, ImageProps } from "./text-editor";
 import * as ga from '../lib/ga'
+
 const BottomLink = styled.div`
   padding: 10px;
 

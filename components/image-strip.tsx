@@ -4,7 +4,8 @@ import { Box, IconButton } from '@mui/material';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 
-import ImageData from '../lib/image-data'
+import ImageData from '../lib/image-data';
+
 interface ImageStripProps {
   images: ImageData[];
   onImageClick: (image: ImageData | null) => void;
@@ -50,7 +51,7 @@ const PlaceholderContainer = styled.div`
   justify-content: center;
   border: 2px solid transparent;
   border-radius: 4px;
-  margin-top:-6px;
+  margin-top: -6px;
 `;
 
 const PlaceholderText = styled.p`

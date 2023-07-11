@@ -20,11 +20,11 @@ async function handler(
         res.status(405).send({ message: 'Only POST requests allowed' });
         return;
     }
-   // let options: Options = req.session.options ? req.session.options : ({} as Options);
+
     const body = req.body;
     const session=req.body.session;
     console.log("save session",session);
-    req.session.sessionid = session.sessionid;//Object.assign(options, inSession);
+    req.session.sessionid = session.sessionid;
     await updateSession(session.sessionid,session);
     console.log("save session2", session.options);
     await req.session.save();

@@ -36,7 +36,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
   onUploadClick,
   hasGreeting
 }) => {
-  /*"pkgopg2z"*/
+
   return (
     <ToolbarContainer data-id="toolbar-generate">
       <ToolbarButton onClick={onGenerateClick}>

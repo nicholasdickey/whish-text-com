@@ -8,14 +8,15 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 
 const Results = styled.div`
+  // Add your custom styles for the Results component here
+`;
 
- // width: 100%;
-`;
 const Title = styled(Paper)`
-padding:20px;
-margin-bottom:40px;
-margin-top:40px;
+  padding: 20px;
+  margin-bottom: 40px;
+  margin-top: 40px;
 `;
+
 const Text = styled.div`
   width: 400px;
 
@@ -37,22 +38,23 @@ const Text = styled.div`
   margin-top: 20px;
 `;
 
-const AmazonIdeaSearch = ({ session,search, text }: { session:any,search: string; text: string }) => {
+const AmazonIdeaSearch = ({ session, search, text }: { session: any, search: string; text: string }) => {
 
-  console.log("AmazonIdeaSearch",search,text)
+  // Fetch Amazon search results using SWR
   const { data: amazonSearch, error } = useSWRImmutable({ search }, getAmazonSearch);
-  console.log("AmazonIdeaSearch",amazonSearch);
+
+  console.log("AmazonIdeaSearch", search, text, amazonSearch);
+
   return (
     <Results>
-      <Title elevation={2} ><Typography>  {text}</Typography></Title>
+      <Title elevation={2}><Typography>{text}</Typography></Title>
       
-        <Grid container spacing={6}>
-          {amazonSearch?.map((s, i) => (
-          
-              <RichLink session={session} key={s.title} imageUrl={s.image} title={s.title} price={s.price} link={s.link} />
-          
-          ))}
-        </Grid>
+      <Grid container spacing={6}>
+        {/* Iterate over each Amazon search result and render a RichLink component */}
+        {amazonSearch?.map((s, i) => (
+          <RichLink session={session} key={s.title} imageUrl={s.image} title={s.title} price={s.price} link={s.link} />
+        ))}
+      </Grid>
      
     </Results>
   );

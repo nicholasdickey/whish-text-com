@@ -8,7 +8,6 @@ import { styled } from "@mui/material/styles";
 import ProTip from "../src/ProTip";
 import Link from "../src/Link";
 import Copyright from "../src/Copyright";
-// import styled from "styled-components";
 
 const CustomButton = styled(Button)`
   font-size: 50px;

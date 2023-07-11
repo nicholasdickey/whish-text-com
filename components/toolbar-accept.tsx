@@ -5,7 +5,6 @@ import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import CheckIcon from '@mui/icons-material/Check';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-//import { CopyToClipboard } from 'react-copy-to-clipboard';
 import useCopyToClipboard from '../lib/copy-to-clipboard';
 import * as ga from '../lib/ga';
 const ToolbarContainer = styled.div`

@@ -6,7 +6,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Box from '@mui/material/Box';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+
 import { AppBar } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -30,7 +30,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { RWebShare } from "react-web-share";
 import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined';
 import Script from 'next/script'
-import Tooltip from '@mui/material/Tooltip';
+
 import {
   GetServerSidePropsContext,
 } from "next";
@@ -39,10 +39,6 @@ import Head from 'next/head'
 import axios from "axios";
 import Image from 'next/image'
 import { useSession, signIn, signOut } from "next-auth/react"
-
-//import GlobalStyle from '../components/globalstyles'
-//import { ThemeProvider } from 'styled-components'
-//import { palette } from '../lib/palette';
 import { Roboto } from 'next/font/google';
 import { withSessionSsr, Options } from '../lib/with-session';
 
@@ -69,13 +65,8 @@ const Sub = styled.div`
 const ClearButton = styled(IconButton)`
 
 margin-top:20px;
- // display: flex;
   width: auto;
- 
- // flex-direction: column;
-  //align-items: center;
- 
-`;
+ `;
 const ClearButtonContainer = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -95,11 +86,9 @@ const AppMenu = styled.div<ColorProps>`
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 
-
 export default function Home({ from: startFrom, to: startTo, occasion: startOccasion, reflections: startReflections, instructions: startInstructions, inastyleof: startInastyleof, language: startLanguage, interests: startInterests, ironsession: startSession }: { from: string, to: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string, ironsession: Options }) {
   console.log("CLIENT START SESSION", startSession)
   const [session, setSession] = useState(startSession);
-  //const [theme, setTheme] = useState(session.dark != -1 ? session.dark == 1 ? 'dark' : 'light' : "unknown")
   const [noExplain, setNoExplain] = useState(session.noExplain || false);
   const [occasion, setOccasion] = useState(startOccasion);
   const [reflections, setReflections] = useState(startReflections);
@@ -114,7 +103,7 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   const { data: authSession } = useSession();
   const router = useRouter();
   const theme = useTheme();
-  // const { window } = props;
+
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [missingOccasion, setMissingOccasion] = useState(false);
   const drawerWidth = 240;
@@ -144,8 +133,6 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
     })
   }
 
-  // copilot fix the type to match the onClick signature
-
   const handleMenuClick = (item: string) => {
     console.log('handleMenuClick', item);
     if (item == 'Login') {
@@ -173,67 +160,28 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
     </Box>
   );
 
-  const container = undefined;// window !== undefined ? () => window.document.body : undefined;
+  const container = undefined;
   //saves the changes to the session on the local web server. 
   const updateSession2 = useCallback(async (updSession: object) => {
     console.log('===>pdate session:', updSession);
     if (!updSession)
       return;
     const assigned = { ...Object.assign(session, updSession) }
-    // console.log('===>pdate session:', assigned);
+
     setSession(assigned);
     await axios.post(`/api/session/save`, { session: assigned });
   }, [session]);
   const updateRoute = useCallback(({ to, from, occasion, reflections, instructions, inastyleof, language, interests }: { to: string, from: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string }) => {
     const params = `/?occasion=${encodeURIComponent(occasion)}${reflections ? `&reflections=${encodeURIComponent(reflections)}` : ``}${instructions ? `&instructions=${encodeURIComponent(instructions)}` : ``}${inastyleof ? `&inastyleof=${encodeURIComponent(inastyleof)}` : ``}${language ? `&language=${encodeURIComponent(language)}` : ``}${to ? `&to=${encodeURIComponent(to)}` : ``}${from ? `&from=${encodeURIComponent(from)}` : ``}${interests ? `&interests=${encodeURIComponent(interests)}` : ``}`;
     router.push(params, params, { shallow: true })
-    /*ga.event({
-      action: "updateRoute",
-      params : {
-        sessionid: session.sessionid,
-        url: params
-      }
-    })*/
+
   }, [router]);
-  //const ur=useCallback(updateRoute, [router])
 
   useEffect(() => {
     updateRoute({ to, from, occasion, reflections, instructions, inastyleof, language, interests });
   }, [to, from, occasion, reflections, instructions, inastyleof, language, interests]);
-  const onOccasionChange = (event: any) => {
-    const value = event.target.value;
-    // console.log('set occasion:', value);
-    /* ga.event({
-       action: "occasionChange",
-       params : {
-         sessionid: session.sessionid,
-         occasion: value
-       }
-     })*/
-    setMissingOccasion(false);
-    updateRoute({
-      from,
-      to,
-      occasion: value,
-      reflections,
-      instructions,
-      inastyleof,
-      language,
-      interests,
-    })
-    setOccasion(value);
-    updateSession2({ occasion: value });
-  }
-  const onOccasionChange2 = (id:string,value: string) => {
-  
-    // console.log('set occasion:', value);
-    /* ga.event({
-       action: "occasionChange",
-       params : {
-         sessionid: session.sessionid,
-         occasion: value
-       }
-     })*/
+
+  const onOccasionChange = (id: string, value: string) => {
     setMissingOccasion(false);
     updateRoute({
       from,
@@ -250,14 +198,6 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   }
   const onReflectionsChange = (event: any) => {
     const value = event.target.value;
-    //  console.log('set reflections:', value);
-    /* ga.event({
-       action: "reflectionsChange",
-       params : {
-         sessionid: session.sessionid,
-         occasion: value
-       }
-     })*/
     updateRoute({
       from,
       to,
@@ -273,14 +213,6 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   }
   const onInstructionsChange = (event: any) => {
     const value = event.target.value;
-    // console.log('set instructions:', value);
-    /* ga.event({
-       action: "instructionsChange",
-       params : {
-         sessionid: session.sessionid,
-         occasion: value
-       }
-     })*/
     updateRoute({
       from,
       to,
@@ -296,14 +228,6 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   }
   const onInastyleofChange = (event: any) => {
     const value = event.target.value;
-    // console.log('set inastyleof:', value);
-    /*ga.event({
-      action: "inastyleofChange",
-      params : {
-        sessionid: session.sessionid,
-        occasion: value
-      }
-    })*/
     updateRoute({
       from,
       to,
@@ -319,14 +243,6 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   }
   const onLanguageChange = (event: any) => {
     const value = event.target.value;
-    //  console.log('set language:', value);
-    /* ga.event({
-       action: "languageChange",
-       params : {
-         sessionid: session.sessionid,
-         occasion: value
-       }
-     })*/
     updateRoute({
       from,
       to,
@@ -340,19 +256,8 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
     setLanguage(value);
     updateSession2({ language: value });
   }
-
-
-
   const onFromChange = (event: any) => {
     const value = event.target.value;
-    // console.log(value);
-    /* ga.event({
-       action: "fromChange",
-       params : {
-         sessionid: session.sessionid,
-         occasion: value
-       }
-     }) */
     updateRoute({
       from: value,
       to,
@@ -364,20 +269,11 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
       interests,
 
     })
-
     setFrom(value);
     updateSession2({ from: value });
   }
   const onToChange = (event: any) => {
     const value = event.target.value;
-    //  console.log(value);
-    /* ga.event({
-       action: "toChange",
-       params : {
-         sessionid: session.sessionid,
-         occasion: value
-       }
-     }) */
     updateRoute({
       from,
       to: value,
@@ -394,14 +290,6 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
   }
   const onInterestsChange = (event: any) => {
     const value = event.target.value;
-    //  console.log(value);
-    /* ga.event({
-       action: "interestsChange",
-       params : {
-         sessionid: session.sessionid,
-         occasion: value
-       }
-     }) */
     updateRoute({
       from,
       to,
@@ -416,13 +304,6 @@ export default function Home({ from: startFrom, to: startTo, occasion: startOcca
     setInterests(value);
     updateSession2({ interests: value });
   }
-  //const container = window !== undefined ? () => window().document.body : undefined;
-
-
-  // console.log("occasion", occasion);
-
-
-  // <meta name="theme-color" content={theme == 'dark' ? palette.dark.colors.background : palette.light.colors.background} />
 
   return (
     <>
@@ -447,7 +328,6 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
 
       </Head>
       <main className={roboto.className} >
-
 
         <Container maxWidth="sm">
 
@@ -491,31 +371,22 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                         action: "share",
                         params: {
                           sessionid: session.sessionid,
-
                         }
                       })
-                    }
-
-                    }
+                    }}
                   >
                     <Button> <IosShareOutlinedIcon /></Button>
                   </RWebShare>
-
-
                 </AppMenu>
               </Box>
               {false && authSession && <Box key="login" >
                 <IconButton
-                  // onClick={handleClick}
                   size="small"
                   sx={{ ml: 2 }}
-                  // aria-controls={open ? 'account-menu' : undefined}
                   aria-haspopup="true"
-                // aria-expanded={open ? 'true' : undefined}
                 >
                   <AvatarMenu authSession={authSession as any} />
                 </IconButton>
-
               </Box>}
             </Toolbar>
           </AppBar>
@@ -536,7 +407,6 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               {drawer}
             </Drawer>
           </Box>
-
           <Toolbar />
           <Box sx={{ my: 2, padding: 1, width: 1, color: noExplain ? 'normal' : 'white', backgroundColor: noExplain ? 'normal' : 'secondary' }}>
             {!noExplain ? <Typography
@@ -549,31 +419,19 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
 
               Additionally, Wish Text can generate a &apos;postcard&apos; greeting over an uploaded image. You can download the card and share from any device.
               <p>Utilizing AI, it also provides the gift suggestions.</p>
-
             </Typography> : null}
-
-
             <FormControlLabel
               label="Do not show the description"
               control={
                 <Checkbox
                   sx={{ color: 'white' }}
                   checked={noExplain}
-                  // indeterminate={checked[0] !== checked[1]}
                   onChange={handleNoExplanChange}
                 />
               }
             />
-
           </Box>
           <ClearButtonContainer><ClearButton onClick={() => {
-            /* ga.event({
-               action: "clearAll",
-               params : {
-                 sessionid: session.sessionid,
-              
-               }
-             })*/
             updateRoute({
               from: '',
               to: '',
@@ -617,10 +475,9 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             label="Occasion"
             value={occasion}
             error={missingOccasion}
-            onChange={onOccasionChange2}
+            onChange={onOccasionChange}
             helperText="Required for a meaningful result. For example: &ldquo;8th Birthday&rdquo;, &ldquo;Sweet Sixteen&rdquo;, &ldquo;Illness&rdquo; &ldquo;Death in the family&rdquo;, &ldquo;Christmas&rdquo;, &ldquo;Graduation&ldquo;"
           />
-        
           <Accordion sx={{ background: theme.palette.background.default }} expanded={expanded === 'custom'} onChange={handleAccordeonChange('custom')}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
@@ -632,10 +489,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             <AccordionDetails>
               <Box sx={{ my: 4 }}>
                 <TextField
-                  sx={{
-                    width: { xs: 1 },
-
-                  }}
+                  sx={{ width: { xs: 1 } }}
                   id="to"
                   label="To (Recepient)"
                   value={to}
@@ -643,13 +497,9 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                   helperText="Examples: &ldquo;Our nephew Billy&rdquo;, &ldquo;My Grandson Evan&rdquo;, &ldquo;My Love&rdquo; &ldquo;Love of My Life&rdquo;, &ldquo;Simpsons&rdquo;, &ldquo;Mr Williams, the postman.&ldquo;"
                 />
               </Box>
-
               <Box sx={{ my: 4 }}>
                 <TextField
-                  sx={{
-                    width: { xs: 1 },
-
-                  }}
+                  sx={{ width: { xs: 1 } }}
                   id="from"
                   label="From"
                   value={from}
@@ -657,7 +507,6 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                   helperText="Optional: who is the greeting from? For example - Grandma and Grandpa, Your Dad, etc."
                 />
               </Box>
-
             </AccordionDetails>
           </Accordion>
           <Accordion sx={{ background: theme.palette.background.default }} expanded={expanded === 'advanced'} onChange={handleAccordeonChange('advanced')}>
@@ -671,10 +520,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             <AccordionDetails>
               <Box sx={{ mb: 4 }}>
                 <TextField
-                  sx={{
-                    width: { xs: 1 },
-
-                  }}
+                  sx={{ width: { xs: 1 } }}
                   id="reflections"
                   label="Additional Reflections,Thoughts"
                   value={reflections}
@@ -684,10 +530,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               </Box>
               <Box sx={{ my: 4 }}>
                 <TextField
-                  sx={{
-                    width: { xs: 1 },
-
-                  }}
+                  sx={{ width: { xs: 1 } }}
                   id="instructions"
                   label="Instructions to AI"
                   value={instructions}
@@ -697,10 +540,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               </Box>
               <Box sx={{ my: 4 }}>
                 <TextField
-                  sx={{
-                    width: { xs: 1 },
-
-                  }}
+                  sx={{ width: { xs: 1 } }}
                   id="inastyleof"
                   label="Use AI to write in the style of"
                   value={inastyleof}
@@ -710,10 +550,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               </Box>
               <Box sx={{ my: 4 }}>
                 <TextField
-                  sx={{
-                    width: { xs: 1 },
-
-                  }}
+                  sx={{ width: { xs: 1 } }}
                   id="language"
                   label="Language"
                   value={language}
@@ -764,12 +601,8 @@ export const getServerSideProps = withSessionSsr(
       inastyleof = inastyleof || '';
       language = language || '';
       var randomstring = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-
       let sessionid = context.req.session?.sessionid || randomstring();
-      //  console.log("SSR sessionid:", sessionid, context.req.session)
       let startoptions: Options = await fetchSession(sessionid);
-
-      console.log("SSR startoptions:", startoptions);
       startoptions = startoptions || {
         sessionid,
         dark: -1,
@@ -777,23 +610,11 @@ export const getServerSideProps = withSessionSsr(
         imagesString: '',
         selectedImage: '',
       };
-      //  console.log("startoptions:", startoptions);
-      /* if (!startoptions) {
-         console.log("SSR init startoptions")
-         startoptions = {
-           sessionid,
-           dark: -1,
-           noExplain: false,
-           imagesString: '',
-           selectedImage: '',
-         }*/
       if (context.req.session.sessionid != sessionid) {
         context.req.session.sessionid = sessionid;
         await context.req.session.save();
       }
-      //}
       let options: Options = startoptions;
-      //  console.log("SSR:", options.giftSuggestions)
 
       from = from || options.from || '';
       to = to || options.to || '';
@@ -826,40 +647,3 @@ export const getServerSideProps = withSessionSsr(
       }
     }
   })
-
-/*
-export default function Index() {
-  return (
-    <Container maxWidth="sm">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Next.js v5-beta with TypeScript example
-        </Typography>
-        <Link href="/about" color="secondary">
-          Go to the about page
-        </Link>
-        <ProTip />
-        <Copyright />
-      </Box>
-    </Container>
-  );
-}
-*/
-/*
-         {navItems.map((item) => {
-                    if (item == 'Login' && authSession) {
-                      return;
-                    }
-                    if(item=='History'||item=='Share'||item=='Contact'){
-                      return <Button key={item} sx={{ color: '#888' }} onClick={() => handleMenuClick(item)}>
-                      {item}
-                      </Button>
-                    }
-                    else {
-                      return <Button key={item} sx={{ color: '#fff' }} onClick={() => handleMenuClick(item)}>
-                        {item}
-                      </Button>
-                    }
-                  }
-                  )
-                  }*/

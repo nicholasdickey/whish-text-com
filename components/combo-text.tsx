@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { styled } from "styled-components";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import Box from "@mui/material/Box";
 import Popper from "@mui/material/Popper";
 import axios from "axios";
 
-interface SearchResults {
-  values: string[]; // sorted list of values
-}
-
+// Function to perform the search
 const search = async (id: string, value: string): Promise<string[]> => {
   const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/search/combo?id=${id}&text=${value}`;
   const res = await axios.get(url);

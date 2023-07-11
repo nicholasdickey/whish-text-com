@@ -4,8 +4,7 @@ import { ThemeProvider,createTheme } from '@mui/material/styles';
 import type { AppProps } from 'next/app';
 import { SessionProvider } from "next-auth/react"
 import Head from 'next/head';
-//import theme from '../src/theme';
-import { palette } from '../lib/palette';
+
 import { blueGrey } from '@mui/material/colors'
 const darkTheme = createTheme({
   palette: {
