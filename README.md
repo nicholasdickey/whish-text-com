@@ -12,7 +12,7 @@ Wish-Text.com is a greetings and sympathy messages composer for messengers and s
 
 ## Getting Started
 
-To use Wish-Text.com, simply visit the [website](https://www.wish-text.com) and create an account. Once logged in, you can start composing messages, creating cards, and exploring gift suggestions.
+To use Wish-Text.com, simply visit the [website](https://www.wish-text.com), you can start composing messages, creating cards, and exploring gift suggestions.
 
 ## Usage
 
