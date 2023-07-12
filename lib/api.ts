@@ -152,3 +152,9 @@ export const getHistories = async (username: string, page: number, pagesize: num
   console.log("getHistories", username, res.data.success);
   return res.data;
 }
+// Records event
+export const recordEvent = async (sessionid:string,name:string,params:string) => {
+  const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/events/record?sessionid=${encodeURIComponent(sessionid)}&name=${encodeURIComponent(name)}&params=${encodeURIComponent(params)}`;
+  const res = await axios.get(url);
+  return res.data.success;
+}

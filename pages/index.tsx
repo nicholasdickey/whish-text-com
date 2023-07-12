@@ -23,7 +23,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useState, useCallback, useEffect } from "react"
 import { useRouter } from 'next/router'
-import { fetchSession } from '../lib/api'
+import { fetchSession,recordEvent } from '../lib/api'
 import styled from 'styled-components';
 import ClearIcon from '@mui/icons-material/Clear';
 import { RWebShare } from "react-web-share";
@@ -50,18 +50,18 @@ import * as ga from '../lib/ga'
 import Combo from "../components/combo-text";
 import { light } from '@mui/material/styles/createPalette';
 
-const Starter= styled.div`
+const Starter = styled.div`
   display:flex;
  
   justify-content:flex-start;
   font-size:64px;
   align-items:center;
   `;
-const StarterMessage=styled.div`
+const StarterMessage = styled.div`
   font-size:24px;
   padding-left:10px;
-  `;  
-const Logo= styled.div`
+  `;
+const Logo = styled.div`
 position:relative;
 width:100%;
 height:100%;
@@ -69,7 +69,7 @@ display:flex;
   align-items:center;
   justify-content: center;
 `;
-const LogoContainer= styled.div`
+const LogoContainer = styled.div`
   //position:absolute;
   //top:0px;
   //right:0px;
@@ -112,7 +112,7 @@ const AppMenu = styled.div<ColorProps>`
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 
-export default function Home({ virgin:startVirgin,naive:startNaive,from: startFrom, to: startTo, occasion: startOccasion, reflections: startReflections, instructions: startInstructions, inastyleof: startInastyleof, language: startLanguage, interests: startInterests, ironsession: startSession }: { virgin:boolean,naive:boolean,from: string, to: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string, ironsession: Options }) {
+export default function Home({ virgin: startVirgin, naive: startNaive, from: startFrom, to: startTo, occasion: startOccasion, reflections: startReflections, instructions: startInstructions, inastyleof: startInastyleof, language: startLanguage, interests: startInterests, ironsession: startSession }: { virgin: boolean, naive: boolean, from: string, to: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string, ironsession: Options }) {
   console.log("CLIENT START SESSION", startSession)
   const [session, setSession] = useState(startSession);
   const [noExplain, setNoExplain] = useState(session.noExplain || false);
@@ -136,7 +136,8 @@ export default function Home({ virgin:startVirgin,naive:startNaive,from: startFr
   const [missingOccasion, setMissingOccasion] = useState(false);
   const drawerWidth = 240;
   const navItems = ['Home', 'History', 'Share', 'Contact', 'Login'];
-
+  
+  React.useMemo(async ()=>{if(!virgin) await recordEvent(session.sessionid, 'virgin load','');},[virgin,session.sessionid]);
   const handleAccordeonChange =
     (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
       setExpanded(isExpanded ? panel : false);
@@ -199,16 +200,24 @@ export default function Home({ virgin:startVirgin,naive:startNaive,from: startFr
     setSession(assigned);
     await axios.post(`/api/session/save`, { session: assigned });
   }, [session]);
-  const updateRoute = useCallback(({ to, from, occasion, naive,reflections, instructions, inastyleof, language, interests }: { to: string, from: string, occasion: string, naive:boolean,reflections: string, instructions: string, inastyleof: string, language: string, interests: string }) => {
-    const params = `/${occasion?'?occasion=':''}${occasion?encodeURIComponent(occasion):''}${naive?`${occasion?'&':'?'}naive=true`:''}${reflections ? `&reflections=${encodeURIComponent(reflections)}` : ``}${instructions ? `&instructions=${encodeURIComponent(instructions)}` : ``}${inastyleof ? `&inastyleof=${encodeURIComponent(inastyleof)}` : ``}${language ? `&language=${encodeURIComponent(language)}` : ``}${to ? `&to=${encodeURIComponent(to)}` : ``}${from ? `&from=${encodeURIComponent(from)}` : ``}${interests ? `&interests=${encodeURIComponent(interests)}` : ``}`;
+  const updateRoute = useCallback(({ to, from, occasion, naive, reflections, instructions, inastyleof, language, interests }: { to: string, from: string, occasion: string, naive: boolean, reflections: string, instructions: string, inastyleof: string, language: string, interests: string }) => {
+    const params = `/${occasion ? '?occasion=' : ''}${occasion ? encodeURIComponent(occasion) : ''}${naive ? `${occasion ? '&' : '?'}naive=true` : ''}${reflections ? `&reflections=${encodeURIComponent(reflections)}` : ``}${instructions ? `&instructions=${encodeURIComponent(instructions)}` : ``}${inastyleof ? `&inastyleof=${encodeURIComponent(inastyleof)}` : ``}${language ? `&language=${encodeURIComponent(language)}` : ``}${to ? `&to=${encodeURIComponent(to)}` : ``}${from ? `&from=${encodeURIComponent(from)}` : ``}${interests ? `&interests=${encodeURIComponent(interests)}` : ``}`;
     router.push(params, params, { shallow: true })
 
   }, [router]);
 
   useEffect(() => {
-    updateRoute({ to, from, occasion, naive,reflections, instructions, inastyleof, language, interests });
-  }, [to, from, occasion, naive,reflections, instructions, inastyleof, language, interests]);
-
+    updateRoute({ to, from, occasion, naive, reflections, instructions, inastyleof, language, interests });
+  }, [to, from, occasion, naive, reflections, instructions, inastyleof, language, interests]);
+  useEffect(() => {
+    if (!virgin)
+      ga.event({
+        action: "virgin",
+        params: {
+          sessionid: session.sessionid,
+        }
+      })
+  }, [session.sessionid, virgin]);
   const onOccasionChange = (id: string, value: string) => {
     setMissingOccasion(false);
     updateRoute({
@@ -430,7 +439,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                   >
                     <Button> <IosShareOutlinedIcon /></Button>
                   </RWebShare>
-                  
+
                 </AppMenu>
               </Box>
               {false && authSession && <Box key="login" >
@@ -462,15 +471,15 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             </Drawer>
           </Box>
           <Toolbar />
-          <Logo><LogoContainer><Image 
-                  
-                  width={250}
-                  height={250}
-                  alt="Picture of the author"
-                  src={'https://ucarecdn.com/3150242f-569d-4a42-8efb-d4b82ca1c6bb/wishtextlogo.png'}/>
-              </LogoContainer></Logo> 
-          {!virgin?<Box sx={{ my: 0, padding: 1, width: 1, color: noExplain ? 'normal' : 'white', backgroundColor: noExplain ? 'normal' : 'secondary' }}>
-         
+          <Logo><LogoContainer><Image
+
+            width={250}
+            height={250}
+            alt="Picture of the author"
+            src={'https://ucarecdn.com/3150242f-569d-4a42-8efb-d4b82ca1c6bb/wishtextlogo.png'} />
+          </LogoContainer></Logo>
+          {!virgin ? <Box sx={{ my: 0, padding: 1, width: 1, color: noExplain ? 'normal' : 'white', backgroundColor: noExplain ? 'normal' : 'secondary' }}>
+
             {!noExplain ? <Typography
               variant="body2"
               component="div"
@@ -482,8 +491,8 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               Additionally, Wish Text can generate a &apos;postcard&apos; greeting over an uploaded image. You can download the card and share from any device.
               <p>Utilizing AI, it also provides the gift suggestions.</p>
             </Typography> : null}
-          
-            {false?<FormControlLabel
+
+            {false ? <FormControlLabel
               label="Do not show the description"
               control={
                 <Checkbox
@@ -492,15 +501,15 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                   onChange={handleNoExplanChange}
                 />
               }
-            />:null}
-          </Box>:null}
-          
-          {virgin?<ClearButtonContainer><ClearButton onClick={() => {
+            /> : null}
+          </Box> : null}
+
+          {virgin ? <ClearButtonContainer><ClearButton onClick={() => {
             updateRoute({
               from: '',
               to: '',
               occasion: '',
-              naive:false,
+              naive: false,
               reflections: '',
               instructions: '',
               inastyleof: '',
@@ -513,7 +522,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               to: '',
               occasion: '',
               virgin: false,
-              naive:false,
+              naive: false,
               reflections: '',
               instructions: '',
               inastyleof: '',
@@ -539,10 +548,10 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
           }}>
             <ClearIcon />
             <ClearText>Reset</ClearText>
-          </ClearButton></ClearButtonContainer>:null}
-          {!virgin? <Box sx={{ mt: 5,width: 1, color: 'white', backgroundColor: 'secondary' }}>
-          <Starter><LooksOneOutlinedIcon fontSize="inherit" color='success' />
-          <StarterMessage><Typography >To begin, select or type an occasion for the greeting:</Typography></StarterMessage></Starter></Box> : null}
+          </ClearButton></ClearButtonContainer> : null}
+          {!virgin ? <Box sx={{ mt: 5, width: 1, color: 'white', backgroundColor: 'secondary' }}>
+            <Starter><LooksOneOutlinedIcon fontSize="inherit" color='success' />
+              <StarterMessage><Typography >To begin, select or type an occasion for the greeting:</Typography></StarterMessage></Starter></Box> : null}
           <Combo id="occasion"
             label="Occasion"
             value={occasion}
@@ -550,7 +559,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             onChange={onOccasionChange}
             helperText="Required for a meaningful result. For example: &ldquo;8th Birthday&rdquo;, &ldquo;Sweet Sixteen&rdquo;, &ldquo;Illness&rdquo; &ldquo;Death in the family&rdquo;, &ldquo;Christmas&rdquo;, &ldquo;Graduation&ldquo;"
           />
-         {virgin? <Accordion sx={{ background: theme.palette.background.default }} expanded={expanded === 'custom'} onChange={handleAccordeonChange('custom')}>
+          {virgin ? <Accordion sx={{ background: theme.palette.background.default }} expanded={expanded === 'custom'} onChange={handleAccordeonChange('custom')}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel4bh-content"
@@ -580,8 +589,8 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                 />
               </Box>
             </AccordionDetails>
-          </Accordion>:null}
-          {virgin?<Accordion sx={{ background: theme.palette.background.default }} expanded={expanded === 'advanced'} onChange={handleAccordeonChange('advanced')}>
+          </Accordion> : null}
+          {virgin ? <Accordion sx={{ background: theme.palette.background.default }} expanded={expanded === 'advanced'} onChange={handleAccordeonChange('advanced')}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel4bh-content"
@@ -590,17 +599,17 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               <Typography sx={{ width: '33%', flexShrink: 0 }}>Advanced Inputs</Typography>
             </AccordionSummary>
             <AccordionDetails>
-            <Box sx={{ mb: 4,color:'primary' }}>
-              <FormControlLabel
-                label={<Typography style={{color:theme.palette.text.secondary}}>Keep it light-hearted, if possible</Typography>}
-                control={
-                  <Checkbox
-                    sx={{ color: 'secondary' }}
-                    checked={!naive}
-                    onChange={onNaiveChange}
-                  />
-                }
-              />
+              <Box sx={{ mb: 4, color: 'primary' }}>
+                <FormControlLabel
+                  label={<Typography style={{ color: theme.palette.text.secondary }}>Keep it light-hearted, if possible</Typography>}
+                  control={
+                    <Checkbox
+                      sx={{ color: 'secondary' }}
+                      checked={!naive}
+                      onChange={onNaiveChange}
+                    />
+                  }
+                />
               </Box>
               <Box sx={{ mb: 4 }}>
                 <TextField
@@ -643,12 +652,16 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                 />
               </Box>
             </AccordionDetails>
-          </Accordion>:null}
-          {!virgin? <Box sx={{ mt: 10, width: 1, color: 'white', backgroundColor: 'secondary' }}>
-          <Starter><LooksTwoOutlinedIcon fontSize="inherit" color='success' />
-          <StarterMessage><Typography >Click or tap on the &quot;Suggest Wish Text&quot; action link:</Typography></StarterMessage></Starter></Box> : null}
-          <GreetingOutput  onVirgin={()=>{setVirgin(true); updateSession2({ virgin:true });}} greeting={session.greeting || ''} setMissingOccasion={setMissingOccasion} setLoadReady={setLoadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} naive={naive} reflections={reflections} instructions={instructions} inastyleof={inastyleof} language={language} authSession={authSession} />
-          
+          </Accordion> : null}
+          {!virgin ? <Box sx={{ mt: 10, width: 1, color: 'white', backgroundColor: 'secondary' }}>
+            <Starter><LooksTwoOutlinedIcon fontSize="inherit" color='success' />
+              <StarterMessage><Typography >Click or tap on the &quot;Suggest Wish Text&quot; action link:</Typography></StarterMessage></Starter></Box> : null}
+          <GreetingOutput onVirgin={async () => { 
+            await recordEvent(session.sessionid, 'virgin wish-text request',`occasion:${occasion}`);
+            setVirgin(true); 
+            updateSession2({ virgin: true }); 
+            }} greeting={session.greeting || ''} setMissingOccasion={setMissingOccasion} setLoadReady={setLoadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} naive={naive} reflections={reflections} instructions={instructions} inastyleof={inastyleof} language={language} authSession={authSession} />
+
           {session.greeting && <GiftsOutput loadReady={loadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} reflections={reflections} interests={interests} onInterestsChange={onInterestsChange} />}
 
           <Copyright> <Sub> <Typography variant="caption" gutterBottom>
@@ -677,15 +690,15 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps(context: GetServerSidePropsContext): Promise<any> {
     try {
-      let { virgin,from, to, occasion, naive,reflections, instructions, inastyleof, language, age, interests, sex }: { virgin:boolean,from: string, to: string, occasion: string, naive:boolean,reflections: string, instructions: string, inastyleof: string, language: string, age: string, interests: string, sex: string } = context.query as any;
+      let { virgin, from, to, occasion, naive, reflections, instructions, inastyleof, language, age, interests, sex }: { virgin: boolean, from: string, to: string, occasion: string, naive: boolean, reflections: string, instructions: string, inastyleof: string, language: string, age: string, interests: string, sex: string } = context.query as any;
       from = from || '';
       to = to || '';
       occasion = occasion || '';
       age = age || '';
       interests = interests || '';
       sex = sex || '';
-      virgin=virgin||false
-      naive=naive||false;
+      virgin = virgin || false
+      naive = naive || false;
       reflections = reflections || '';
       instructions = instructions || '';
       inastyleof = inastyleof || '';
@@ -709,8 +722,8 @@ export const getServerSideProps = withSessionSsr(
       from = from || options.from || '';
       to = to || options.to || '';
       occasion = occasion || options.occasion || '';
-      virgin=options.virgin||false;
-      naive = naive || options.naive || typeof options.naive ==='undefined'?false:true;
+      virgin = options.virgin || false;
+      naive = naive || options.naive || typeof options.naive === 'undefined' ? false : true;
       reflections = reflections || options.reflections || '';
       instructions = instructions || options.instructions || '';
       inastyleof = inastyleof || options.inastyleof || '';
@@ -721,7 +734,7 @@ export const getServerSideProps = withSessionSsr(
           from: from,
           to: to,
           occasion: occasion,
-          virgin:virgin,
+          virgin: virgin,
           naive: naive,
           reflections: reflections,
           instructions: instructions,
