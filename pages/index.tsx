@@ -538,7 +538,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
 
           }}>
             <ClearIcon />
-            <ClearText>Clear all</ClearText>
+            <ClearText>Reset</ClearText>
           </ClearButton></ClearButtonContainer>:null}
           {!virgin? <Box sx={{ mt: 5,width: 1, color: 'white', backgroundColor: 'secondary' }}>
           <Starter><LooksOneOutlinedIcon fontSize="inherit" color='success' />
