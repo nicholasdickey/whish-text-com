@@ -49,7 +49,7 @@ import { useTheme } from '@mui/material/styles';
 import * as ga from '../lib/ga'
 import Combo from "../components/combo-text";
 import { light } from '@mui/material/styles/createPalette';
-
+import { isbot } from '../lib/isbot'
 const Starter = styled.div`
   display:flex;
  
@@ -112,7 +112,7 @@ const AppMenu = styled.div<ColorProps>`
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 let v=false;
-export default function Home({ virgin: startVirgin, naive: startNaive, from: startFrom, to: startTo, occasion: startOccasion, reflections: startReflections, instructions: startInstructions, inastyleof: startInastyleof, language: startLanguage, interests: startInterests, ironsession: startSession }: { virgin: boolean, naive: boolean, from: string, to: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string, ironsession: Options }) {
+export default function Home({ utm_medium,isbot,isfb,virgin: startVirgin, naive: startNaive, from: startFrom, to: startTo, occasion: startOccasion, reflections: startReflections, instructions: startInstructions, inastyleof: startInastyleof, language: startLanguage, interests: startInterests, ironsession: startSession }: { utm_medium:string,isbot:boolean,isfb:boolean,virgin: boolean, naive: boolean, from: string, to: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string, ironsession: Options }) {
   console.log("CLIENT START SESSION", startSession)
   const [session, setSession] = useState(startSession);
   const [noExplain, setNoExplain] = useState(session.noExplain || false);
@@ -138,10 +138,10 @@ export default function Home({ virgin: startVirgin, naive: startNaive, from: sta
   const drawerWidth = 240;
   const navItems = ['Home', 'History', 'Share', 'Contact', 'Login'];
   
-  if(!virgin&&!virginEvent&&!v){
+  if(!virgin&&!virginEvent&&!v&&!isbot){
     v=true; 
     setVirginEvent(true);   
-    setTimeout(async ()=>await recordEvent(session.sessionid, 'virgin load',''),1000);
+    setTimeout(async ()=>await recordEvent(session.sessionid, 'virgin load',isfb?'facebook:'+utm_medium:utm_medium?utm_medium:''),1000);
   }
   const handleAccordeonChange =
     (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
@@ -399,7 +399,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
         <Container maxWidth="sm">
 
           <CssBaseline />
-          <AppBar position="fixed" component="nav">
+          <AppBar position="absolute" component="nav">
             <Toolbar>
               {false ? <IconButton
                 color="inherit"
@@ -695,7 +695,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps(context: GetServerSidePropsContext): Promise<any> {
     try {
-      let { virgin, from, to, occasion, naive, reflections, instructions, inastyleof, language, age, interests, sex }: { virgin: boolean, from: string, to: string, occasion: string, naive: boolean, reflections: string, instructions: string, inastyleof: string, language: string, age: string, interests: string, sex: string } = context.query as any;
+      let {utm_medium, utm_campaign,utm_content, virgin, from, to, occasion, naive, reflections, instructions, inastyleof, language, age, interests, sex }: { utm_medium:string,utm_campaign:string,utm_content:string,virgin: boolean, from: string, to: string, occasion: string, naive: boolean, reflections: string, instructions: string, inastyleof: string, language: string, age: string, interests: string, sex: string } = context.query as any;
       from = from || '';
       to = to || '';
       occasion = occasion || '';
@@ -718,6 +718,11 @@ export const getServerSideProps = withSessionSsr(
         imagesString: '',
         selectedImage: '',
       };
+      const ua = context.req.headers['user-agent'];
+      const botInfo = isbot({ ua });
+      if(botInfo.bot)
+        setTimeout(async ()=>await recordEvent(sessionid, 'bot',`{ua:${ua},utm_medium:${utm_medium},utm_campaign:${utm_campaign},utm_content:${utm_content}}`),100);
+ 
       if (context.req.session.sessionid != sessionid) {
         context.req.session.sessionid = sessionid;
         await context.req.session.save();
@@ -749,6 +754,9 @@ export const getServerSideProps = withSessionSsr(
           interests: interests,
           sex: sex,
           ironsession: options,
+          isbot: botInfo.bot,
+          isfb: botInfo.fb || utm_medium ? 1 : 0,
+          utm_medium:`{utm_medium:${utm_medium},utm_campaign:${utm_campaign},utm_content:${utm_content}}}}`,
         }
       }
     } catch (x) {
