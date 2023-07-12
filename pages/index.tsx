@@ -493,7 +493,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               <p>Create the &quot;wishing&quot; or greeting text for you to paste into your favorite messaging app.
                 AI will provide the helpful suggestions that you can edit by clicking on the suggestion.</p>
 
-              Additionally, Wish Text can generate a &apos;postcard&apos; greeting over an uploaded image. You can download the card and share from any device.
+              Additionally, Wish Text Composer can generate a &apos;postcard&apos; greeting over an uploaded image. You can download the card and share from any device.
               <p>Utilizing AI, it also provides the gift suggestions.</p>
             </Typography> : null}
 
