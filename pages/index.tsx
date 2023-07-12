@@ -200,7 +200,7 @@ export default function Home({ virgin:startVirgin,naive:startNaive,from: startFr
     await axios.post(`/api/session/save`, { session: assigned });
   }, [session]);
   const updateRoute = useCallback(({ to, from, occasion, naive,reflections, instructions, inastyleof, language, interests }: { to: string, from: string, occasion: string, naive:boolean,reflections: string, instructions: string, inastyleof: string, language: string, interests: string }) => {
-    const params = `/?occasion=${encodeURIComponent(occasion)}${naive?`&naive=true`:''}${reflections ? `&reflections=${encodeURIComponent(reflections)}` : ``}${instructions ? `&instructions=${encodeURIComponent(instructions)}` : ``}${inastyleof ? `&inastyleof=${encodeURIComponent(inastyleof)}` : ``}${language ? `&language=${encodeURIComponent(language)}` : ``}${to ? `&to=${encodeURIComponent(to)}` : ``}${from ? `&from=${encodeURIComponent(from)}` : ``}${interests ? `&interests=${encodeURIComponent(interests)}` : ``}`;
+    const params = `/${occasion?'?occasion=':''}${occasion?encodeURIComponent(occasion):''}${naive?`${occasion?'&':'?'}naive=true`:''}${reflections ? `&reflections=${encodeURIComponent(reflections)}` : ``}${instructions ? `&instructions=${encodeURIComponent(instructions)}` : ``}${inastyleof ? `&inastyleof=${encodeURIComponent(inastyleof)}` : ``}${language ? `&language=${encodeURIComponent(language)}` : ``}${to ? `&to=${encodeURIComponent(to)}` : ``}${from ? `&from=${encodeURIComponent(from)}` : ``}${interests ? `&interests=${encodeURIComponent(interests)}` : ``}`;
     router.push(params, params, { shallow: true })
 
   }, [router]);
