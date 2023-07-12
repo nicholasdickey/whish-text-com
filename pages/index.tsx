@@ -695,7 +695,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps(context: GetServerSidePropsContext): Promise<any> {
     try {
-      let {utm_medium, utm_campaign,utm_content, virgin, from, to, occasion, naive, reflections, instructions, inastyleof, language, age, interests, sex }: { utm_medium:string,utm_campaign:string,utm_content:string,virgin: boolean, from: string, to: string, occasion: string, naive: boolean, reflections: string, instructions: string, inastyleof: string, language: string, age: string, interests: string, sex: string } = context.query as any;
+      let {fbclid,utm_medium, utm_campaign,utm_content, virgin, from, to, occasion, naive, reflections, instructions, inastyleof, language, age, interests, sex }: { fbclid:string,utm_medium:string,utm_campaign:string,utm_content:string,virgin: boolean, from: string, to: string, occasion: string, naive: boolean, reflections: string, instructions: string, inastyleof: string, language: string, age: string, interests: string, sex: string } = context.query as any;
       from = from || '';
       to = to || '';
       occasion = occasion || '';
@@ -759,7 +759,7 @@ export const getServerSideProps = withSessionSsr(
           ironsession: options,
           isbot: botInfo.bot,
           isfb: botInfo.fb || utm_medium ? 1 : 0,
-          utm_medium:`{utm_medium:${utm_medium},utm_campaign:${utm_campaign},utm_content:${utm_content}}}}`,
+          utm_medium:`{fbclid:${fbclid},utm_medium:${utm_medium},utm_campaign:${utm_campaign},utm_content:${utm_content}}}}`,
         }
       }
     } catch (x) {
