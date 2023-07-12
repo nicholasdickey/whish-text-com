@@ -73,7 +73,7 @@ const LogoContainer = styled.div`
   //position:absolute;
   //top:0px;
   //right:0px;
- 
+  margin-top:50px;
   z-index:-1;
   `;
 const Copyright = styled.div`
@@ -478,10 +478,10 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
           <Toolbar />
           <Logo><LogoContainer><Image
 
-            width={250}
-            height={250}
-            alt="Picture of the author"
-            src={'https://ucarecdn.com/3150242f-569d-4a42-8efb-d4b82ca1c6bb/wishtextlogo.png'} />
+            width={668/4}
+            height={868/4}
+            alt="Wish Text Composer"
+            src={'https://ucarecdn.com/711a184a-cb29-410c-a169-826e80c4a5d1/wishtextlogo21.png'} />
           </LogoContainer></Logo>
           {!virgin ? <Box sx={{ my: 0, padding: 1, width: 1, color: noExplain ? 'normal' : 'white', backgroundColor: noExplain ? 'normal' : 'secondary' }}>
 
