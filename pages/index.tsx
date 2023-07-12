@@ -469,7 +469,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                   alt="Picture of the author"
                   src={'https://ucarecdn.com/3150242f-569d-4a42-8efb-d4b82ca1c6bb/wishtextlogo.png'}/>
               </LogoContainer></Logo> 
-          <Box sx={{ my: 0, padding: 1, width: 1, color: noExplain ? 'normal' : 'white', backgroundColor: noExplain ? 'normal' : 'secondary' }}>
+          {!virgin?<Box sx={{ my: 0, padding: 1, width: 1, color: noExplain ? 'normal' : 'white', backgroundColor: noExplain ? 'normal' : 'secondary' }}>
          
             {!noExplain ? <Typography
               variant="body2"
@@ -483,7 +483,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               <p>Utilizing AI, it also provides the gift suggestions.</p>
             </Typography> : null}
           
-            <FormControlLabel
+            {false?<FormControlLabel
               label="Do not show the description"
               control={
                 <Checkbox
@@ -492,8 +492,8 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                   onChange={handleNoExplanChange}
                 />
               }
-            />
-          </Box>
+            />:null}
+          </Box>:null}
           
           {virgin?<ClearButtonContainer><ClearButton onClick={() => {
             updateRoute({
@@ -512,6 +512,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               from: '',
               to: '',
               occasion: '',
+              virgin: false,
               naive:false,
               reflections: '',
               instructions: '',
@@ -527,6 +528,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             setFrom('');
             setTo('');
             setOccasion('');
+            setVirgin(false);
             setNaive(false);
             setReflections('');
             setInstructions('');
@@ -538,7 +540,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             <ClearIcon />
             <ClearText>Clear all</ClearText>
           </ClearButton></ClearButtonContainer>:null}
-          {!virgin? <Box sx={{ mt: 10,width: 1, color: 'white', backgroundColor: 'secondary' }}>
+          {!virgin? <Box sx={{ mt: 5,width: 1, color: 'white', backgroundColor: 'secondary' }}>
           <Starter><LooksOneOutlinedIcon fontSize="inherit" color='success' />
           <StarterMessage><Typography >To begin, select or type an occasion for the greeting:</Typography></StarterMessage></Starter></Box> : null}
           <Combo id="occasion"
@@ -644,7 +646,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
           </Accordion>:null}
           {!virgin? <Box sx={{ mt: 10, width: 1, color: 'white', backgroundColor: 'secondary' }}>
           <Starter><LooksTwoOutlinedIcon fontSize="inherit" color='success' />
-          <StarterMessage><Typography >Click or tap on the "Suggest Wish Text" action link:</Typography></StarterMessage></Starter></Box> : null}
+          <StarterMessage><Typography >Click or tap on the &quot;Suggest Wish Text&quot; action link:</Typography></StarterMessage></Starter></Box> : null}
           <GreetingOutput  onVirgin={()=>{setVirgin(true); updateSession2({ virgin:true });}} greeting={session.greeting || ''} setMissingOccasion={setMissingOccasion} setLoadReady={setLoadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} naive={naive} reflections={reflections} instructions={instructions} inastyleof={inastyleof} language={language} authSession={authSession} />
           
           {session.greeting && <GiftsOutput loadReady={loadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} reflections={reflections} interests={interests} onInterestsChange={onInterestsChange} />}
