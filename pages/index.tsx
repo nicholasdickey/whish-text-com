@@ -111,7 +111,7 @@ const AppMenu = styled.div<ColorProps>`
 `;
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
-
+let v=false;
 export default function Home({ virgin: startVirgin, naive: startNaive, from: startFrom, to: startTo, occasion: startOccasion, reflections: startReflections, instructions: startInstructions, inastyleof: startInastyleof, language: startLanguage, interests: startInterests, ironsession: startSession }: { virgin: boolean, naive: boolean, from: string, to: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string, ironsession: Options }) {
   console.log("CLIENT START SESSION", startSession)
   const [session, setSession] = useState(startSession);
@@ -128,6 +128,7 @@ export default function Home({ virgin: startVirgin, naive: startNaive, from: sta
   const [to, setTo] = useState(startTo);
   const [interests, setInterests] = useState(startInterests);
   const [loadReady, setLoadReady] = useState(true);
+  const [virginEvent,setVirginEvent] = useState(false);
   const { data: authSession } = useSession();
   const router = useRouter();
   const theme = useTheme();
@@ -137,7 +138,11 @@ export default function Home({ virgin: startVirgin, naive: startNaive, from: sta
   const drawerWidth = 240;
   const navItems = ['Home', 'History', 'Share', 'Contact', 'Login'];
   
-  React.useMemo(async ()=>{if(!virgin) await recordEvent(session.sessionid, 'virgin load','');},[virgin,session.sessionid]);
+  if(!virgin&&!virginEvent&&!v){
+    v=true; 
+    setVirginEvent(true);   
+    setTimeout(async ()=>await recordEvent(session.sessionid, 'virgin load',''),1000);
+  }
   const handleAccordeonChange =
     (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
       setExpanded(isExpanded ? panel : false);
