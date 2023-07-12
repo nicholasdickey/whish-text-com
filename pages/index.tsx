@@ -708,6 +708,9 @@ export const getServerSideProps = withSessionSsr(
       instructions = instructions || '';
       inastyleof = inastyleof || '';
       language = language || '';
+      utm_medium = utm_medium || '';
+      utm_campaign = utm_campaign || '';
+      utm_content = utm_content || '';
       var randomstring = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
       let sessionid = context.req.session?.sessionid || randomstring();
       let startoptions: Options = await fetchSession(sessionid);
