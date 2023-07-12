@@ -21,7 +21,7 @@ const ToolbarButton = styled(IconButton)`
 `;
 
 const ToolbarText = styled.span`
-  font-size: 12px;
+  font-size: 14px;
 `;
 
 interface ToolbarProps {
@@ -56,7 +56,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
   }, [copied]);
   return (
     <ToolbarContainer>
-      {images && images.length > 0 && <ToolbarButton color="primary" onClick={onDownloadClick}>
+      {images && images.length > 0 && <ToolbarButton color="primary" size="large" onClick={onDownloadClick}>
         <CloudDownloadIcon />
         <ToolbarText> Download Card</ToolbarText>
       </ToolbarButton>}

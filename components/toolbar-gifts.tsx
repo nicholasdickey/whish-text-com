@@ -18,7 +18,7 @@ const ToolbarButton = styled(IconButton)`
 `;
 
 const ToolbarText = styled.span`
-  font-size: 12px;
+  font-size: 14px;
 `;
 
 interface ToolbarProps {
@@ -32,9 +32,9 @@ const Toolbar: React.FC<ToolbarProps> = ({
 }) => {
   return (
     <ToolbarContainer>
-      <ToolbarButton color="primary" onClick={onRegenerateClick}>
+      <ToolbarButton color="primary" size="large" onClick={onRegenerateClick}>
         <CardGiftcardIcon />
-        <ToolbarText> Regenerate Gift Suggestions</ToolbarText>
+        <ToolbarText> Regenerate Gifts</ToolbarText>
       </ToolbarButton>
       
     </ToolbarContainer>

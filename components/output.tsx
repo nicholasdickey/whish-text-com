@@ -36,6 +36,7 @@ const BottomLink = styled.div`
 `;
 
 export default function Output({
+  onVirgin,
   setMissingOccasion,
   setLoadReady,
   session,
@@ -51,6 +52,7 @@ export default function Output({
   greeting,
   authSession
 }: {
+  onVirgin: any;
   setMissingOccasion: any;
   setLoadReady: any;
   session: Options;
@@ -136,6 +138,7 @@ export default function Output({
     }
     setLoading(true);
     setLoadReady(true);
+    onVirgin();
     const result = await getWishText({
       style: "",
       from,

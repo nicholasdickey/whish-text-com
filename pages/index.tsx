@@ -29,7 +29,8 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { RWebShare } from "react-web-share";
 import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined';
 import Script from 'next/script'
-
+import LooksOneOutlinedIcon from '@mui/icons-material/LooksOneOutlined';
+import LooksTwoOutlinedIcon from '@mui/icons-material/LooksTwoOutlined';
 import {
   GetServerSidePropsContext,
 } from "next";
@@ -48,6 +49,18 @@ import { useTheme } from '@mui/material/styles';
 import * as ga from '../lib/ga'
 import Combo from "../components/combo-text";
 import { light } from '@mui/material/styles/createPalette';
+
+const Starter= styled.div`
+  display:flex;
+ 
+  justify-content:flex-start;
+  font-size:64px;
+  align-items:center;
+  `;
+const StarterMessage=styled.div`
+  font-size:24px;
+  padding-left:10px;
+  `;  
 const Logo= styled.div`
 position:relative;
 width:100%;
@@ -99,11 +112,12 @@ const AppMenu = styled.div<ColorProps>`
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 
-export default function Home({ naive:startNaive,from: startFrom, to: startTo, occasion: startOccasion, reflections: startReflections, instructions: startInstructions, inastyleof: startInastyleof, language: startLanguage, interests: startInterests, ironsession: startSession }: { naive:boolean,from: string, to: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string, ironsession: Options }) {
+export default function Home({ virgin:startVirgin,naive:startNaive,from: startFrom, to: startTo, occasion: startOccasion, reflections: startReflections, instructions: startInstructions, inastyleof: startInastyleof, language: startLanguage, interests: startInterests, ironsession: startSession }: { virgin:boolean,naive:boolean,from: string, to: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string, ironsession: Options }) {
   console.log("CLIENT START SESSION", startSession)
   const [session, setSession] = useState(startSession);
   const [noExplain, setNoExplain] = useState(session.noExplain || false);
   const [occasion, setOccasion] = useState(startOccasion);
+  const [virgin, setVirgin] = useState(startVirgin);
   const [naive, setNaive] = useState(startNaive);
   const [reflections, setReflections] = useState(startReflections);
   const [instructions, setInstructions] = useState(startInstructions);
@@ -481,7 +495,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             />
           </Box>
           
-          <ClearButtonContainer><ClearButton onClick={() => {
+          {virgin?<ClearButtonContainer><ClearButton onClick={() => {
             updateRoute({
               from: '',
               to: '',
@@ -523,7 +537,10 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
           }}>
             <ClearIcon />
             <ClearText>Clear all</ClearText>
-          </ClearButton></ClearButtonContainer>
+          </ClearButton></ClearButtonContainer>:null}
+          {!virgin? <Box sx={{ mt: 10,width: 1, color: 'white', backgroundColor: 'secondary' }}>
+          <Starter><LooksOneOutlinedIcon fontSize="inherit" color='success' />
+          <StarterMessage><Typography >To begin, select or type an occasion for the greeting:</Typography></StarterMessage></Starter></Box> : null}
           <Combo id="occasion"
             label="Occasion"
             value={occasion}
@@ -531,7 +548,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             onChange={onOccasionChange}
             helperText="Required for a meaningful result. For example: &ldquo;8th Birthday&rdquo;, &ldquo;Sweet Sixteen&rdquo;, &ldquo;Illness&rdquo; &ldquo;Death in the family&rdquo;, &ldquo;Christmas&rdquo;, &ldquo;Graduation&ldquo;"
           />
-          <Accordion sx={{ background: theme.palette.background.default }} expanded={expanded === 'custom'} onChange={handleAccordeonChange('custom')}>
+         {virgin? <Accordion sx={{ background: theme.palette.background.default }} expanded={expanded === 'custom'} onChange={handleAccordeonChange('custom')}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel4bh-content"
@@ -561,8 +578,8 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                 />
               </Box>
             </AccordionDetails>
-          </Accordion>
-          <Accordion sx={{ background: theme.palette.background.default }} expanded={expanded === 'advanced'} onChange={handleAccordeonChange('advanced')}>
+          </Accordion>:null}
+          {virgin?<Accordion sx={{ background: theme.palette.background.default }} expanded={expanded === 'advanced'} onChange={handleAccordeonChange('advanced')}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel4bh-content"
@@ -624,8 +641,11 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                 />
               </Box>
             </AccordionDetails>
-          </Accordion>
-          <GreetingOutput greeting={session.greeting || ''} setMissingOccasion={setMissingOccasion} setLoadReady={setLoadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} naive={naive} reflections={reflections} instructions={instructions} inastyleof={inastyleof} language={language} authSession={authSession} />
+          </Accordion>:null}
+          {!virgin? <Box sx={{ mt: 10, width: 1, color: 'white', backgroundColor: 'secondary' }}>
+          <Starter><LooksTwoOutlinedIcon fontSize="inherit" color='success' />
+          <StarterMessage><Typography >Click or tap on the "Suggest Wish Text" action link:</Typography></StarterMessage></Starter></Box> : null}
+          <GreetingOutput  onVirgin={()=>{setVirgin(true); updateSession2({ virgin:true });}} greeting={session.greeting || ''} setMissingOccasion={setMissingOccasion} setLoadReady={setLoadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} naive={naive} reflections={reflections} instructions={instructions} inastyleof={inastyleof} language={language} authSession={authSession} />
           
           {session.greeting && <GiftsOutput loadReady={loadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} reflections={reflections} interests={interests} onInterestsChange={onInterestsChange} />}
 
@@ -655,13 +675,14 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps(context: GetServerSidePropsContext): Promise<any> {
     try {
-      let { from, to, occasion, naive,reflections, instructions, inastyleof, language, age, interests, sex }: { from: string, to: string, occasion: string, naive:boolean,reflections: string, instructions: string, inastyleof: string, language: string, age: string, interests: string, sex: string } = context.query as any;
+      let { virgin,from, to, occasion, naive,reflections, instructions, inastyleof, language, age, interests, sex }: { virgin:boolean,from: string, to: string, occasion: string, naive:boolean,reflections: string, instructions: string, inastyleof: string, language: string, age: string, interests: string, sex: string } = context.query as any;
       from = from || '';
       to = to || '';
       occasion = occasion || '';
       age = age || '';
       interests = interests || '';
       sex = sex || '';
+      virgin=virgin||false
       naive=naive||false;
       reflections = reflections || '';
       instructions = instructions || '';
@@ -686,6 +707,7 @@ export const getServerSideProps = withSessionSsr(
       from = from || options.from || '';
       to = to || options.to || '';
       occasion = occasion || options.occasion || '';
+      virgin=options.virgin||false;
       naive = naive || options.naive || typeof options.naive ==='undefined'?false:true;
       reflections = reflections || options.reflections || '';
       instructions = instructions || options.instructions || '';
@@ -697,6 +719,7 @@ export const getServerSideProps = withSessionSsr(
           from: from,
           to: to,
           occasion: occasion,
+          virgin:virgin,
           naive: naive,
           reflections: reflections,
           instructions: instructions,

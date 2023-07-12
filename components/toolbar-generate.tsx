@@ -17,11 +17,12 @@ const ToolbarButton = styled(IconButton)`
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-size:48px;
   
 `;
 
 const ToolbarText = styled.span`
-  font-size: 12px;
+  font-size: 14px;
   
 `;
 
