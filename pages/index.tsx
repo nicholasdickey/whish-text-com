@@ -52,6 +52,11 @@ import * as ga from '../lib/ga'
 import Combo from "../components/combo-text";
 import { light } from '@mui/material/styles/createPalette';
 import { isbot } from '../lib/isbot'
+
+
+const WBLogo=styled.div`
+  margin-right:10px;
+`;
 const Starter = styled.div`
   display:flex;
   justify-content:flex-start;
@@ -413,6 +418,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               >
                 <MenuIcon />
               </IconButton> : null}
+              <WBLogo><Image src="/wbLogo.png" width={32} height={31} alt="Wish Text Composer Logo"/></WBLogo>
               <Typography
                 variant="h6"
                 component="div"
