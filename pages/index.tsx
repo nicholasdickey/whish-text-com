@@ -61,6 +61,7 @@ const Starter = styled.div`
 const StarterMessage = styled.div`
   font-size:24px;
   padding-left:10px;
+  padding-right:10px;
   `;
 const Logo = styled.div`
 position:relative;

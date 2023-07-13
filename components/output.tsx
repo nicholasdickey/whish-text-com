@@ -22,10 +22,12 @@ const Starter = styled.div`
   justify-content:flex-start;
   font-size:64px;
   align-items:center;
+  
   `;
 const StarterMessage = styled.div`
   font-size:24px;
   padding-left:10px;
+  padding-right:10px;
   `;
 
 const BottomLink = styled.div`
