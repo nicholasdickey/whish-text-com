@@ -70,6 +70,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
           }
         })
         setCopied(true);
+        onCopyClick();
         copy(text)
       }}>
         {copied ? <FileCopyIcon /> : <ContentCopyIcon />}

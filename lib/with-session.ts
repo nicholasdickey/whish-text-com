@@ -51,6 +51,7 @@ export interface Options{
     to?:string;
     occasion?:string;
     virgin?:boolean;
+    virgin2?:boolean;
     naive?:boolean;
     reflections?:string;
     instructions?:string;

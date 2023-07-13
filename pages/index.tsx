@@ -31,6 +31,8 @@ import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined';
 import Script from 'next/script'
 import LooksOneOutlinedIcon from '@mui/icons-material/LooksOneOutlined';
 import LooksTwoOutlinedIcon from '@mui/icons-material/LooksTwoOutlined';
+import LooksThreeOutlinedIcon from '@mui/icons-material/Looks3Outlined';
+import LooksFourOutlinedIcon from '@mui/icons-material/Looks4Outlined';
 import {
   GetServerSidePropsContext,
 } from "next";
@@ -52,7 +54,6 @@ import { light } from '@mui/material/styles/createPalette';
 import { isbot } from '../lib/isbot'
 const Starter = styled.div`
   display:flex;
- 
   justify-content:flex-start;
   font-size:64px;
   align-items:center;
@@ -112,12 +113,13 @@ const AppMenu = styled.div<ColorProps>`
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 let v=false;
-export default function Home({ utm_medium,isbot,isfb,virgin: startVirgin, naive: startNaive, from: startFrom, to: startTo, occasion: startOccasion, reflections: startReflections, instructions: startInstructions, inastyleof: startInastyleof, language: startLanguage, interests: startInterests, ironsession: startSession }: { utm_medium:string,isbot:boolean,isfb:boolean,virgin: boolean, naive: boolean, from: string, to: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string, ironsession: Options }) {
+export default function Home({ utm_medium,isbot,isfb,virgin: startVirgin, virgin2:startVirgin2,naive: startNaive, from: startFrom, to: startTo, occasion: startOccasion, reflections: startReflections, instructions: startInstructions, inastyleof: startInastyleof, language: startLanguage, interests: startInterests, ironsession: startSession }: { utm_medium:string,isbot:boolean,isfb:boolean,virgin: boolean, virgin2:boolean,naive: boolean, from: string, to: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string, ironsession: Options }) {
   console.log("CLIENT START SESSION", startSession)
   const [session, setSession] = useState(startSession);
   const [noExplain, setNoExplain] = useState(session.noExplain || false);
   const [occasion, setOccasion] = useState(startOccasion);
   const [virgin, setVirgin] = useState(startVirgin);
+  const [virgin2, setVirgin2] = useState(startVirgin2);
   const [naive, setNaive] = useState(startNaive);
   const [reflections, setReflections] = useState(startReflections);
   const [instructions, setInstructions] = useState(startInstructions);
@@ -371,7 +373,7 @@ export default function Home({ utm_medium,isbot,isfb,virgin: startVirgin, naive:
     setInterests(value);
     updateSession2({ interests: value });
   }
-
+  console.log("virgin", virgin,virgin2);
   return (
     <>
       <Head>
@@ -477,7 +479,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
           </LogoContainer></Logo>
           {!virgin ? <Box sx={{ my: 0, padding: 1, width: 1, color: noExplain ? 'normal' : 'white', backgroundColor: noExplain ? 'normal' : 'secondary' }}>
 
-            {!noExplain ? <Typography
+            {false&&!noExplain ? <Typography
               variant="body2"
               component="div"
               sx={{ flexGrow: 1, display: { xs: 'block', sm: 'block' } }}
@@ -535,6 +537,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             setTo('');
             setOccasion('');
             setVirgin(false);
+            setVirgin2(false);
             setNaive(false);
             setReflections('');
             setInstructions('');
@@ -548,7 +551,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
           </ClearButton></ClearButtonContainer> : null}
           {!virgin ? <Box sx={{ mt: 5, width: 1, color: 'white', backgroundColor: 'secondary' }}>
             <Starter><LooksOneOutlinedIcon fontSize="inherit" color='success' />
-              <StarterMessage><Typography >To begin, select or type an occasion for the greeting:</Typography></StarterMessage></Starter></Box> : null}
+              <StarterMessage><Typography color="#ffee58">To begin, select or type an occasion for the greeting, for example "Birthday":</Typography></StarterMessage></Starter></Box> : null}
           <Combo id="occasion"
             label="Occasion"
             value={occasion}
@@ -556,7 +559,11 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             onChange={onOccasionChange}
             helperText="Required for a meaningful result. For example: &ldquo;8th Birthday&rdquo;, &ldquo;Sweet Sixteen&rdquo;, &ldquo;Illness&rdquo; &ldquo;Death in the family&rdquo;, &ldquo;Christmas&rdquo;, &ldquo;Graduation&ldquo;"
           />
-          {virgin ? <Accordion sx={{ background: theme.palette.background.default }} expanded={expanded === 'custom'} onChange={handleAccordeonChange('custom')}>
+          {session.greeting&&virgin&&!virgin2 ? <Box sx={{ mt: 10, width: 1, color: 'white', backgroundColor: 'secondary' }}>
+            <Starter><LooksThreeOutlinedIcon fontSize="inherit" color='success' />
+              <StarterMessage><Typography color="#ffee58">Experiment with inputs to make instructions to AI more specific:</Typography></StarterMessage></Starter></Box> : null}
+        
+         {virgin&&session.greeting ? <Accordion sx={{ background: theme.palette.background.default }} expanded={expanded === 'custom'} onChange={handleAccordeonChange('custom')}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel4bh-content"
@@ -587,7 +594,8 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               </Box>
             </AccordionDetails>
           </Accordion> : null}
-          {virgin ? <Accordion sx={{ background: theme.palette.background.default }} expanded={expanded === 'advanced'} onChange={handleAccordeonChange('advanced')}>
+         
+          {virgin &&session.greeting? <Accordion sx={{ background: theme.palette.background.default }} expanded={expanded === 'advanced'} onChange={handleAccordeonChange('advanced')}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel4bh-content"
@@ -650,14 +658,22 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               </Box>
             </AccordionDetails>
           </Accordion> : null}
+          {session.greeting&&virgin&&!virgin2 ? <Box sx={{ mt: 10, width: 1, color: 'white', backgroundColor: 'secondary' }}>
+            <Starter><LooksFourOutlinedIcon fontSize="inherit" color='success' />
+              <StarterMessage><Typography color="#ffee58">Click or tap on  &quot;Suggest New Wish Text&quot; to regenerate the text. Upload images to create downloadable greeting cards.</Typography></StarterMessage></Starter></Box> : null}
+        
           {!virgin ? <Box sx={{ mt: 10, width: 1, color: 'white', backgroundColor: 'secondary' }}>
             <Starter><LooksTwoOutlinedIcon fontSize="inherit" color='success' />
-              <StarterMessage><Typography >Click or tap on the &quot;Suggest Wish Text&quot; action link:</Typography></StarterMessage></Starter></Box> : null}
+              <StarterMessage><Typography color="#ffee58">Click or tap on the &quot;Suggest Wish Text&quot; button:</Typography></StarterMessage></Starter></Box> : null}
           <GreetingOutput onVirgin={async () => { 
             await recordEvent(session.sessionid, 'virgin wish-text request',`occasion:${occasion}`);
             setVirgin(true); 
             updateSession2({ virgin: true }); 
-            }} greeting={session.greeting || ''} setMissingOccasion={setMissingOccasion} setLoadReady={setLoadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} naive={naive} reflections={reflections} instructions={instructions} inastyleof={inastyleof} language={language} /*authSession={authSession}*/ />
+            }} greeting={session.greeting || ''} onVirgin2={async () => { 
+              await recordEvent(session.sessionid, 'virgin2 request',`occasion:${occasion}`);
+              setVirgin2(true); 
+              updateSession2({ virgin2: true }); 
+              }} virgin={virgin} virgin2={virgin2} setMissingOccasion={setMissingOccasion} setLoadReady={setLoadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} naive={naive} reflections={reflections} instructions={instructions} inastyleof={inastyleof} language={language} /*authSession={authSession}*/ />
            
           {session.greeting && <GiftsOutput loadReady={loadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} reflections={reflections} interests={interests} onInterestsChange={onInterestsChange} />}
 
@@ -687,14 +703,15 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps(context: GetServerSidePropsContext): Promise<any> {
     try {
-      let {fbclid,utm_medium, utm_campaign,utm_content, virgin, from, to, occasion, naive, reflections, instructions, inastyleof, language, age, interests, sex }: { fbclid:string,utm_medium:string,utm_campaign:string,utm_content:string,virgin: boolean, from: string, to: string, occasion: string, naive: boolean, reflections: string, instructions: string, inastyleof: string, language: string, age: string, interests: string, sex: string } = context.query as any;
+      let {fbclid,utm_medium, utm_campaign,utm_content, virgin, virgin2,from, to, occasion, naive, reflections, instructions, inastyleof, language, age, interests, sex }: { fbclid:string,utm_medium:string,utm_campaign:string,utm_content:string,virgin: boolean, virgin2:boolean,from: string, to: string, occasion: string, naive: boolean, reflections: string, instructions: string, inastyleof: string, language: string, age: string, interests: string, sex: string } = context.query as any;
       from = from || '';
       to = to || '';
       occasion = occasion || '';
       age = age || '';
       interests = interests || '';
       sex = sex || '';
-      virgin = virgin || false
+      virgin = virgin || false;
+      virgin2 = virgin2 || false;
       naive = naive || false;
       reflections = reflections || '';
       instructions = instructions || '';
@@ -728,6 +745,7 @@ export const getServerSideProps = withSessionSsr(
       to = to || options.to || '';
       occasion = occasion || options.occasion || '';
       virgin = options.virgin || false;
+      virgin2 = options.virgin2 || false;
       naive = naive || options.naive || typeof options.naive === 'undefined' ? false : true;
       reflections = reflections || options.reflections || '';
       instructions = instructions || options.instructions || '';
@@ -740,6 +758,7 @@ export const getServerSideProps = withSessionSsr(
           to: to,
           occasion: occasion,
           virgin: virgin,
+          virgin2: virgin2,
           naive: naive,
           reflections: reflections,
           instructions: instructions,

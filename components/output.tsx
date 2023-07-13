@@ -11,21 +11,23 @@ import ImageStrip from "./image-strip";
 import ImageData from "../lib/image-data";
 import html2canvas from "html2canvas";
 import FileSaver from "file-saver";
-
+import Typography from '@mui/material/Typography';
 import TextEditor, { TextEditorProps, ImageProps } from "./text-editor";
+
+import LooksFiveOutlinedIcon from '@mui/icons-material/Looks5Outlined';
+
 import * as ga from '../lib/ga'
-const Logo= styled.div`
-position:relative;
-width:100%;
-height:100%;
-`;
-const LogoContainer= styled.div`
-  position:absolute;
-  top:50px;
-  right:0px;
+const Starter = styled.div`
+  display:flex;
+  justify-content:flex-start;
+  font-size:64px;
   align-items:center;
-  z-index:-1;
   `;
+const StarterMessage = styled.div`
+  font-size:24px;
+  padding-left:10px;
+  `;
+
 const BottomLink = styled.div`
   padding: 10px;
 
@@ -37,6 +39,9 @@ const BottomLink = styled.div`
 
 export default function Output({
   onVirgin,
+  onVirgin2,
+  virgin,
+  virgin2,
   setMissingOccasion,
   setLoadReady,
   session,
@@ -53,6 +58,9 @@ export default function Output({
  // authSession
 }: {
   onVirgin: any;
+  onVirgin2:any;
+  virgin:boolean;
+  virgin2:boolean;
   setMissingOccasion: any;
   setLoadReady: any;
   session: Options;
@@ -139,6 +147,9 @@ export default function Output({
     setLoading(true);
     setLoadReady(true);
     onVirgin();
+    if(greeting){
+      onVirgin2();
+    }
     const result = await getWishText({
       style: "",
       from,
@@ -159,6 +170,11 @@ export default function Output({
       updateSession2({ greeting: result });
       setValue(result);
       setLoadReady(true);
+      const elem = document.getElementById('wt-output');
+      setTimeout(()=>window.scrollTo({
+        top: elem?.getBoundingClientRect().top,
+        behavior: "smooth",
+      }),100);
     }
     ga.event({
       action: "generate",
@@ -187,6 +203,7 @@ export default function Output({
 
   const handleCopy: () => void = () => {
     // Add your implementation here
+    onVirgin2();
   };
 
   const handleDownload = async () => {
@@ -215,6 +232,9 @@ export default function Output({
 
   const onUpload = (result: any, widget: any) => {
     const { secure_url: url, public_id: publicId, height, width, thumbnail_url: thumbnailUrl, original_filename: originalFilename } = result.info;
+    
+    onVirgin2();
+    
     ga.event({
       action: "upload",
       params : {
@@ -245,8 +265,12 @@ export default function Output({
   return (
     <>
       <ToolbarGenerate error={occasion?.length>0?false:true} onGenerateClick={handleGenerate} onUploadClick={onUpload} hasGreeting={session.greeting ? true : false} />
-      <Box sx={{ my: 1, width: { xs: 1 } }} textAlign="center">
+      <Box id='wt-output' sx={{ my: 1, width: { xs: 1 } }} textAlign="center">
         <TextEditor session={session} text={session.greeting || ''} onChange={(text: string) => { updateSession2({ greeting: text }); }} image={selectedImage} loading={loading} canvasRef={canvasRef} />
+        {virgin&&!virgin2 ? <Box sx={{ mt: 10, width: 1, color: 'white', backgroundColor: 'secondary' }}>
+            <Starter><LooksFiveOutlinedIcon fontSize="inherit" color='success' />
+              <StarterMessage><Typography color="#ffee58">Copy message to clipboard to be used with your favorite messenger or social media app.</Typography></StarterMessage></Starter></Box> : null}
+        
         {session.greeting && !loading && <ToolbarAccept session={session} text={session.greeting} images={images} onDownloadClick={handleDownload} onAcceptClick={handleAccept} onCopyClick={handleCopy} />}
         {!loading && false && (
           <BottomLink>
