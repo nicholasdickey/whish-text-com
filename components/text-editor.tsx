@@ -8,7 +8,7 @@ import MdEditor from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
 import { useTheme } from '@mui/material/styles';
 import * as ga from '../lib/ga';
-
+import LinearProgress from '@mui/material/LinearProgress';
 
 const Headline = styled.div`
 width:100%;
@@ -283,6 +283,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ session, image, text, loading, 
                 {loading ? "" : headline}
               </ReactMarkdown></Headline>
               <div />
+              {loading&&<LinearProgress />}
              <Body id='wt-output'> <ReactMarkdown>
                 {loading ? "Generating..." : body}
               </ReactMarkdown></Body>
