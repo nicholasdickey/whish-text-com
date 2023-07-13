@@ -615,7 +615,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                   label="Additional Reflections,Thoughts"
                   value={reflections}
                   onChange={onReflectionsChange}
-                  helperText="Any thoughts that you have about what should be reflected in the greeting. For example: 'Always thinking og you', 'We miss you', 'We are so proud of you', 'We are so happy for you', 'We are so sorry for your loss', 'Say Hi to your family'"
+                  helperText="Any thoughts that you have about what should be reflected in the greeting. For example: 'Always thinking of you', 'We miss you', 'We are so proud of you', 'We are so happy for you', 'We are so sorry for your loss', 'Say Hi to your family'"
                 />
               </Box>
               <Box sx={{ my: 4 }}>
