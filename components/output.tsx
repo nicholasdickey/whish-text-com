@@ -172,7 +172,7 @@ export default function Output({
       setLoadReady(true);
       const elem = document.getElementById('wt-output');
       setTimeout(()=>window.scrollTo({
-        top: elem?.getBoundingClientRect().top,
+        top:(elem?.getBoundingClientRect().bottom||0)-200,
         behavior: "smooth",
       }),100);
     }
@@ -265,8 +265,9 @@ export default function Output({
   return (
     <>
       <ToolbarGenerate error={occasion?.length>0?false:true} onGenerateClick={handleGenerate} onUploadClick={onUpload} hasGreeting={session.greeting ? true : false} />
-      <Box id='wt-output' sx={{ my: 1, width: { xs: 1 } }} textAlign="center">
-        <TextEditor session={session} text={session.greeting || ''} onChange={(text: string) => { updateSession2({ greeting: text }); }} image={selectedImage} loading={loading} canvasRef={canvasRef} />
+      <Box sx={{ my: 1, width: { xs: 1 } }} textAlign="center">
+        <TextEditor  session={session} text={session.greeting || ''} onChange={(text: string) => { updateSession2({ greeting: text }); }} image={selectedImage} loading={loading} canvasRef={canvasRef} />
+        <div  />
         {virgin&&!virgin2 ? <Box sx={{ mt: 10, width: 1, color: 'white', backgroundColor: 'secondary' }}>
             <Starter><LooksFiveOutlinedIcon fontSize="inherit" color='success' />
               <StarterMessage><Typography color="#ffee58">Copy message to clipboard to be used with your favorite messenger or social media app.</Typography></StarterMessage></Starter></Box> : null}

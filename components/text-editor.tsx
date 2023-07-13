@@ -23,6 +23,10 @@ justify-content:center;
   padding: 2px;
   margin-top: 20px;
   //margin-bottom: 2px;
+  @media (max-width: 990px) {
+    font-size: 16px;
+  
+  }
   `;
 
 const Body = styled.div`
@@ -43,6 +47,10 @@ justify-content:center;
   padding-bottom:20px;
   padding-right:10px;
   margin-bottom: 20px;
+  @media (max-width: 990px) {
+    font-size: 14px;
+  
+  }
   `;
 
 const BackgroundWrapper = styled.div`
@@ -178,7 +186,7 @@ const editorStyles = {
   color: "#fff", // Text color
   zIndex: 4,
   //marginTop:64,
-  minHeight: "100%",
+  minHeight: 250,
   overflow: "auto"
 
 };
@@ -271,10 +279,11 @@ const TextEditor: React.FC<TextEditorProps> = ({ session, image, text, loading, 
         <InnerOutput image={image.url} ref={ref} className="inner-output" div={canvasRef.current} height={image.height + (text.length > 400 ? horiz ? 150 : 50 : 0)} width={image.width} data-id="GreetingsOutput:InnerOutput" length={text.length} horiz={horiz} editable={editing}>
           {!editing ? (
             <Mark image={image.url?true:false} onClick={() => handleTextClick()} >
-              <Headline><ReactMarkdown>
+              <Headline ><ReactMarkdown>
                 {loading ? "" : headline}
               </ReactMarkdown></Headline>
-             <Body> <ReactMarkdown>
+              <div />
+             <Body id='wt-output'> <ReactMarkdown>
                 {loading ? "Generating..." : body}
               </ReactMarkdown></Body>
             </Mark>
