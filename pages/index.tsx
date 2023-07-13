@@ -55,7 +55,7 @@ import { isbot } from '../lib/isbot'
 
 
 const WBLogo=styled.div`
-  margin-right:10px;
+  margin-right:30px;
 `;
 const Starter = styled.div`
   display:flex;
@@ -429,9 +429,9 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               <Typography
                 variant="h6"
                 component="div"
-                sx={{ flexGrow: 1, display: { xs: 'block', sm: 'none' } }}
+                sx={{ flexGrow: 1,  display: { xs: 'block', sm: 'none' } }}
               >
-                WISH TEXT COMPOSER
+                WISH TEXT
               </Typography>
               <Box sx={{ display: { xs: 'block', sm: 'block' } }}>
                 <AppMenu color={theme.palette.text.primary}>
