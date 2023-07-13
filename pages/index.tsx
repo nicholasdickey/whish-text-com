@@ -551,7 +551,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
           </ClearButton></ClearButtonContainer> : null}
           {!virgin ? <Box sx={{ mt: 5, width: 1, color: 'white', backgroundColor: 'secondary' }}>
             <Starter><LooksOneOutlinedIcon fontSize="inherit" color='success' />
-              <StarterMessage><Typography color="#ffee58">To begin, select or type an occasion for the greeting, for example "Birthday":</Typography></StarterMessage></Starter></Box> : null}
+              <StarterMessage><Typography color="#ffee58">To begin, select or type an occasion for the greeting, for example `&ldquo;`Birthday`&ldquo;`:</Typography></StarterMessage></Starter></Box> : null}
           <Combo id="occasion"
             label="Occasion"
             value={occasion}
