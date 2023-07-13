@@ -662,7 +662,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             <Starter><LooksFourOutlinedIcon fontSize="inherit" color='success' />
               <StarterMessage><Typography color="#ffee58">Click or tap on  &quot;Suggest New Wish Text&quot; to regenerate the text. Upload images to create downloadable greeting cards.</Typography></StarterMessage></Starter></Box> : null}
         
-          {!virgin ? <Box sx={{ mt: 10, width: 1, color: 'white', backgroundColor: 'secondary' }}>
+          {!virgin&&occasion ? <Box sx={{ mt: 10, width: 1, color: 'white', backgroundColor: 'secondary' }}>
             <Starter><LooksTwoOutlinedIcon fontSize="inherit" color='success' />
               <StarterMessage><Typography color="#ffee58">Click or tap on the &quot;Suggest Wish Text&quot; button:</Typography></StarterMessage></Starter></Box> : null}
           <GreetingOutput onVirgin={async () => { 
