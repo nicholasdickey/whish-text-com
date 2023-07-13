@@ -38,7 +38,7 @@ import {
 import Head from 'next/head'
 import axios from "axios";
 import Image from 'next/image'
-import { useSession, signIn, signOut } from "next-auth/react"
+//import { useSession, signIn, signOut } from "next-auth/react"
 import { Roboto } from 'next/font/google';
 import { withSessionSsr, Options } from '../lib/with-session';
 
@@ -129,7 +129,7 @@ export default function Home({ utm_medium,isbot,isfb,virgin: startVirgin, naive:
   const [interests, setInterests] = useState(startInterests);
   const [loadReady, setLoadReady] = useState(true);
   const [virginEvent,setVirginEvent] = useState(false);
-  const { data: authSession } = useSession();
+  //const { data: authSession } = useSession();
   const router = useRouter();
   const theme = useTheme();
 
@@ -170,7 +170,7 @@ export default function Home({ utm_medium,isbot,isfb,virgin: startVirgin, naive:
   const handleMenuClick = (item: string) => {
     console.log('handleMenuClick', item);
     if (item == 'Login') {
-      signIn();
+     // signIn();
     }
     else
       router.push(`/${item.toLowerCase()}`);
@@ -447,15 +447,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
 
                 </AppMenu>
               </Box>
-              {false && authSession && <Box key="login" >
-                <IconButton
-                  size="small"
-                  sx={{ ml: 2 }}
-                  aria-haspopup="true"
-                >
-                  <AvatarMenu authSession={authSession as any} />
-                </IconButton>
-              </Box>}
+            
             </Toolbar>
           </AppBar>
           <Box component="nav">
@@ -665,8 +657,8 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             await recordEvent(session.sessionid, 'virgin wish-text request',`occasion:${occasion}`);
             setVirgin(true); 
             updateSession2({ virgin: true }); 
-            }} greeting={session.greeting || ''} setMissingOccasion={setMissingOccasion} setLoadReady={setLoadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} naive={naive} reflections={reflections} instructions={instructions} inastyleof={inastyleof} language={language} authSession={authSession} />
-
+            }} greeting={session.greeting || ''} setMissingOccasion={setMissingOccasion} setLoadReady={setLoadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} naive={naive} reflections={reflections} instructions={instructions} inastyleof={inastyleof} language={language} /*authSession={authSession}*/ />
+           
           {session.greeting && <GiftsOutput loadReady={loadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} reflections={reflections} interests={interests} onInterestsChange={onInterestsChange} />}
 
           <Copyright> <Sub> <Typography variant="caption" gutterBottom>
@@ -770,3 +762,16 @@ export const getServerSideProps = withSessionSsr(
       }
     }
   })
+/**
+ * 
+ * 
+ *   {false && authSession && <Box key="login" >
+                <IconButton
+                  size="small"
+                  sx={{ ml: 2 }}
+                  aria-haspopup="true"
+                >
+                  <AvatarMenu authSession={authSession as any} />
+                </IconButton>
+              </Box>}
+ */

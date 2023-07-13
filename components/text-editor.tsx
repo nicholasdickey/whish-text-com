@@ -90,8 +90,8 @@ interface InnerOutputProps {
 
 const InnerOutput = styled.div<InnerOutputProps>`
   position: relative;
-  display: flex;
-  flex-direction: column;
+  //display: flex;
+  //flex-direction: column;
   white-space: pre-line;
   justify-content: flex-end;
   overflow-wrap: break-word;
@@ -127,7 +127,8 @@ const InnerOutput = styled.div<InnerOutputProps>`
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 4;
+    height:100%;
+    z-index: 5;
   }
 
   & p {
@@ -139,7 +140,7 @@ const InnerOutput = styled.div<InnerOutputProps>`
     margin-bottom: 10px; /* Add margin-bottom to prevent text overflow */
     bottom: 0;
     color:${({ image }) => image ? 'white' : null};
-    z-index: 4;
+    z-index: 6;
     overflow-wrap: break-word;
     text-align: left;
     font-family: PingFangSC-Regular, 'Roboto', sans-serif;
@@ -148,7 +149,7 @@ const InnerOutput = styled.div<InnerOutputProps>`
 
   & div#adintro {
     opacity: 1.0;
-    margin-top: 10px;
+    margin-bottom: 10px;
     color: white;
     position: relative;
     z-index: 4;
@@ -177,12 +178,22 @@ const editorStyles = {
   color: "#fff", // Text color
   zIndex: 4,
   //marginTop:64,
-  minHeight: 200,
+  minHeight: "100%",
   overflow: "auto"
 
 };
+interface MarkProps {
+  image:boolean;
+}
+const Mark=styled.div<MarkProps>`
+position: ${({image})=>image?'absolute':'relative'};
+bottom:0;
+`;
 const MarkdownEditorWrap = styled.div`
-  
+  position:absolute;
+  bottom:0;
+  width:100%;
+  height:100%;
   & textarea{
    // background: transparent !important;
     //background-color:rgba(0, 0, 0, 0.5);
@@ -259,14 +270,14 @@ const TextEditor: React.FC<TextEditorProps> = ({ session, image, text, loading, 
       <div style={{ position: "relative" }} ref={canvasRef}>
         <InnerOutput image={image.url} ref={ref} className="inner-output" div={canvasRef.current} height={image.height + (text.length > 400 ? horiz ? 150 : 50 : 0)} width={image.width} data-id="GreetingsOutput:InnerOutput" length={text.length} horiz={horiz} editable={editing}>
           {!editing ? (
-            <div style={{ zIndex: 4 }} onClick={() => handleTextClick()} >
+            <Mark image={image.url?true:false} onClick={() => handleTextClick()} >
               <Headline><ReactMarkdown>
                 {loading ? "" : headline}
               </ReactMarkdown></Headline>
              <Body> <ReactMarkdown>
                 {loading ? "Generating..." : body}
               </ReactMarkdown></Body>
-            </div>
+            </Mark>
           ) : (
             <MarkdownEditorWrap><MdEditor
               name={'text-editor'}

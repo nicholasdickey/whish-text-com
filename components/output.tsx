@@ -50,7 +50,7 @@ export default function Output({
   inastyleof,
   language,
   greeting,
-  authSession
+ // authSession
 }: {
   onVirgin: any;
   setMissingOccasion: any;
@@ -66,7 +66,7 @@ export default function Output({
   inastyleof: string;
   language: string;
   greeting: string;
-  authSession: any;
+//  authSession: any;
 }) {
   const [value, setValue] = useState("");
   const [loading, setLoading] = useState(false);
@@ -182,7 +182,7 @@ export default function Output({
     if (selectedImage.url) {
       image = await convertDivToPng(canvasRef.current);
     }
-    await saveToHistory(authSession.username, greeting, occasion, to, image, gift);
+   // await saveToHistory(authSession.username, greeting, occasion, to, image, gift);
   };
 
   const handleCopy: () => void = () => {
@@ -245,9 +245,7 @@ export default function Output({
   return (
     <>
       <ToolbarGenerate error={occasion?.length>0?false:true} onGenerateClick={handleGenerate} onUploadClick={onUpload} hasGreeting={session.greeting ? true : false} />
-      
       <Box sx={{ my: 1, width: { xs: 1 } }} textAlign="center">
-        
         <TextEditor session={session} text={session.greeting || ''} onChange={(text: string) => { updateSession2({ greeting: text }); }} image={selectedImage} loading={loading} canvasRef={canvasRef} />
         {session.greeting && !loading && <ToolbarAccept session={session} text={session.greeting} images={images} onDownloadClick={handleDownload} onAcceptClick={handleAccept} onCopyClick={handleCopy} />}
         {!loading && false && (
