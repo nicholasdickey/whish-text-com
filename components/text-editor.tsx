@@ -1,4 +1,4 @@
-import React, { useState, useRef,useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { styled } from "styled-components";
 import AdIntro from "./ad-intro";
 import ReactMarkdown from "react-markdown";
@@ -8,6 +8,43 @@ import MdEditor from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
 import { useTheme } from '@mui/material/styles';
 import * as ga from '../lib/ga';
+
+
+const Headline = styled.div`
+width:100%;
+display:flex;
+
+justify-content:center;
+  font-size: 22px;
+  font-weight: 700;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  color: #fff;
+  text-align: center;
+  padding: 2px;
+  margin-top: 20px;
+  //margin-bottom: 2px;
+  `;
+
+const Body = styled.div`
+width:100%;
+display:flex;
+
+justify-content:center;
+//border: 1px solid #fff;
+
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.7;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  color: #fff;
+
+  padding-left: 20px;
+  padding-top:1px;
+  padding-bottom:20px;
+  padding-right:10px;
+  margin-bottom: 20px;
+  `;
+
 const BackgroundWrapper = styled.div`
   width: 100%;
   //background-color: #000; /* Add black background color */
@@ -48,7 +85,7 @@ interface InnerOutputProps {
   div: any;
   horiz?: boolean;
   editable: boolean;
-  image:string;
+  image: string;
 }
 
 const InnerOutput = styled.div<InnerOutputProps>`
@@ -65,7 +102,7 @@ const InnerOutput = styled.div<InnerOutputProps>`
   @media (max-width: 990px) {
     font-weight: 400;
     font-size: ${({ length, horiz }) =>
-      `${length < 600 ? (horiz ? '9' : '14') : length < 500 ? (horiz ? '10' : '15') : length < 400 ? (horiz ? '11' : '16') : horiz ? '7' : '12'}`}px;
+    `${length < 600 ? (horiz ? '9' : '14') : length < 500 ? (horiz ? '10' : '15') : length < 400 ? (horiz ? '11' : '16') : horiz ? '7' : '12'}`}px;
   }
 
   height: ${({ div, width, height }) => {
@@ -80,7 +117,7 @@ const InnerOutput = styled.div<InnerOutputProps>`
     left: 0;
     width: 100%;
     height: 100%; /* Set the height to 100% */
-    background: ${({image})=>image?`linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.6) 60%, rgba(0, 0, 0, 1.0) 100%)`:null};
+    background: ${({ image }) => image ? `linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.6) 60%, rgba(0, 0, 0, 1.0) 100%)` : null};
     z-index: 4;
   }
 
@@ -101,7 +138,7 @@ const InnerOutput = styled.div<InnerOutputProps>`
     margin-top: auto;
     margin-bottom: 10px; /* Add margin-bottom to prevent text overflow */
     bottom: 0;
-    color:${({image})=>image?'white':null};
+    color:${({ image }) => image ? 'white' : null};
     z-index: 4;
     overflow-wrap: break-word;
     text-align: left;
@@ -132,17 +169,17 @@ export interface TextEditorProps {
   loading: boolean;
   onChange: (text: string) => void;
   canvasRef: React.RefObject<HTMLDivElement>;
-  session:any
+  session: any
 }
 const editorStyles = {
- // background:"transparent",// "#262644", // Dark background color
- //backgroundColor:"rgba(0, 0, 0, 0.5);",
+  // background:"transparent",// "#262644", // Dark background color
+  //backgroundColor:"rgba(0, 0, 0, 0.5);",
   color: "#fff", // Text color
-  zIndex:4,
+  zIndex: 4,
   //marginTop:64,
   minHeight: 200,
   overflow: "auto"
-  
+
 };
 const MarkdownEditorWrap = styled.div`
   
@@ -164,38 +201,38 @@ const MarkdownEditorWrap = styled.div`
     overflow:auto;
   }
 `;
-const TextEditor: React.FC<TextEditorProps> = ({ session,image, text, loading, onChange, canvasRef }) => {
+const TextEditor: React.FC<TextEditorProps> = ({ session, image, text, loading, onChange, canvasRef }) => {
   const horiz: boolean = image.width > image.height;
   const mdParser = new MarkdownIt();
   const [editing, setEditing] = useState(false);
   const theme = useTheme();
-  console.log("texteditor",text);
+  console.log("texteditor", text);
   const handleTextClick = () => {
     ga.event({
       action: "textClick",
-      params : {
+      params: {
         sessionid: session.sessionid,
         text: text,
       }
-    }) 
+    })
     setEditing(true);
   };
 
- /*const handleTextChange = (value: string) => {
-    onChange(value);
+  /*const handleTextChange = (value: string) => {
+     onChange(value);
+   };
+ */
+  const handleTextChange = ({ text }: { text: string }) => {
+    ga.event({
+      action: "textEditorChange",
+      params: {
+        sessionid: session.sessionid,
+        text: text,
+      }
+    })
+    onChange(text);
   };
-*/
-const handleTextChange = ({ text }: { text: string }) => {
-  ga.event({
-    action: "textEditorChange",
-    params : {
-      sessionid: session.sessionid,
-      text: text,
-    }
-  }) 
-  onChange(text);
-};
-  let ref=useRef<HTMLDivElement>(null);
+  let ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
@@ -209,30 +246,39 @@ const handleTextChange = ({ text }: { text: string }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [canvasRef]);
- text=text.replaceAll('\n\n','\n');
-console.log("texteditor",text,image )
+  text = text.replaceAll('\n\n', '\n');
+  const tw = text.split('\n');
+  const headline=tw.length>1?tw[0]:'';
+  const body=tw.length>1?tw.slice(1).join('\n'):tw[0];
+  console.log('tw=>:',tw, headline,body)
+  console.log('headline=>:',headline)
+  console.log('body=>:',body)
+  console.log("texteditor", text, image)
   return (
     <div>
       <div style={{ position: "relative" }} ref={canvasRef}>
-        <InnerOutput image={image.url} ref={ref} className="inner-output" div={canvasRef.current}  height={image.height +(text.length>400?horiz?150:50:0)} width={image.width} data-id="GreetingsOutput:InnerOutput" length={text.length} horiz={horiz} editable={editing}>
+        <InnerOutput image={image.url} ref={ref} className="inner-output" div={canvasRef.current} height={image.height + (text.length > 400 ? horiz ? 150 : 50 : 0)} width={image.width} data-id="GreetingsOutput:InnerOutput" length={text.length} horiz={horiz} editable={editing}>
           {!editing ? (
-            <div style={{zIndex:4}} onClick={()=>handleTextClick()} >
-              <ReactMarkdown>
-                {loading ? "Generating..." : text}
-              </ReactMarkdown>
+            <div style={{ zIndex: 4 }} onClick={() => handleTextClick()} >
+              <Headline><ReactMarkdown>
+                {loading ? "" : headline}
+              </ReactMarkdown></Headline>
+             <Body> <ReactMarkdown>
+                {loading ? "Generating..." : body}
+              </ReactMarkdown></Body>
             </div>
           ) : (
             <MarkdownEditorWrap><MdEditor
-            name={'text-editor'}
-            value={text}
-            style={editorStyles} // Apply custom editor styles
-            renderHTML={(text) => mdParser.render(text)}
-            onChange={handleTextChange}
-            view={{ menu: false, md: true, html: false}}
-          /></MarkdownEditorWrap>
+              name={'text-editor'}
+              value={text}
+              style={editorStyles} // Apply custom editor styles
+              renderHTML={(text) => mdParser.render(text)}
+              onChange={handleTextChange}
+              view={{ menu: false, md: true, html: false }}
+            /></MarkdownEditorWrap>
           )}
         </InnerOutput>
-        <BackgroundWrapper>{image && <BackgroundImage div={canvasRef.current} height={image.height} width={image.width} src={image.url} />}<BackgroundFiller/></BackgroundWrapper>
+        <BackgroundWrapper>{image && <BackgroundImage div={canvasRef.current} height={image.height} width={image.width} src={image.url} />}<BackgroundFiller /></BackgroundWrapper>
       </div>
     </div>
   );
