@@ -24,7 +24,7 @@ justify-content:center;
   margin-top: 20px;
   //margin-bottom: 2px;
   @media (max-width: 990px) {
-    font-size: 16px;
+    font-size: 18px;
   
   }
   `;
@@ -48,7 +48,7 @@ justify-content:center;
   padding-right:10px;
   margin-bottom: 20px;
   @media (max-width: 990px) {
-    font-size: 14px;
+    font-size: 16px;
   
   }
   `;
