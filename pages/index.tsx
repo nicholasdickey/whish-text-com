@@ -418,7 +418,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               >
                 <MenuIcon />
               </IconButton> : null}
-              <WBLogo><Image src="/wbLogo.png" width={32} height={31} alt="Wish Text Composer Logo"/></WBLogo>
+              <WBLogo><Image src="/wbLogo-grey.png" width={32} height={31} alt="Wish Text Composer Logo"/></WBLogo>
               <Typography
                 variant="h6"
                 component="div"
