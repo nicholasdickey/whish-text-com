@@ -226,6 +226,7 @@ export default function Output({
     // Add your implementation here
     setTimeout(async ()=>await recordEvent(session.sessionid, 'copyToClipboard',''),1000);
     setPrompt5(true);
+    updateSession2({ prompt5: true });
   };
 
   const handleDownload = async () => {

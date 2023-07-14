@@ -15,6 +15,7 @@ const amazonSearch=async (
     res: NextApiResponse) => {
 
     let search:string = req.query.search as string;
+   // console.log("AMAZON search:", search);")
     const url=`https://www.amazon.com/s?k=${search.replaceAll(' ','+')}&ref=nb_sb_noss_2`;
   
     const response =  await axios.get(url,{

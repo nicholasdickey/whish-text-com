@@ -26,7 +26,7 @@ async function handler(
     console.log("save session",session);
     req.session.sessionid = session.sessionid;
     await updateSession(session.sessionid,session);
-    console.log("save session2", session.options);
+   // console.log("save session2", session);
     await req.session.save();
    
 

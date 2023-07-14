@@ -38,9 +38,10 @@ import NextPlanOutlinedIcon from '@mui/icons-material/NextPlanOutlined';
 import {
   GetServerSidePropsContext,
 } from "next";
-
+import { ThemeProvider,createTheme } from '@mui/material/styles';
 import Head from 'next/head'
-import axios from "axios";
+import { blueGrey } from '@mui/material/colors'
+import axios from 'axios';
 import Image from 'next/image'
 //import { useSession, signIn, signOut } from "next-auth/react"
 import { Roboto } from 'next/font/google';
@@ -154,12 +155,12 @@ export default function Home({ prompt1: startPrompt1, prompt2: startPrompt2, pro
   const [interests, setInterests] = useState(startInterests);
   const [loadReady, setLoadReady] = useState(true);
   const [virginEvent, setVirginEvent] = useState(false);
-  const [customVirgin, setCustomVirgin] = useState(false);
-  const [regenerateVirgin, setRegenerateVirgin] = useState(false);
+  const [darkMode, setDarkMode] = useState(session.mode );
+
 
   //const { data: authSession } = useSession();
   const router = useRouter();
-  const theme = useTheme();
+  //const theme = useTheme();
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [missingOccasion, setMissingOccasion] = useState(false);
@@ -170,7 +171,50 @@ export default function Home({ prompt1: startPrompt1, prompt2: startPrompt2, pro
   console.log("===================================  ###########  ==============================")
   //const mode = useDarkMode(session.mode||true);
    //const mode=darkMode;
-
+   
+   const modeMe = (e:any) => {
+     setDarkMode(!!(e.matches));
+   };
+  // console.log("_app:darkMode",darkMode,session?.mode||"")
+   React.useEffect(() => {
+     const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
+     if(matchMedia.matches!=darkMode){
+       const assigned = { ...Object.assign(session?session:{}, {mode:matchMedia.matches}) }
+       setTimeout(async () => {
+       await axios.post(`/api/session/save`, { session: assigned });
+       }, 1);
+     }
+     setDarkMode(matchMedia.matches);
+     matchMedia.addEventListener("change", modeMe);
+ 
+     return () => matchMedia.removeEventListener("change", modeMe);
+   }, []);
+ 
+   let theme:any;
+   if(darkMode){
+     theme = createTheme({
+       palette: {
+         mode: 'dark',
+         background: {
+           default:'#2d2b38',//' blueGrey[900],
+           paper: blueGrey[600],
+         },
+         
+       },
+     })
+   }
+   else {
+     theme = createTheme({
+       palette: {
+         mode: 'light',
+         /*background: {
+           default:'#2d2b38',//' blueGrey[900],
+           paper: blueGrey[600],
+         },*/
+        
+       },
+     })
+   }
   if (!virgin && !virginEvent && !v && !isbot) {
     v = true;
     setVirginEvent(true);
@@ -188,6 +232,7 @@ export default function Home({ prompt1: startPrompt1, prompt2: startPrompt2, pro
       setTimeout(async () => await recordEvent(session.sessionid, 'accordion', panel), 1000);
 
       setPrompt3(true);
+      updateSession2({ prompt3: true });
     };
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -433,10 +478,12 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
 Whether it's birthdays, graduations, holidays, or moments of illness or loss, WISH-TEXT.COM provides personalized messages and thoughtful gift recommendations, all at absolutely no cost." />
         <meta property="og:description" content="Are you tired of struggling to find the right words and perfect gifts for various occasions? Look no further! With WISH-TEXT.COM, our free AI-powered Assistant is here to make your life easier.
 Whether it's birthdays, graduations, holidays, or moments of illness or loss, WISH-TEXT.COM provides personalized messages and thoughtful gift recommendations, all at absolutely no cost." />
+        <link rel="icon" href={darkMode ? "/wbLogo.png" : "/bwLogo.png"} sizes="64x63" type="image/png" />
 
         <meta name="viewport" content="width=device-width, initial-scale=1" />
      
       </Head>
+      <ThemeProvider theme={theme}>
       <main className={roboto.className} >
 
         <Container maxWidth="sm">
@@ -729,7 +776,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             await recordEvent(session.sessionid, 'virgin2 request', `occasion:${occasion}`);
             setVirgin2(true);
             setPrompt4(true);
-            updateSession2({ virgin2: true,prompt4 });
+            updateSession2({ virgin2: true,prompt4:true });
           }} virgin={virgin} virgin2={virgin2} setMissingOccasion={setMissingOccasion} setLoadReady={setLoadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} naive={naive} reflections={reflections} instructions={instructions} inastyleof={inastyleof} language={language} /*authSession={authSession}*/ />
 
           {session.greeting && <GiftsOutput loadReady={loadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} reflections={reflections} interests={interests} onInterestsChange={onInterestsChange} />}
@@ -754,6 +801,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
           </Script>
         </div>
       </main>
+      </ThemeProvider>
     </>
   )
 }

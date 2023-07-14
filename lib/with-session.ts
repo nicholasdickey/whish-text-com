@@ -63,5 +63,5 @@ export interface Options{
     inastyleof?:string;
     language?:string;
     interests?:string;
-    mode?:true;
+    mode?:boolean;
  }
