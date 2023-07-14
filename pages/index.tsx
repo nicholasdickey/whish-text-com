@@ -145,7 +145,13 @@ export default function Home({ utm_medium,isbot,isfb,virgin: startVirgin, virgin
   const [missingOccasion, setMissingOccasion] = useState(false);
   const drawerWidth = 240;
   const navItems = ['Home', 'History', 'Share', 'Contact', 'Login'];
-  
+  const [mode,setMode]=  React.useState('dark');
+ 
+  React.useEffect(() => {
+    const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const m=  darkModeQuery.matches ? 'dark' : 'light';
+    setMode(m);
+  }, []);
   if(!virgin&&!virginEvent&&!v&&!isbot){
     v=true; 
     setVirginEvent(true);   
@@ -214,7 +220,7 @@ export default function Home({ utm_medium,isbot,isfb,virgin: startVirgin, virgin
     await axios.post(`/api/session/save`, { session: assigned });
   }, [session]);
   const updateRoute = useCallback(({ to, from, occasion, naive, reflections, instructions, inastyleof, language, interests }: { to: string, from: string, occasion: string, naive: boolean, reflections: string, instructions: string, inastyleof: string, language: string, interests: string }) => {
-    const params = `/${occasion ? '?occasion=' : ''}${occasion ? encodeURIComponent(occasion) : ''}${naive ? `${occasion ? '&' : '?'}naive=true` : ''}${reflections ? `${occasion ? '&' : '?'}reflections=${encodeURIComponent(reflections)}` : ``}${instructions ? `${occasion ? '&' : '?'}instructions=${encodeURIComponent(instructions)}` : ``}${inastyleof ? `${occasion ? '&' : '?'}inastyleof=${encodeURIComponent(inastyleof)}` : ``}${language ? `${occasion ? '&' : '?'}language=${encodeURIComponent(language)}` : ``}${to ? `${occasion ? '&' : '?'}to=${encodeURIComponent(to)}` : ``}${from ? `${occasion ? '&' : '?'}from=${encodeURIComponent(from)}` : ``}${interests ? `${occasion ? '&' : '?'}interests=${encodeURIComponent(interests)}` : ``}`;
+    const params = `/${occasion ? '?occasion=' : ''}${occasion ? encodeURIComponent(occasion) : ''}${naive ? `${occasion ? '&' : '?'}naive=${naive}` : ''}${reflections ? `${occasion ? '&' : '?'}reflections=${encodeURIComponent(reflections)}` : ``}${instructions ? `${occasion ? '&' : '?'}instructions=${encodeURIComponent(instructions)}` : ``}${inastyleof ? `${occasion ? '&' : '?'}inastyleof=${encodeURIComponent(inastyleof)}` : ``}${language ? `${occasion ? '&' : '?'}language=${encodeURIComponent(language)}` : ``}${to ? `${occasion ? '&' : '?'}to=${encodeURIComponent(to)}` : ``}${from ? `${occasion ? '&' : '?'}from=${encodeURIComponent(from)}` : ``}${interests ? `${occasion ? '&' : '?'}interests=${encodeURIComponent(interests)}` : ``}`;
     router.push(params, params, { shallow: true })
 
   }, [router]);
@@ -399,7 +405,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
 Whether it's birthdays, graduations, holidays, or moments of illness or loss, WISH-TEXT.COM provides personalized messages and thoughtful gift recommendations, all at absolutely no cost." />
 
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/wbLogo.png" sizes="64x63" type="image/png" />
+        <link rel="icon" href={mode=='dark'?"/wbLogo.png":"/bwLogo.png"} sizes="64x63" type="image/png" />
 
       </Head>
       <main className={roboto.className} >
@@ -484,7 +490,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             width={668/4}
             height={868/4}
             alt="Wish Text Composer"
-            src={'https://ucarecdn.com/711a184a-cb29-410c-a169-826e80c4a5d1/wishtextlogo21.png'} />
+            src={'/wish-text-candle-light.png'} />
           </LogoContainer></Logo>
           {!virgin ? <Box sx={{ my: 0, padding: 1, width: 1, color: noExplain ? 'normal' : 'white', backgroundColor: noExplain ? 'normal' : 'secondary' }}>
 
@@ -558,9 +564,9 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             <ClearIcon />
             <ClearText>Reset</ClearText>
           </ClearButton></ClearButtonContainer> : null}
-          {!virgin ? <Box sx={{ mt: 5, width: 1, color: 'white', backgroundColor: 'secondary' }}>
+          {!virgin ? <Box sx={{ mt: 5, width: 1,  }}>
             <Starter><LooksOneOutlinedIcon fontSize="inherit" color='success' />
-              <StarterMessage><Typography color="#ffee58">To begin, select or type an occasion for the greeting, for example &ldquo;Birthday&ldquo;:</Typography></StarterMessage></Starter></Box> : null}
+              <StarterMessage><Typography color="secondary"/*color="#ffee58"*/>To begin, select or type an occasion for the greeting, for example &ldquo;Birthday&ldquo;:</Typography></StarterMessage></Starter></Box> : null}
           <Combo id="occasion"
             label="Occasion"
             value={occasion}
@@ -568,9 +574,9 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             onChange={onOccasionChange}
             helperText="Required for a meaningful result. For example: &ldquo;8th Birthday&rdquo;, &ldquo;Sweet Sixteen&rdquo;, &ldquo;Illness&rdquo; &ldquo;Death in the family&rdquo;, &ldquo;Christmas&rdquo;, &ldquo;Graduation&ldquo;"
           />
-          {session.greeting&&virgin&&!virgin2 ? <Box sx={{ mt: 10, width: 1, color: 'white', backgroundColor: 'secondary' }}>
+          {session.greeting&&virgin&&!virgin2 ? <Box sx={{ mt: 10, width: 1 }}>
             <Starter><LooksThreeOutlinedIcon fontSize="inherit" color='success' />
-              <StarterMessage><Typography color="#ffee58">Experiment with inputs to make instructions to AI more specific:</Typography></StarterMessage></Starter></Box> : null}
+              <StarterMessage><Typography color="secondary"/*color="#ffee58"*/>Experiment with inputs to make instructions to AI more specific:</Typography></StarterMessage></Starter></Box> : null}
         
          {virgin&&session.greeting ? <Accordion sx={{ background: theme.palette.background.default }} expanded={expanded === 'custom'} onChange={handleAccordeonChange('custom')}>
             <AccordionSummary
@@ -669,11 +675,11 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
           </Accordion> : null}
           {session.greeting&&virgin&&!virgin2 ? <Box sx={{ mt: 10, width: 1, color: 'white', backgroundColor: 'secondary' }}>
             <Starter><LooksFourOutlinedIcon fontSize="inherit" color='success' />
-              <StarterMessage><Typography color="#ffee58">Click or tap on  &quot;Suggest New Wish Text&quot; to regenerate the text. Upload images to create downloadable greeting cards.</Typography></StarterMessage></Starter></Box> : null}
+              <StarterMessage><Typography color="secondary"/*color="#ffee58"*/>Click or tap on  &quot;Suggest New Wish Text&quot; to regenerate the text. Upload images to create downloadable greeting cards.</Typography></StarterMessage></Starter></Box> : null}
         
-          {!virgin&&occasion ? <Box sx={{ mt: 10, width: 1, color: 'white', backgroundColor: 'secondary' }}>
+          {!virgin&&occasion ? <Box sx={{ mt: 10, width: 1}}>
             <Starter><LooksTwoOutlinedIcon fontSize="inherit" color='success' />
-              <StarterMessage><Typography color="#ffee58">Click or tap on the &quot;Suggest Wish Text&quot; button:</Typography></StarterMessage></Starter></Box> : null}
+              <StarterMessage><Typography color="secondary"/*color="#ffee58"*/>Click or tap on the &quot;Suggest Wish Text&quot; button:</Typography></StarterMessage></Starter></Box> : null}
           <GreetingOutput onVirgin={async () => { 
             await recordEvent(session.sessionid, 'virgin wish-text request',`occasion:${occasion}`);
             setVirgin(true); 
@@ -730,6 +736,7 @@ export const getServerSideProps = withSessionSsr(
       utm_campaign = utm_campaign || '';
       utm_content = utm_content || '';
       fbclid=fbclid||'';
+      console.log("naive1=",naive)
       var randomstring = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
       let sessionid = context.req.session?.sessionid || randomstring();
       let startoptions: Options = await fetchSession(sessionid);
@@ -740,6 +747,7 @@ export const getServerSideProps = withSessionSsr(
         imagesString: '',
         selectedImage: '',
       };
+      console.log("naive2=",naive)
       const ua = context.req.headers['user-agent'];
       const botInfo = isbot({ ua });
       if(botInfo.bot)
@@ -756,12 +764,13 @@ export const getServerSideProps = withSessionSsr(
       occasion = occasion || options.occasion || '';
       virgin = options.virgin || false;
       virgin2 = options.virgin2 || false;
-      naive = naive || options.naive || typeof options.naive === 'undefined' ? false : true;
+      naive = naive || options.naive||false;
       reflections = reflections || options.reflections || '';
       instructions = instructions || options.instructions || '';
       inastyleof = inastyleof || options.inastyleof || '';
       language = language || options.language || '';
       interests = interests || options.interests || '';
+      console.log("naive3=",naive)
       return {
         props: {
           from: from,

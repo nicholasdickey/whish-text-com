@@ -18,7 +18,7 @@ justify-content:center;
   font-size: 22px;
   font-weight: 700;
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-  color: #fff;
+ // color: #fff;
   text-align: center;
   padding: 2px;
   margin-top: 20px;
@@ -40,7 +40,7 @@ justify-content:center;
   font-weight: 400;
   line-height: 1.7;
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-  color: #fff;
+ // color: #fff;
 
   padding-left: 20px;
   padding-top:1px;
