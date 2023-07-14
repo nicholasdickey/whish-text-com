@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 const useDarkMode = () => {
   const [darkMode, setDarkMode] = useState(false);
 
-  const modeMe = (e) => {
+  const modeMe = (e:any) => {
     setDarkMode(!!e.matches);
   };
 
