@@ -52,7 +52,7 @@ import * as ga from '../lib/ga'
 import Combo from "../components/combo-text";
 import { light } from '@mui/material/styles/createPalette';
 import { isbot } from '../lib/isbot'
-
+import useDarkMode from '../hooks/mode';
 
 const WBLogo=styled.div`
   margin-right:30px;
@@ -145,13 +145,9 @@ export default function Home({ utm_medium,isbot,isfb,virgin: startVirgin, virgin
   const [missingOccasion, setMissingOccasion] = useState(false);
   const drawerWidth = 240;
   const navItems = ['Home', 'History', 'Share', 'Contact', 'Login'];
-  const [mode,setMode]=  React.useState('dark');
+  //const [mode,setMode]=  React.useState('dark');
+  const mode=useDarkMode();
  
-  React.useEffect(() => {
-    const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const m=  darkModeQuery.matches ? 'dark' : 'light';
-    setMode(m);
-  }, []);
   if(!virgin&&!virginEvent&&!v&&!isbot){
     v=true; 
     setVirginEvent(true);   
@@ -405,7 +401,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
 Whether it's birthdays, graduations, holidays, or moments of illness or loss, WISH-TEXT.COM provides personalized messages and thoughtful gift recommendations, all at absolutely no cost." />
 
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href={mode=='dark'?"/wbLogo.png":"/bwLogo.png"} sizes="64x63" type="image/png" />
+        <link rel="icon" href={mode?"/wbLogo.png":"/bwLogo.png"} sizes="64x63" type="image/png" />
 
       </Head>
       <main className={roboto.className} >

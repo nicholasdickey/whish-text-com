@@ -4,22 +4,14 @@ import { ThemeProvider,createTheme } from '@mui/material/styles';
 import type { AppProps } from 'next/app';
 import { SessionProvider } from "next-auth/react"
 import Head from 'next/head';
-
+import useDarkMode from '../hooks/mode';
 import { blueGrey } from '@mui/material/colors'
 
 export default function MyApp(props: AppProps) {
   const { Component, pageProps: { session, ...pageProps } } = props;
-  const [mode,setMode]=  React.useState('dark');
+  const mode= useDarkMode();
   let theme:any;
-  React.useEffect(() => {
-   
-    const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const m=  darkModeQuery.matches ? 'dark' : 'light';
-    setMode(m);
-      console.log("SET MODE",m)
-      document.body.setAttribute("data-theme", m); 
-  }, []);
-  if(mode=='dark'){
+  if(mode){
     theme = createTheme({
       palette: {
         mode: 'dark',
