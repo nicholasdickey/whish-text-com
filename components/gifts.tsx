@@ -35,6 +35,7 @@ const ButtonContainer = styled.div`
 `;
 
 const OuterWrap = styled.div`
+margin-top: 120px;
 `;
 
 const GiftSuggesstionHeader = styled.div`
@@ -176,6 +177,7 @@ export default function Output({
 
   return (
     <OuterWrap>
+      <hr/>
       <Typography>
         {loading ? (
           <PlaceholderOuterContainer>
@@ -209,6 +211,7 @@ export default function Output({
           />
         </FormContainer>
       ) : null}
+       <hr/>
     </OuterWrap>
   );
 }

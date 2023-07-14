@@ -294,7 +294,7 @@ export default function Output({
       <Box sx={{ my: 1, width: { xs: 1 } }} textAlign="center">
         <TextEditor  session={session} text={session.greeting || ''} onChange={(text: string) => { updateSession2({ greeting: text }); }} image={selectedImage} loading={loading} canvasRef={canvasRef} />
         <div  />
-        {virgin&&!prompt5 && !loading ? <Box sx={{ mt: 10, width: 1 }}>
+        {virgin&&!prompt5 && !loading ? <Box sx={{ mt: 0, width: 1 }}>
             <Starter><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
               <StarterMessage><Typography color="secondary"/*color="#ffee58"*/>Copy message to clipboard to be used with your favorite messenger or social media app.</Typography></StarterMessage></Starter></Box> : null}
         
