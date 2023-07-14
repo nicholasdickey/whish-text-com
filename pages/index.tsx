@@ -53,7 +53,12 @@ import Combo from "../components/combo-text";
 import { light } from '@mui/material/styles/createPalette';
 import { isbot } from '../lib/isbot'
 import useDarkMode from '../hooks/mode';
-
+interface WebShareProps{
+  color:string;
+}
+const WebShare=styled.div<WebShareProps>`
+  color:${props=>props.color};
+`;
 const WBLogo=styled.div`
   margin-right:30px;
 `;
@@ -437,6 +442,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               </Typography>
               <Box sx={{ display: { xs: 'block', sm: 'block' } }}>
                 <AppMenu color={theme.palette.text.primary}>
+                 
                   <RWebShare
                     data={{
                       text: session.greeting || '',
@@ -455,7 +461,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
 
                     }}
                   >
-                    <Button> <IosShareOutlinedIcon /></Button>
+                     <WebShare color={"white"}><Button color={"inherit"}> <IosShareOutlinedIcon /></Button></WebShare>
                   </RWebShare>
 
                 </AppMenu>
