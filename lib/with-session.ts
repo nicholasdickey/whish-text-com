@@ -52,6 +52,11 @@ export interface Options{
     occasion?:string;
     virgin?:boolean;
     virgin2?:boolean;
+    prompt1?:string;
+    prompt2?:string;
+    prompt3?:string;
+    prompt4?:string;
+    prompt5?:string;
     naive?:boolean;
     reflections?:string;
     instructions?:string;

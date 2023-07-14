@@ -15,7 +15,7 @@ import Typography from '@mui/material/Typography';
 import TextEditor, { TextEditorProps, ImageProps } from "./text-editor";
 import { recordEvent } from '../lib/api'
 import LooksFiveOutlinedIcon from '@mui/icons-material/Looks5Outlined';
-
+import ErrorOutlineOutlinedIcon from '@mui/icons-material/NextPlanOutlined';
 import * as ga from '../lib/ga'
 const Starter = styled.div`
   display:flex;
@@ -44,6 +44,7 @@ export default function Output({
   onVirgin2,
   virgin,
   virgin2,
+  prompt5,
   setMissingOccasion,
   setLoadReady,
   session,
@@ -57,12 +58,14 @@ export default function Output({
   inastyleof,
   language,
   greeting,
+  setPrompt5,
  // authSession
 }: {
   onVirgin: any;
   onVirgin2:any;
   virgin:boolean;
   virgin2:boolean;
+  prompt5:boolean
   setMissingOccasion: any;
   setLoadReady: any;
   session: Options;
@@ -76,6 +79,7 @@ export default function Output({
   inastyleof: string;
   language: string;
   greeting: string;
+  setPrompt5: any;
 //  authSession: any;
 }) {
   const [value, setValue] = useState("");
@@ -220,9 +224,8 @@ export default function Output({
 
   const handleCopy: () => void = () => {
     // Add your implementation here
-    onVirgin2();
     setTimeout(async ()=>await recordEvent(session.sessionid, 'copyToClipboard',''),1000);
-   
+    setPrompt5(true);
   };
 
   const handleDownload = async () => {
@@ -291,8 +294,8 @@ export default function Output({
       <Box sx={{ my: 1, width: { xs: 1 } }} textAlign="center">
         <TextEditor  session={session} text={session.greeting || ''} onChange={(text: string) => { updateSession2({ greeting: text }); }} image={selectedImage} loading={loading} canvasRef={canvasRef} />
         <div  />
-        {virgin&&!virgin2 ? <Box sx={{ mt: 10, width: 1 }}>
-            <Starter><LooksFiveOutlinedIcon fontSize="inherit" color='success' />
+        {virgin&&!prompt5 && !loading ? <Box sx={{ mt: 10, width: 1 }}>
+            <Starter><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
               <StarterMessage><Typography color="secondary"/*color="#ffee58"*/>Copy message to clipboard to be used with your favorite messenger or social media app.</Typography></StarterMessage></Starter></Box> : null}
         
         {session.greeting && !loading && <ToolbarAccept session={session} text={session.greeting} images={images} onDownloadClick={handleDownload} onAcceptClick={handleAccept} onCopyClick={handleCopy} />}
