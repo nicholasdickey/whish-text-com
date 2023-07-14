@@ -449,6 +449,8 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                           sessionid: session.sessionid,
                         }
                       })
+                      setTimeout(async ()=>await recordEvent(session.sessionid, 'share',isfb?'facebook:'+utm_medium:utm_medium?utm_medium:''),1000);
+
                     }}
                   >
                     <Button> <IosShareOutlinedIcon /></Button>
@@ -727,6 +729,7 @@ export const getServerSideProps = withSessionSsr(
       utm_medium = utm_medium || '';
       utm_campaign = utm_campaign || '';
       utm_content = utm_content || '';
+      fbclid=fbclid||'';
       var randomstring = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
       let sessionid = context.req.session?.sessionid || randomstring();
       let startoptions: Options = await fetchSession(sessionid);

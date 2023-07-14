@@ -13,7 +13,7 @@ import html2canvas from "html2canvas";
 import FileSaver from "file-saver";
 import Typography from '@mui/material/Typography';
 import TextEditor, { TextEditorProps, ImageProps } from "./text-editor";
-
+import { recordEvent } from '../lib/api'
 import LooksFiveOutlinedIcon from '@mui/icons-material/Looks5Outlined';
 
 import * as ga from '../lib/ga'
@@ -116,6 +116,8 @@ export default function Output({
         image: image?.url,
       }
     })
+    setTimeout(async ()=>await recordEvent(session.sessionid, 'stripClickHandler',image?.url||''),1000);
+         
     if (image == null) {
       image = {
         url: '',
@@ -152,6 +154,19 @@ export default function Output({
     if(greeting){
       onVirgin2();
     }
+    setTimeout(async ()=>await recordEvent(session.sessionid, 'generate',JSON.stringify({
+      from,
+      to,
+      occasion,
+      naive,
+      reflections,
+      instructions,
+      inastyleof,
+      language,
+      fresh: value ? true : false,
+      sessionid:session.sessionid,
+    },null,4)),1000);
+  
     const result = await getWishText({
       style: "",
       from,
@@ -206,6 +221,8 @@ export default function Output({
   const handleCopy: () => void = () => {
     // Add your implementation here
     onVirgin2();
+    setTimeout(async ()=>await recordEvent(session.sessionid, 'copyToClipboard',''),1000);
+   
   };
 
   const handleDownload = async () => {
@@ -222,6 +239,8 @@ export default function Output({
       
         }
       })
+      setTimeout(async ()=>await recordEvent(session.sessionid, 'download',''),1000);
+   
       if (window.saveAs) {
         window.saveAs(data, 'a' + filename);
       } else {
@@ -245,6 +264,8 @@ export default function Output({
         original_filename: originalFilename,
       }
     })
+    setTimeout(async ()=>await recordEvent(session.sessionid, 'upload',`${originalFilename};${url}`),1000);
+   
     const newImage: ImageData = {
       url,
       publicId,

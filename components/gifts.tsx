@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import { getGiftsText } from "../lib/api";
-
+import { recordEvent } from '../lib/api'
 import AmazonIdeaSearch from "./amazon-idea-search";
 import { Options } from "../lib/with-session";
 import ToobarGifts from "./toolbar-gifts";
@@ -204,6 +204,7 @@ export default function Output({
             onRegenerateClick={async () => {
               if (loading) return;
               await load();
+              setTimeout(async ()=>await recordEvent(session.sessionid, 'regenerateGifts',interests),1000);
             }}
           />
         </FormContainer>

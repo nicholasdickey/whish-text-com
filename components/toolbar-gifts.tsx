@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { IconButton } from '@mui/material';
-
 import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
 
 const ToolbarContainer = styled.div`
@@ -23,20 +22,19 @@ const ToolbarText = styled.span`
 
 interface ToolbarProps {
   onRegenerateClick: () => void;
-
 }
 
 const Toolbar: React.FC<ToolbarProps> = ({
   onRegenerateClick,
- 
+
 }) => {
   return (
     <ToolbarContainer>
-      <ToolbarButton color="primary" size="large" onClick={onRegenerateClick}>
+      <ToolbarButton color="primary" size="large" onClick={
+        onRegenerateClick}>
         <CardGiftcardIcon />
         <ToolbarText> Regenerate Gifts</ToolbarText>
-      </ToolbarButton>
-      
+      </ToolbarButton>      
     </ToolbarContainer>
   );
 };
