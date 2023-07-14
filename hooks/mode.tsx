@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
-const useDarkMode = () => {
-  const [darkMode, setDarkMode] = useState(false);
+const useDarkMode = (defaultMode:boolean):boolean => {
+  const [darkMode, setDarkMode] = useState(defaultMode);
 
   const modeMe = (e:any) => {
     setDarkMode(!!e.matches);

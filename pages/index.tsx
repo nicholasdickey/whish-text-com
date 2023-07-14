@@ -23,7 +23,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useState, useCallback, useEffect } from "react"
 import { useRouter } from 'next/router'
-import { fetchSession, recordEvent } from '../lib/api'
+import { fetchSession, recordEvent, updateSession } from '../lib/api'
 import styled from 'styled-components';
 import ClearIcon from '@mui/icons-material/Clear';
 import { RWebShare } from "react-web-share";
@@ -165,8 +165,11 @@ export default function Home({ prompt1: startPrompt1, prompt2: startPrompt2, pro
   const [missingOccasion, setMissingOccasion] = useState(false);
   const drawerWidth = 240;
   const navItems = ['Home', 'History', 'Share', 'Contact', 'Login'];
+  
   //const [mode,setMode]=  React.useState('dark');
-  const mode = useDarkMode();
+  console.log("===================================  ###########  ==============================")
+  //const mode = useDarkMode(session.mode||true);
+   //const mode=darkMode;
 
   if (!virgin && !virginEvent && !v && !isbot) {
     v = true;
@@ -238,6 +241,12 @@ export default function Home({ prompt1: startPrompt1, prompt2: startPrompt2, pro
     setSession(assigned);
     await axios.post(`/api/session/save`, { session: assigned });
   }, [session]);
+  /*
+  React.useEffect(() => {
+    console.log("UPDATE session  MODE",mode)
+    updateSession2({ mode: mode });
+  },[mode,session.mode])
+*/
   const updateRoute = useCallback(({ to, from, occasion, naive, reflections, instructions, inastyleof, language, interests }: { to: string, from: string, occasion: string, naive: boolean, reflections: string, instructions: string, inastyleof: string, language: string, interests: string }) => {
     const params = `/${occasion ? '?occasion=' : ''}${occasion ? encodeURIComponent(occasion) : ''}${naive ? `${occasion ? '&' : '?'}naive=${naive}` : ''}${reflections ? `${occasion ? '&' : '?'}reflections=${encodeURIComponent(reflections)}` : ``}${instructions ? `${occasion ? '&' : '?'}instructions=${encodeURIComponent(instructions)}` : ``}${inastyleof ? `${occasion ? '&' : '?'}inastyleof=${encodeURIComponent(inastyleof)}` : ``}${language ? `${occasion ? '&' : '?'}language=${encodeURIComponent(language)}` : ``}${to ? `${occasion ? '&' : '?'}to=${encodeURIComponent(to)}` : ``}${from ? `${occasion ? '&' : '?'}from=${encodeURIComponent(from)}` : ``}${interests ? `${occasion ? '&' : '?'}interests=${encodeURIComponent(interests)}` : ``}`;
     router.push(params, params, { shallow: true })
@@ -406,6 +415,7 @@ export default function Home({ prompt1: startPrompt1, prompt2: startPrompt2, pro
     updateSession2({ interests: value });
   }
   console.log("virgin", virgin, virgin2);
+  console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
   return (
     <>
       <Head>
@@ -425,8 +435,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
 Whether it's birthdays, graduations, holidays, or moments of illness or loss, WISH-TEXT.COM provides personalized messages and thoughtful gift recommendations, all at absolutely no cost." />
 
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href={mode ? "/wbLogo.png" : "/bwLogo.png"} sizes="64x63" type="image/png" />
-
+     
       </Head>
       <main className={roboto.className} >
 
