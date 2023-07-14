@@ -399,7 +399,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
 Whether it's birthdays, graduations, holidays, or moments of illness or loss, WISH-TEXT.COM provides personalized messages and thoughtful gift recommendations, all at absolutely no cost." />
 
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/new-wt-logo.png" sizes="128x128" type="image/png" />
+        <link rel="icon" href="/wbLogo.png" sizes="64x63" type="image/png" />
 
       </Head>
       <main className={roboto.className} >
