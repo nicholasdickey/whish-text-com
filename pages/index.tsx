@@ -38,6 +38,8 @@ import NextPlanOutlinedIcon from '@mui/icons-material/NextPlanOutlined';
 import MarkUnreadChatAltOutlinedIcon from '@mui/icons-material/MarkUnreadChatAltOutlined';
 import LightbulbCircleTwoToneIcon from '@mui/icons-material/LightbulbCircleTwoTone';
 import TipsAndUpdatesTwoToneIcon from '@mui/icons-material/TipsAndUpdatesTwoTone';
+import ModeNightTwoToneIcon from '@mui/icons-material/ModeNightTwoTone';
+import LightModeTwoToneIcon from '@mui/icons-material/LightModeTwoTone';
 import {
   GetServerSidePropsContext,
 } from "next";
@@ -59,14 +61,15 @@ import Combo from "../components/combo-text";
 import { light } from '@mui/material/styles/createPalette';
 import { isbot } from '../lib/isbot'
 import useDarkMode from '../hooks/mode';
+import { DarkModeTwoTone } from '@mui/icons-material';
 
 interface BackgroundMode{
   colorDark: string;
   colorLight: string;
 }
 const Background = styled.div<BackgroundMode>`
-z-index:-100;
- background2: ${({colorDark,colorLight})=>`linear-gradient(to top, ${colorDark}, ${colorLight})`};
+  z-index:-100;
+  //background2: ${({colorDark,colorLight})=>`linear-gradient(to top, ${colorDark}, ${colorLight})`};
 `;
 interface WebShareProps {
   color: string;
@@ -168,7 +171,7 @@ export default function Home({ prompt1: startPrompt1, prompt2: startPrompt2, pro
   const [interests, setInterests] = useState(startInterests);
   const [loadReady, setLoadReady] = useState(true);
   const [virginEvent, setVirginEvent] = useState(false);
-  const [darkMode, setDarkMode] = useState(session.mode );
+  const [darkMode, setDarkMode] = useState(true );
 
 
   //const { data: authSession } = useSession();
@@ -184,7 +187,7 @@ export default function Home({ prompt1: startPrompt1, prompt2: startPrompt2, pro
  //console.log("===================================  ###########  ==============================")
   //const mode = useDarkMode(session.mode||true);
    //const mode=darkMode;
-   
+   /*
    const modeMe = (e:any) => {
      setDarkMode(!!(e.matches));
    };
@@ -201,8 +204,8 @@ export default function Home({ prompt1: startPrompt1, prompt2: startPrompt2, pro
      matchMedia.addEventListener("change", modeMe);
  
      return () => matchMedia.removeEventListener("change", modeMe);
-   }, []);
- 
+   }, [darkMode,session?.mode]);
+ */
    let theme:any;
    if(darkMode){
      theme = createTheme({
@@ -497,7 +500,6 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
      
       </Head>
       <ThemeProvider theme={theme}>
-        <Background colorDark={theme.palette.primary.dark} colorLight={theme.palette.background.default}>
       <main className={roboto.className} >
 
         <Container maxWidth="sm">
@@ -531,8 +533,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               </Typography>
               <Box sx={{ display: { xs: 'block', sm: 'block' } }}>
                 <AppMenu color={theme.palette.text.primary}>
-
-                  <RWebShare
+                 <RWebShare
                     data={{
                       text: session.greeting || '',
                       url: `/?occasion=${encodeURIComponent(session.occasion || '')}${session.reflections ? `&reflections=${encodeURIComponent(session.reflections)}` : ``}${session.instructions ? `&instructions=${encodeURIComponent(session.instructions)}` : ``}${session.inastyleof ? `&inastyleof=${encodeURIComponent(session.inastyleof)}` : ``}${session.language ? `&language=${encodeURIComponent(session.language)}` : ``}${session.to ? `&to=${encodeURIComponent(session.to)}` : ``}${session.from ? `&from=${encodeURIComponent(session.from)}` : ``}${session.interests ? `&interests=${encodeURIComponent(session.interests)}` : ``}`,
@@ -576,7 +577,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             </Drawer>
           </Box>
           <Toolbar />
-          <Logo><LogoContainer><Image
+          <Logo ><LogoContainer><Image
 
             width={668 / 8}
             height={868 / 8}
@@ -815,7 +816,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
           </Script>
         </div>
       </main>
-      </Background>
+ 
       </ThemeProvider>
     </>
   )
