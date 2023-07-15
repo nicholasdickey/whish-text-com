@@ -22,7 +22,7 @@ const ToolbarButton = styled(IconButton)`
 `;
 
 const ToolbarText = styled.span`
-  font-size: 14px;
+  font-size: 16px;
   
 `;
 

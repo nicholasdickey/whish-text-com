@@ -64,4 +64,5 @@ export interface Options{
     language?:string;
     interests?:string;
     mode?:boolean;
+    modeIsSet?:boolean;
  }

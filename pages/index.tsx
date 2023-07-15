@@ -38,12 +38,12 @@ import NextPlanOutlinedIcon from '@mui/icons-material/NextPlanOutlined';
 import MarkUnreadChatAltOutlinedIcon from '@mui/icons-material/MarkUnreadChatAltOutlined';
 import LightbulbCircleTwoToneIcon from '@mui/icons-material/LightbulbCircleTwoTone';
 import TipsAndUpdatesTwoToneIcon from '@mui/icons-material/TipsAndUpdatesTwoTone';
-import ModeNightTwoToneIcon from '@mui/icons-material/ModeNightTwoTone';
-import LightModeTwoToneIcon from '@mui/icons-material/LightModeTwoTone';
+import ModeNightTwoToneIcon from '@mui/icons-material/ModeNightOutlined';
+import LightModeTwoToneIcon from '@mui/icons-material/LightModeOutlined';
 import {
   GetServerSidePropsContext,
 } from "next";
-import { ThemeProvider,createTheme } from '@mui/material/styles';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Head from 'next/head'
 import { blueGrey } from '@mui/material/colors'
 import axios from 'axios';
@@ -63,13 +63,20 @@ import { isbot } from '../lib/isbot'
 import useDarkMode from '../hooks/mode';
 import { DarkModeTwoTone } from '@mui/icons-material';
 
-interface BackgroundMode{
+const ModeSwitch = styled.div`
+  position:absolute;
+  right:0px;
+  top:20px;  
+  z-index:100; 
+  color:grey; 
+  `;
+interface BackgroundMode {
   colorDark: string;
   colorLight: string;
 }
 const Background = styled.div<BackgroundMode>`
   z-index:-100;
-  //background2: ${({colorDark,colorLight})=>`linear-gradient(to top, ${colorDark}, ${colorLight})`};
+  //background2: ${({ colorDark, colorLight }) => `linear-gradient(to top, ${colorDark}, ${colorLight})`};
 `;
 interface WebShareProps {
   color: string;
@@ -101,9 +108,6 @@ const Logo = styled.div`
   z-index:20;
 `;
 const LogoContainer = styled.div`
-  //position:absolute;
-  //top:0px;
-  //right:0px;
   margin-top:50px;
   z-index:-1;
   `;
@@ -120,8 +124,6 @@ const Sub = styled.div`
   margin:20px;
 `;
 const ClearButton = styled(IconButton)`
-
-//margin-top:20px;
   width: auto;
  `;
 const ClearButtonContainer = styled.div`
@@ -147,7 +149,7 @@ export default function Home({ prompt1: startPrompt1, prompt2: startPrompt2, pro
   prompt4: startPrompt4, prompt5: startPrompt5,
   utm_medium, isbot, isfb, virgin: startVirgin, virgin2: startVirgin2, naive: startNaive, from: startFrom, to: startTo, occasion: startOccasion, reflections: startReflections, instructions: startInstructions, inastyleof: startInastyleof, language: startLanguage, interests: startInterests, ironsession: startSession }:
   { prompt1: boolean, prompt2: boolean, prompt3: boolean, prompt4: boolean, prompt5: boolean, utm_medium: string, isbot: boolean, isfb: boolean, virgin: boolean, virgin2: boolean, naive: boolean, from: string, to: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string, ironsession: Options }) {
-  console.log("CLIENT START SESSION", startSession)
+  
   const [session, setSession] = useState(startSession);
   const [noExplain, setNoExplain] = useState(session.noExplain || false);
   const [occasion, setOccasion] = useState(startOccasion);
@@ -171,8 +173,10 @@ export default function Home({ prompt1: startPrompt1, prompt2: startPrompt2, pro
   const [interests, setInterests] = useState(startInterests);
   const [loadReady, setLoadReady] = useState(true);
   const [virginEvent, setVirginEvent] = useState(false);
-  const [darkMode, setDarkMode] = useState(true );
 
+  const [darkMode, setDarkMode] = React.useState(startSession.mode);
+  const [modeIsSet, setModeIsSet] = React.useState(startSession.modeIsSet);
+  const [systemMode, setSystemMode] = React.useState(false);
 
   //const { data: authSession } = useSession();
   const router = useRouter();
@@ -182,55 +186,26 @@ export default function Home({ prompt1: startPrompt1, prompt2: startPrompt2, pro
   const [missingOccasion, setMissingOccasion] = useState(false);
   const drawerWidth = 240;
   const navItems = ['Home', 'History', 'Share', 'Contact', 'Login'];
-  
-  //const [mode,setMode]=  React.useState('dark');
- //console.log("===================================  ###########  ==============================")
-  //const mode = useDarkMode(session.mode||true);
-   //const mode=darkMode;
-   /*
-   const modeMe = (e:any) => {
-     setDarkMode(!!(e.matches));
-   };
-  // console.log("_app:darkMode",darkMode,session?.mode||"")
-   React.useEffect(() => {
-     const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
-     if(matchMedia.matches!=darkMode){
-       const assigned = { ...Object.assign(session?session:{}, {mode:matchMedia.matches}) }
-       setTimeout(async () => {
-       await axios.post(`/api/session/save`, { session: assigned });
-       }, 1);
-     }
-     setDarkMode(matchMedia.matches);
-     matchMedia.addEventListener("change", modeMe);
- 
-     return () => matchMedia.removeEventListener("change", modeMe);
-   }, [darkMode,session?.mode]);
- */
-   let theme:any;
-   if(darkMode){
-     theme = createTheme({
-       palette: {
-         mode: 'dark',
-         background: {
-           default:'#2d2b38',//' blueGrey[900],
-           paper: blueGrey[600],
-         },
-         
-       },
-     })
-   }
-   else {
-     theme = createTheme({
-       palette: {
-         mode: 'light',
-         /*background: {
-           default:'#2d2b38',//' blueGrey[900],
-           paper: blueGrey[600],
-         },*/
-        
-       },
-     })
-   }
+
+  let theme: any;
+  if (darkMode) {
+    theme = createTheme({
+      palette: {
+        mode: 'dark',
+        background: {
+          default: '#2d2b38',//' blueGrey[900],
+          paper: blueGrey[600],
+        }
+      },
+    })
+  }
+  else {
+    theme = createTheme({
+      palette: {
+        mode: 'light',
+      },
+    })
+  }
   if (!virgin && !virginEvent && !v && !isbot) {
     v = true;
     setVirginEvent(true);
@@ -263,7 +238,6 @@ export default function Home({ prompt1: startPrompt1, prompt2: startPrompt2, pro
       }
     })
   }
-
   const handleMenuClick = (item: string) => {
     console.log('handleMenuClick', item);
     if (item == 'Login') {
@@ -271,7 +245,6 @@ export default function Home({ prompt1: startPrompt1, prompt2: startPrompt2, pro
     }
     else
       router.push(`/${item.toLowerCase()}`);
-
   }
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
@@ -302,6 +275,32 @@ export default function Home({ prompt1: startPrompt1, prompt2: startPrompt2, pro
     setSession(assigned);
     await axios.post(`/api/session/save`, { session: assigned });
   }, [session]);
+  const modeMe = (e: any) => {
+    //if(!modeIsSet){
+    setDarkMode(!!(e.matches));
+    updateSession2({ mode: e.matches });
+    setSystemMode(!!(e.matches));   
+   // }
+  };
+  // console.log("_app:darkMode",darkMode,session?.mode||"")
+  React.useEffect(() => {
+    const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
+    setSystemMode(matchMedia.matches);   
+    if (matchMedia.matches != darkMode) {
+      const assigned = { ...Object.assign(session ? session : {}, { mode: matchMedia.matches }) }
+    
+     if(!modeIsSet){
+        document.body.setAttribute("data-theme", matchMedia.matches ? 'dark' : 'light');
+        setDarkMode(!!(matchMedia.matches));
+        updateSession2({ mode: matchMedia.matches });
+     }
+    }
+    // setDarkMode(matchMedia.matches);
+    matchMedia.addEventListener("change", modeMe);
+
+    return () => matchMedia.removeEventListener("change", modeMe);
+  }, [darkMode, session?.mode,modeIsSet]);
+
   /*
   React.useEffect(() => {
     console.log("UPDATE session  MODE",mode)
@@ -341,7 +340,7 @@ export default function Home({ prompt1: startPrompt1, prompt2: startPrompt2, pro
     })
     setOccasion(value);
     setPrompt1(true);
-    updateSession2({ occasion: value,prompt1:true });
+    updateSession2({ occasion: value, prompt1: true });
   }
 
   const onNaiveChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -475,8 +474,8 @@ export default function Home({ prompt1: startPrompt1, prompt2: startPrompt2, pro
     setInterests(value);
     updateSession2({ interests: value });
   }
- // console.log("virgin", virgin, virgin2);
-//console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+  // console.log("virgin", virgin, virgin2);
+  //console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
   return (
     <>
       <Head>
@@ -494,329 +493,335 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
 Whether it's birthdays, graduations, holidays, or moments of illness or loss, WISH-TEXT.COM provides personalized messages and thoughtful gift recommendations, all at absolutely no cost." />
         <meta property="og:description" content="Are you tired of struggling to find the right words and perfect gifts for various occasions? Look no further! With WISH-TEXT.COM, our free AI-powered Assistant is here to make your life easier.
 Whether it's birthdays, graduations, holidays, or moments of illness or loss, WISH-TEXT.COM provides personalized messages and thoughtful gift recommendations, all at absolutely no cost." />
-        <link rel="icon" href={darkMode ? "/wbLogo.png" : "/bwLogo.png"} sizes="64x63" type="image/png" />
+        <link rel="icon" href={systemMode ? "/wbLogo.png" : "/bwLogo.png"} sizes="64x63" type="image/png" />
+        <meta name="theme-color" content={theme.palette.background.default} />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-     
+
       </Head>
       <ThemeProvider theme={theme}>
-      <main className={roboto.className} >
+        <main className={roboto.className} >
 
-        <Container maxWidth="sm">
+          <Container maxWidth="sm">
 
-          <CssBaseline />
-          <AppBar position="absolute" component="nav">
-            <Toolbar>
-              {false ? <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                onClick={handleDrawerToggle}
-                sx={{ mr: 2, display: { sm: 'none' } }}
+            <CssBaseline />
+            <AppBar position="absolute" component="nav">
+              <Toolbar>
+                {false ? <IconButton
+                  color="inherit"
+                  aria-label="open drawer"
+                  edge="start"
+                  onClick={handleDrawerToggle}
+                  sx={{ mr: 2, display: { sm: 'none' } }}
+                >
+                  <MenuIcon />
+                </IconButton> : null}
+                <WBLogo><Image src="/wbLogo-grey.png" width={32} height={31} alt="Wish Text Composer Logo" /></WBLogo>
+                <Typography
+                  variant="h6"
+                  component="div"
+                  sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+                >
+                  WISH TEXT COMPOSER
+                </Typography>
+                <Typography
+                  variant="h6"
+                  component="div"
+                  sx={{ flexGrow: 1, display: { xs: 'block', sm: 'none' } }}
+                >
+                  WISH TEXT
+                </Typography>
+                <Box sx={{ display: { xs: 'block', sm: 'block' } }}>
+                  <AppMenu color={theme.palette.text.primary}>
+                    <RWebShare
+                      data={{
+                        text: session.greeting || '',
+                        url: `/?occasion=${encodeURIComponent(session.occasion || '')}${session.reflections ? `&reflections=${encodeURIComponent(session.reflections)}` : ``}${session.instructions ? `&instructions=${encodeURIComponent(session.instructions)}` : ``}${session.inastyleof ? `&inastyleof=${encodeURIComponent(session.inastyleof)}` : ``}${session.language ? `&language=${encodeURIComponent(session.language)}` : ``}${session.to ? `&to=${encodeURIComponent(session.to)}` : ``}${session.from ? `&from=${encodeURIComponent(session.from)}` : ``}${session.interests ? `&interests=${encodeURIComponent(session.interests)}` : ``}`,
+                        title: 'Wish-Text.Com -  Wish Text Composer',
+                      }}
+                      onClick={() => {
+                        console.log("shared successfully!");
+                        ga.event({
+                          action: "share",
+                          params: {
+                            sessionid: session.sessionid,
+                          }
+                        })
+                        setTimeout(async () => await recordEvent(session.sessionid, 'share', isfb ? 'facebook:' + utm_medium : utm_medium ? utm_medium : ''), 1000);
+
+                      }}
+                    >
+                      <WebShare color={"white"}><Button color={"inherit"}> <IosShareOutlinedIcon /></Button></WebShare>
+                    </RWebShare>
+
+                  </AppMenu>
+                </Box>
+
+              </Toolbar>
+            </AppBar>
+            <Box component="nav">
+              <Drawer
+                container={container}
+                variant="temporary"
+                open={mobileOpen}
+                onClose={handleDrawerToggle}
+                ModalProps={{
+                  keepMounted: true, // Better open performance on mobile.
+                }}
+                sx={{
+                  display: { xs: 'block', sm: 'none' },
+                  '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+                }}
               >
-                <MenuIcon />
-              </IconButton> : null}
-              <WBLogo><Image src="/wbLogo-grey.png" width={32} height={31} alt="Wish Text Composer Logo" /></WBLogo>
-              <Typography
-                variant="h6"
+                {drawer}
+              </Drawer>
+            </Box>
+            <Toolbar />
+            <Logo ><ModeSwitch><Button color={"inherit"} onClick={()=>{
+              setDarkMode(!darkMode); 
+              setModeIsSet(true);
+              updateSession2({mode: !darkMode,modeIsSet: true});
+            }}>{darkMode?<LightModeTwoToneIcon/>:<ModeNightTwoToneIcon/>}</Button></ModeSwitch><LogoContainer><Image
+
+              width={668 / 8}
+              height={868 / 8}
+              alt="Wish Text Composer"
+              src={'/wish-text-candle-light.png'} />
+            </LogoContainer></Logo>
+            {!virgin ? <Box sx={{ my: 0, padding: 1, width: 1, color: noExplain ? 'normal' : 'white', backgroundColor: noExplain ? 'normal' : 'secondary' }}>
+
+              {false && !noExplain ? <Typography
+                variant="body2"
                 component="div"
-                sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+                sx={{ flexGrow: 1, display: { xs: 'block', sm: 'block' } }}
               >
-                WISH TEXT COMPOSER
-              </Typography>
-              <Typography
-                variant="h6"
-                component="div"
-                sx={{ flexGrow: 1, display: { xs: 'block', sm: 'none' } }}
+                <p>Create the &quot;wishing&quot; or greeting text for you to paste into your favorite messaging app.
+                  AI will provide the helpful suggestions that you can edit by clicking on the suggestion.</p>
+
+                Additionally, Wish Text Composer can generate a &apos;postcard&apos; greeting over an uploaded image. You can download the card and share from any device.
+                <p>Utilizing AI, it also provides the gift suggestions.</p>
+              </Typography> : null}
+
+              {false ? <FormControlLabel
+                label="Do not show the description"
+                control={
+                  <Checkbox
+                    sx={{ color: 'white' }}
+                    checked={noExplain}
+                    onChange={handleNoExplanChange}
+                  />
+                }
+              /> : null}
+            </Box> : null}
+
+            {virgin ? <ClearButtonContainer><ClearButton onClick={() => {
+              updateRoute({
+                from: '',
+                to: '',
+                occasion: '',
+                naive: false,
+                reflections: '',
+                instructions: '',
+                inastyleof: '',
+                language: '',
+                interests: '',
+
+              })
+              updateSession2({
+                from: '',
+                to: '',
+                occasion: '',
+                virgin: false,
+                prompt1: false,
+                prompt2: false,
+                prompt3: false,
+                prompt4: false,
+                prompt5: false,
+                naive: false,
+                reflections: '',
+                instructions: '',
+                inastyleof: '',
+                language: '',
+                interests: '',
+                greeting: '',
+                giftSuggestions: '',
+                imagesString: '',
+                selectedImage: '',
+
+              });
+              setFrom('');
+              setTo('');
+              setOccasion('');
+              setVirgin(false);
+              setVirgin2(false);
+              setPrompt1(false);
+              setPrompt2(false);
+              setPrompt3(false);
+              setPrompt4(false);
+              setPrompt5(false);
+              setNaive(false);
+              setReflections('');
+              setInstructions('');
+              setInastyleof('');
+              setLanguage('');
+              setInterests('');
+
+            }}>
+              <ClearIcon />
+              <ClearText>Reset</ClearText>
+            </ClearButton></ClearButtonContainer> : null}
+            {!prompt1 ? <Box sx={{ mt: 5, width: 1, }}>
+              <Starter><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
+                <StarterMessage><Typography color="secondary"/*color="#ffee58"*/>To begin, select or type an occasion for the greeting, for example &ldquo;Birthday&ldquo;:</Typography></StarterMessage></Starter></Box> : null}
+            <Combo id="occasion"
+              label="Occasion"
+              value={occasion}
+              error={missingOccasion}
+              onChange={onOccasionChange}
+              helperText="Required for a meaningful result. For example: &ldquo;8th Birthday&rdquo;, &ldquo;Sweet Sixteen&rdquo;, &ldquo;Illness&rdquo; &ldquo;Death in the family&rdquo;, &ldquo;Christmas&rdquo;, &ldquo;Graduation&ldquo;"
+            />
+            {session.greeting && !prompt3 ? <Box sx={{ mt: 10, width: 1 }}>
+              <Starter><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
+                <StarterMessage><Typography color="secondary"/*color="#ffee58"*/>Experiment with inputs to make instructions to AI more specific:</Typography></StarterMessage></Starter></Box> : null}
+
+            {virgin && session.greeting ? <Accordion sx={{ background: theme.palette.background.default }} expanded={expanded === 'custom'} onChange={handleAccordeonChange('custom')}>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel4bh-content"
+                id="panel4bh-header"
               >
-                WISH TEXT
-              </Typography>
-              <Box sx={{ display: { xs: 'block', sm: 'block' } }}>
-                <AppMenu color={theme.palette.text.primary}>
-                 <RWebShare
-                    data={{
-                      text: session.greeting || '',
-                      url: `/?occasion=${encodeURIComponent(session.occasion || '')}${session.reflections ? `&reflections=${encodeURIComponent(session.reflections)}` : ``}${session.instructions ? `&instructions=${encodeURIComponent(session.instructions)}` : ``}${session.inastyleof ? `&inastyleof=${encodeURIComponent(session.inastyleof)}` : ``}${session.language ? `&language=${encodeURIComponent(session.language)}` : ``}${session.to ? `&to=${encodeURIComponent(session.to)}` : ``}${session.from ? `&from=${encodeURIComponent(session.from)}` : ``}${session.interests ? `&interests=${encodeURIComponent(session.interests)}` : ``}`,
-                      title: 'Wish-Text.Com -  Wish Text Composer',
-                    }}
-                    onClick={() => {
-                      console.log("shared successfully!");
-                      ga.event({
-                        action: "share",
-                        params: {
-                          sessionid: session.sessionid,
-                        }
-                      })
-                      setTimeout(async () => await recordEvent(session.sessionid, 'share', isfb ? 'facebook:' + utm_medium : utm_medium ? utm_medium : ''), 1000);
+                <Typography sx={{ width: '33%', flexShrink: 0 }}>Customize</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box sx={{ my: 4 }}>
+                  <TextField
+                    sx={{ width: { xs: 1 } }}
+                    id="to"
+                    label="To (Recepient)"
+                    value={to}
+                    onChange={onToChange}
+                    helperText="Examples: &ldquo;Our nephew Billy&rdquo;, &ldquo;My Grandson Evan&rdquo;, &ldquo;My Love&rdquo; &ldquo;Love of My Life&rdquo;, &ldquo;Simpsons&rdquo;, &ldquo;Mr Williams, the postman.&ldquo;"
+                  />
+                </Box>
+                <Box sx={{ my: 4 }}>
+                  <TextField
+                    sx={{ width: { xs: 1 } }}
+                    id="from"
+                    label="From"
+                    value={from}
+                    onChange={onFromChange}
+                    helperText="Optional: who is the greeting from? For example - Grandma and Grandpa, Your Dad, etc."
+                  />
+                </Box>
+              </AccordionDetails>
+            </Accordion> : null}
 
-                    }}
-                  >
-                    <WebShare color={"white"}><Button color={"inherit"}> <IosShareOutlinedIcon /></Button></WebShare>
-                  </RWebShare>
+            {virgin && session.greeting ? <Accordion sx={{ background: theme.palette.background.default }} expanded={expanded === 'advanced'} onChange={handleAccordeonChange('advanced')}>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel4bh-content"
+                id="panel4bh-header"
+              >
+                <Typography sx={{ width: '33%', flexShrink: 0 }}>Advanced Inputs</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box sx={{ mb: 4, color: 'primary' }}>
+                  <FormControlLabel
+                    label={<Typography style={{ color: theme.palette.text.secondary }}>Keep it light-hearted, if possible</Typography>}
+                    control={
+                      <Checkbox
+                        sx={{ color: 'secondary' }}
+                        checked={!naive}
+                        onChange={onNaiveChange}
+                      />
+                    }
+                  />
+                </Box>
+                <Box sx={{ mb: 4 }}>
+                  <TextField
+                    sx={{ width: { xs: 1 } }}
+                    id="reflections"
+                    label="Additional Reflections,Thoughts"
+                    value={reflections}
+                    onChange={onReflectionsChange}
+                    helperText="Any thoughts that you have about what should be reflected in the greeting. For example: 'Always thinking of you', 'We miss you', 'We are so proud of you', 'We are so happy for you', 'We are so sorry for your loss', 'Say Hi to your family'"
+                  />
+                </Box>
+                <Box sx={{ my: 4 }}>
+                  <TextField
+                    sx={{ width: { xs: 1 } }}
+                    id="instructions"
+                    label="Instructions to AI"
+                    value={instructions}
+                    onChange={onInstructionsChange}
+                    helperText="Example: 'Keep it very short', 'Do not wish cake', ' As a methodist prayer', 'As a Hebrew prayer', 'No special day'"
+                  />
+                </Box>
+                <Box sx={{ my: 4 }}>
+                  <TextField
+                    sx={{ width: { xs: 1 } }}
+                    id="inastyleof"
+                    label="Use AI to write in the style of"
+                    value={inastyleof}
+                    onChange={onInastyleofChange}
+                    helperText="Example: 'Mark Twain'.'Dr Seuss', 'Shakespeare', 'King David', 'The Simpsons', 'The Bible'. You can upload an image of a character or a person to go with the styled greeting."
+                  />
+                </Box>
+                <Box sx={{ my: 4 }}>
+                  <TextField
+                    sx={{ width: { xs: 1 } }}
+                    id="language"
+                    label="Language"
+                    value={language}
+                    onChange={onLanguageChange}
+                    helperText="Example: 'French', 'Ukrainian', 'Middle-English', 'Canadian'"
+                  />
+                </Box>
+              </AccordionDetails>
+            </Accordion> : null}
+            {session.greeting && !prompt4 ? <Box sx={{ mt: 10, width: 1, color: 'white', backgroundColor: 'secondary' }}>
+              <Starter><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
+                <StarterMessage><Typography color="secondary"/*color="#ffee58"*/>Click or tap on  &quot;Suggest New Wish Text&quot; to regenerate the text. Upload images to create downloadable greeting cards.</Typography></StarterMessage></Starter></Box> : null}
 
-                </AppMenu>
-              </Box>
+            {!prompt2 && occasion ? <Box sx={{ mt: 10, width: 1 }}>
+              <Starter><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
+                <StarterMessage><Typography color="secondary"/*color="#ffee58"*/>Click or tap on the &quot;Suggest Wish Text&quot; button:</Typography></StarterMessage></Starter></Box> : null}
+            <GreetingOutput setPrompt5={setPrompt5} prompt5={prompt5} onVirgin={async () => {
+              await recordEvent(session.sessionid, 'virgin wish-text request', `occasion:${occasion}`);
+              setVirgin(true);
+              setPrompt2(true);
+              updateSession2({ virgin: true, prompt2: true });
+            }} greeting={session.greeting || ''} onVirgin2={async () => {
+              await recordEvent(session.sessionid, 'virgin2 request', `occasion:${occasion}`);
+              setVirgin2(true);
+              setPrompt4(true);
+              updateSession2({ virgin2: true, prompt4: true });
+            }} virgin={virgin} virgin2={virgin2} setMissingOccasion={setMissingOccasion} setLoadReady={setLoadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} naive={naive} reflections={reflections} instructions={instructions} inastyleof={inastyleof} language={language} /*authSession={authSession}*/ />
 
-            </Toolbar>
-          </AppBar>
-          <Box component="nav">
-            <Drawer
-              container={container}
-              variant="temporary"
-              open={mobileOpen}
-              onClose={handleDrawerToggle}
-              ModalProps={{
-                keepMounted: true, // Better open performance on mobile.
-              }}
-              sx={{
-                display: { xs: 'block', sm: 'none' },
-                '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-              }}
-            >
-              {drawer}
-            </Drawer>
-          </Box>
-          <Toolbar />
-          <Logo ><LogoContainer><Image
+            {session.greeting && <GiftsOutput loadReady={loadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} reflections={reflections} interests={interests} onInterestsChange={onInterestsChange} />}
 
-            width={668 / 8}
-            height={868 / 8}
-            alt="Wish Text Composer"
-            src={'/wish-text-candle-light.png'} />
-          </LogoContainer></Logo>
-          {!virgin ? <Box sx={{ my: 0, padding: 1, width: 1, color: noExplain ? 'normal' : 'white', backgroundColor: noExplain ? 'normal' : 'secondary' }}>
-
-            {false && !noExplain ? <Typography
-              variant="body2"
-              component="div"
-              sx={{ flexGrow: 1, display: { xs: 'block', sm: 'block' } }}
-            >
-              <p>Create the &quot;wishing&quot; or greeting text for you to paste into your favorite messaging app.
-                AI will provide the helpful suggestions that you can edit by clicking on the suggestion.</p>
-
-              Additionally, Wish Text Composer can generate a &apos;postcard&apos; greeting over an uploaded image. You can download the card and share from any device.
-              <p>Utilizing AI, it also provides the gift suggestions.</p>
-            </Typography> : null}
-
-            {false ? <FormControlLabel
-              label="Do not show the description"
-              control={
-                <Checkbox
-                  sx={{ color: 'white' }}
-                  checked={noExplain}
-                  onChange={handleNoExplanChange}
-                />
-              }
-            /> : null}
-          </Box> : null}
-
-          {virgin ? <ClearButtonContainer><ClearButton onClick={() => {
-            updateRoute({
-              from: '',
-              to: '',
-              occasion: '',
-              naive: false,
-              reflections: '',
-              instructions: '',
-              inastyleof: '',
-              language: '',
-              interests: '',
-
-            })
-            updateSession2({
-              from: '',
-              to: '',
-              occasion: '',
-              virgin: false,
-              prompt1: false,
-              prompt2: false,
-              prompt3: false,
-              prompt4: false,
-              prompt5: false,
-              naive: false,
-              reflections: '',
-              instructions: '',
-              inastyleof: '',
-              language: '',
-              interests: '',
-              greeting: '',
-              giftSuggestions: '',
-              imagesString: '',
-              selectedImage: '',
-
-            });
-            setFrom('');
-            setTo('');
-            setOccasion('');
-            setVirgin(false);
-            setVirgin2(false);
-            setPrompt1(false);
-            setPrompt2(false);
-            setPrompt3(false);
-            setPrompt4(false);
-            setPrompt5(false);
-            setNaive(false);
-            setReflections('');
-            setInstructions('');
-            setInastyleof('');
-            setLanguage('');
-            setInterests('');
-
-          }}>
-            <ClearIcon />
-            <ClearText>Reset</ClearText>
-          </ClearButton></ClearButtonContainer> : null}
-          {!prompt1 ? <Box sx={{ mt: 5, width: 1, }}>
-            <Starter><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
-              <StarterMessage><Typography color="secondary"/*color="#ffee58"*/>To begin, select or type an occasion for the greeting, for example &ldquo;Birthday&ldquo;:</Typography></StarterMessage></Starter></Box> : null}
-          <Combo id="occasion"
-            label="Occasion"
-            value={occasion}
-            error={missingOccasion}
-            onChange={onOccasionChange}
-            helperText="Required for a meaningful result. For example: &ldquo;8th Birthday&rdquo;, &ldquo;Sweet Sixteen&rdquo;, &ldquo;Illness&rdquo; &ldquo;Death in the family&rdquo;, &ldquo;Christmas&rdquo;, &ldquo;Graduation&ldquo;"
-          />
-          {session.greeting && !prompt3 ? <Box sx={{ mt: 10, width: 1 }}>
-            <Starter><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
-              <StarterMessage><Typography color="secondary"/*color="#ffee58"*/>Experiment with inputs to make instructions to AI more specific:</Typography></StarterMessage></Starter></Box> : null}
-
-          {virgin && session.greeting ? <Accordion sx={{ background: theme.palette.background.default }} expanded={expanded === 'custom'} onChange={handleAccordeonChange('custom')}>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel4bh-content"
-              id="panel4bh-header"
-            >
-              <Typography sx={{ width: '33%', flexShrink: 0 }}>Customize</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Box sx={{ my: 4 }}>
-                <TextField
-                  sx={{ width: { xs: 1 } }}
-                  id="to"
-                  label="To (Recepient)"
-                  value={to}
-                  onChange={onToChange}
-                  helperText="Examples: &ldquo;Our nephew Billy&rdquo;, &ldquo;My Grandson Evan&rdquo;, &ldquo;My Love&rdquo; &ldquo;Love of My Life&rdquo;, &ldquo;Simpsons&rdquo;, &ldquo;Mr Williams, the postman.&ldquo;"
-                />
-              </Box>
-              <Box sx={{ my: 4 }}>
-                <TextField
-                  sx={{ width: { xs: 1 } }}
-                  id="from"
-                  label="From"
-                  value={from}
-                  onChange={onFromChange}
-                  helperText="Optional: who is the greeting from? For example - Grandma and Grandpa, Your Dad, etc."
-                />
-              </Box>
-            </AccordionDetails>
-          </Accordion> : null}
-
-          {virgin && session.greeting ? <Accordion sx={{ background: theme.palette.background.default }} expanded={expanded === 'advanced'} onChange={handleAccordeonChange('advanced')}>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel4bh-content"
-              id="panel4bh-header"
-            >
-              <Typography sx={{ width: '33%', flexShrink: 0 }}>Advanced Inputs</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Box sx={{ mb: 4, color: 'primary' }}>
-                <FormControlLabel
-                  label={<Typography style={{ color: theme.palette.text.secondary }}>Keep it light-hearted, if possible</Typography>}
-                  control={
-                    <Checkbox
-                      sx={{ color: 'secondary' }}
-                      checked={!naive}
-                      onChange={onNaiveChange}
-                    />
-                  }
-                />
-              </Box>
-              <Box sx={{ mb: 4 }}>
-                <TextField
-                  sx={{ width: { xs: 1 } }}
-                  id="reflections"
-                  label="Additional Reflections,Thoughts"
-                  value={reflections}
-                  onChange={onReflectionsChange}
-                  helperText="Any thoughts that you have about what should be reflected in the greeting. For example: 'Always thinking of you', 'We miss you', 'We are so proud of you', 'We are so happy for you', 'We are so sorry for your loss', 'Say Hi to your family'"
-                />
-              </Box>
-              <Box sx={{ my: 4 }}>
-                <TextField
-                  sx={{ width: { xs: 1 } }}
-                  id="instructions"
-                  label="Instructions to AI"
-                  value={instructions}
-                  onChange={onInstructionsChange}
-                  helperText="Example: 'Keep it very short', 'Do not wish cake', ' As a methodist prayer', 'As a Hebrew prayer', 'No special day'"
-                />
-              </Box>
-              <Box sx={{ my: 4 }}>
-                <TextField
-                  sx={{ width: { xs: 1 } }}
-                  id="inastyleof"
-                  label="Use AI to write in the style of"
-                  value={inastyleof}
-                  onChange={onInastyleofChange}
-                  helperText="Example: 'Mark Twain'.'Dr Seuss', 'Shakespeare', 'King David', 'The Simpsons', 'The Bible'. You can upload an image of a character or a person to go with the styled greeting."
-                />
-              </Box>
-              <Box sx={{ my: 4 }}>
-                <TextField
-                  sx={{ width: { xs: 1 } }}
-                  id="language"
-                  label="Language"
-                  value={language}
-                  onChange={onLanguageChange}
-                  helperText="Example: 'French', 'Ukrainian', 'Middle-English', 'Canadian'"
-                />
-              </Box>
-            </AccordionDetails>
-          </Accordion> : null}
-          {session.greeting && !prompt4 ? <Box sx={{ mt: 10, width: 1, color: 'white', backgroundColor: 'secondary' }}>
-            <Starter><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
-              <StarterMessage><Typography color="secondary"/*color="#ffee58"*/>Click or tap on  &quot;Suggest New Wish Text&quot; to regenerate the text. Upload images to create downloadable greeting cards.</Typography></StarterMessage></Starter></Box> : null}
-
-          {!prompt2 && occasion ? <Box sx={{ mt: 10, width: 1 }}>
-            <Starter><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
-              <StarterMessage><Typography color="secondary"/*color="#ffee58"*/>Click or tap on the &quot;Suggest Wish Text&quot; button:</Typography></StarterMessage></Starter></Box> : null}
-          <GreetingOutput setPrompt5={setPrompt5} prompt5={prompt5} onVirgin={async () => {
-            await recordEvent(session.sessionid, 'virgin wish-text request', `occasion:${occasion}`);
-            setVirgin(true);
-            setPrompt2(true);
-            updateSession2({ virgin: true,prompt2:true });
-          }} greeting={session.greeting || ''} onVirgin2={async () => {
-            await recordEvent(session.sessionid, 'virgin2 request', `occasion:${occasion}`);
-            setVirgin2(true);
-            setPrompt4(true);
-            updateSession2({ virgin2: true,prompt4:true });
-          }} virgin={virgin} virgin2={virgin2} setMissingOccasion={setMissingOccasion} setLoadReady={setLoadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} naive={naive} reflections={reflections} instructions={instructions} inastyleof={inastyleof} language={language} /*authSession={authSession}*/ />
-
-          {session.greeting && <GiftsOutput loadReady={loadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} reflections={reflections} interests={interests} onInterestsChange={onInterestsChange} />}
-
-          <Copyright> <Sub> <Typography variant="caption" gutterBottom>
-            Copyright: Wish-Text.Com
-          </Typography></Sub>
-            <Sub><Typography variant="caption" gutterBottom>
-              Contact: support@hudsonwilde.com
-            </Typography></Sub></Copyright>
-        </Container>
-        <div className="container">
-          <Script src={`https://www.googletagmanager.com/gtag/js?${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`} />
-          <Script id="google-analytics">
-            {`
+            <Copyright> <Sub> <Typography variant="caption" gutterBottom>
+              Copyright: Wish-Text.Com
+            </Typography></Sub>
+              <Sub><Typography variant="caption" gutterBottom>
+                Contact: support@hudsonwilde.com
+              </Typography></Sub></Copyright>
+          </Container>
+          <div className="container">
+            <Script src={`https://www.googletagmanager.com/gtag/js?${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`} />
+            <Script id="google-analytics">
+              {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
  
           gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}');
         `}
-          </Script>
-        </div>
-      </main>
- 
+            </Script>
+          </div>
+        </main>
+
       </ThemeProvider>
     </>
   )
