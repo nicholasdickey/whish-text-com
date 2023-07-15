@@ -59,6 +59,15 @@ import Combo from "../components/combo-text";
 import { light } from '@mui/material/styles/createPalette';
 import { isbot } from '../lib/isbot'
 import useDarkMode from '../hooks/mode';
+
+interface BackgroundMode{
+  colorDark: string;
+  colorLight: string;
+}
+const Background = styled.div<BackgroundMode>`
+z-index:-100;
+ background2: ${({colorDark,colorLight})=>`linear-gradient(to top, ${colorDark}, ${colorLight})`};
+`;
 interface WebShareProps {
   color: string;
 }
@@ -80,12 +89,13 @@ const StarterMessage = styled.div`
   padding-right:10px;
   `;
 const Logo = styled.div`
-position:relative;
-width:100%;
-height:100%;
-display:flex;
+  position:relative;
+  width:100%;
+  height:100%;
+  display:flex;
   align-items:center;
   justify-content: center;
+  z-index:20;
 `;
 const LogoContainer = styled.div`
   //position:absolute;
@@ -487,6 +497,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
      
       </Head>
       <ThemeProvider theme={theme}>
+        <Background colorDark={theme.palette.primary.dark} colorLight={theme.palette.background.default}>
       <main className={roboto.className} >
 
         <Container maxWidth="sm">
@@ -567,8 +578,8 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
           <Toolbar />
           <Logo><LogoContainer><Image
 
-            width={668 / 4}
-            height={868 / 4}
+            width={668 / 8}
+            height={868 / 8}
             alt="Wish Text Composer"
             src={'/wish-text-candle-light.png'} />
           </LogoContainer></Logo>
@@ -804,6 +815,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
           </Script>
         </div>
       </main>
+      </Background>
       </ThemeProvider>
     </>
   )

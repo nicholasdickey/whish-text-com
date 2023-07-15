@@ -193,10 +193,12 @@ export default function Output({
       setValue(result);
       setLoadReady(true);
       const elem = document.getElementById('wt-output');
-      setTimeout(()=>window.scrollTo({
-        top:(elem?.getBoundingClientRect().bottom||0)-200,
+      //elem?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(()=>
+      /*window.scrollTo({
+        top:(elem?.getBoundingClientRect().top),//-200,
         behavior: "smooth",
-      }),100);
+      })*/ elem?.scrollIntoView({ behavior: 'smooth', block: 'center' }),100); 
     }
     ga.event({
       action: "generate",
