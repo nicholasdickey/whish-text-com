@@ -33,8 +33,11 @@ import LooksOneOutlinedIcon from '@mui/icons-material/LooksOneOutlined';
 import LooksTwoOutlinedIcon from '@mui/icons-material/LooksTwoOutlined';
 import LooksThreeOutlinedIcon from '@mui/icons-material/Looks3Outlined';
 import LooksFourOutlinedIcon from '@mui/icons-material/Looks4Outlined';
-import ErrorOutlineOutlinedIcon from '@mui/icons-material/NextPlanOutlined';//'@mui/icons-material/ErrorOutlineOutlined';
+import ErrorOutlineOutlinedIcon from '@mui/icons-material/TipsAndUpdatesTwoTone';//'@mui/icons-material/LightbulbCircleTwoTone';//'@mui/icons-material/MarkUnreadChatAltOutlined';//'@mui/icons-material/NextPlanOutlined';//'@mui/icons-material/ErrorOutlineOutlined';
 import NextPlanOutlinedIcon from '@mui/icons-material/NextPlanOutlined';
+import MarkUnreadChatAltOutlinedIcon from '@mui/icons-material/MarkUnreadChatAltOutlined';
+import LightbulbCircleTwoToneIcon from '@mui/icons-material/LightbulbCircleTwoTone';
+import TipsAndUpdatesTwoToneIcon from '@mui/icons-material/TipsAndUpdatesTwoTone';
 import {
   GetServerSidePropsContext,
 } from "next";
@@ -68,7 +71,7 @@ const WBLogo = styled.div`
 const Starter = styled.div`
   display:flex;
   justify-content:flex-start;
-  font-size:64px;
+  font-size:48px;
   align-items:center;
   `;
 const StarterMessage = styled.div`
@@ -168,7 +171,7 @@ export default function Home({ prompt1: startPrompt1, prompt2: startPrompt2, pro
   const navItems = ['Home', 'History', 'Share', 'Contact', 'Login'];
   
   //const [mode,setMode]=  React.useState('dark');
-  console.log("===================================  ###########  ==============================")
+ //console.log("===================================  ###########  ==============================")
   //const mode = useDarkMode(session.mode||true);
    //const mode=darkMode;
    
@@ -459,8 +462,8 @@ export default function Home({ prompt1: startPrompt1, prompt2: startPrompt2, pro
     setInterests(value);
     updateSession2({ interests: value });
   }
-  console.log("virgin", virgin, virgin2);
-  console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+ // console.log("virgin", virgin, virgin2);
+//console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
   return (
     <>
       <Head>

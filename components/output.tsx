@@ -15,12 +15,13 @@ import Typography from '@mui/material/Typography';
 import TextEditor, { TextEditorProps, ImageProps } from "./text-editor";
 import { recordEvent } from '../lib/api'
 import LooksFiveOutlinedIcon from '@mui/icons-material/Looks5Outlined';
-import ErrorOutlineOutlinedIcon from '@mui/icons-material/NextPlanOutlined';
+//import ErrorOutlineOutlinedIcon from '@mui/icons-material/NextPlanOutlined';
+import ErrorOutlineOutlinedIcon from '@mui/icons-material/TipsAndUpdatesTwoTone';
 import * as ga from '../lib/ga'
 const Starter = styled.div`
   display:flex;
   justify-content:flex-start;
-  font-size:64px;
+  font-size:48px;
   align-items:center;
   
   `;
