@@ -65,4 +65,6 @@ export interface Options{
     interests?:string;
     mode?:boolean;
     modeIsSet?:boolean;
+    num?:number;
+    max?:number;
  }

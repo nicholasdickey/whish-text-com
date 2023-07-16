@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Options } from './with-session';
 
 // Retrieves wish text from the server
-export const getWishText = async ({ style, from, to, occasion, naive, reflections, instructions, inastyleof, language, fresh, sessionid }: { style: string, from: string, to: string, occasion: string, naive: boolean, reflections: string, instructions: string, inastyleof: string, language: string, fresh?: boolean, sessionid?: string }) => {
+export const getWishText = async ({ style, from, to, occasion, naive, reflections, instructions, inastyleof, language, fresh, sessionid }: { style: string, from: string, to: string, occasion: string, naive: boolean, reflections: string, instructions: string, inastyleof: string, language: string, fresh?: boolean, sessionid?: string }):Promise<{content:string,num:number}> => {
   try {
     // Encode the URL parameters
     from = encodeURIComponent(from || '');
@@ -17,11 +17,11 @@ export const getWishText = async ({ style, from, to, occasion, naive, reflection
     fresh = fresh || false;
 
     if (!from && !to && !occasion)
-      return '';
+      return {content:'',num:0};
 
     // Construct the URL
     let url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/openai/wish-text?sessionid=${sessionid}&from=${from}&to=${to}&occasion=${occasion}&naive=${naive}&reflections=${reflections}&instructions=${instructions}&inastyleof=${inastyleof}&language=${language}${fresh ? '&fresh=1' : ''}`;
-    console.log("url:", url);
+   // console.log("url:", url);
 
     let recovery = '';
     while (true) {
@@ -30,7 +30,7 @@ export const getWishText = async ({ style, from, to, occasion, naive, reflection
           url = url + recovery;
         }
         const res = await axios.get(url);
-        return res.data.result;
+        return {content:res.data.result,num:res.data.num};
       } catch (x) {
         console.log("SLEEP", x);
         await new Promise(r => setTimeout(r, 1000));
@@ -40,7 +40,7 @@ export const getWishText = async ({ style, from, to, occasion, naive, reflection
   }
   catch (x) {
     console.log("getWishText", x);
-    return '';
+    return {content:'error',num:0}  ;
   }
 }
 
@@ -60,7 +60,7 @@ export const getGiftsText = async ({ from, to, occasion, reflections, interests,
 
     // Construct the URL
     let url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/openai/gifts-text?sessionid=${sessionid || ''}&from=${from}&to=${to}&occasion=${occasion}&reflections=${reflections}&interests=${interests}${fresh ? '&fresh=1' : ''}`;
-    console.log("url:", url);
+  //  console.log("url:", url);
 
     let recovery = '';
     while (true) {
@@ -94,7 +94,7 @@ export const getAmazonSearch = async ({ search }: { search: string }) => {
   try {
     if (!search) return [];
     const url = `/api/amazon-search?search=${encodeURIComponent(search)}`;
-    console.log("url:", url);
+    //console.log("url:", url);
     const res = await axios.get(url);
     return res.data.items as Item[];
   }
@@ -130,14 +130,14 @@ export const getUserSession = async (userslug: string) => {
 export const updateSession = async (sessionid: string, config: Options) => {
   try {
     const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/session/updateSession?`;
-    console.log("updateSession", url, sessionid, config);
+    //console.log("updateSession", url, sessionid, config);
     const res = await axios.post(url, {
       sessionid,
       config
     });
     return res.data.success;
   } catch (x) {
-    console.log("updateSession", x);
+   // console.log("updateSession", x);
   }
 }
 
@@ -188,5 +188,16 @@ export const recordEvent = async (sessionid: string, name: string, params: strin
     console.log("recordEvent", e);
     return false;
   }
-
+}
+export const getSessionHistory= async (sessionid: string,num:number) => {
+  const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/history/get-session-history?sessionid=${sessionid}&num=${num}`;
+  const res = await axios.get(url);
+  console.log("getSessionHistory", sessionid,num, res.data.success,res.data);
+  return res.data;
+}
+export const deleteSessionHistories= async (sessionid: string) => {
+  const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/history/delete-session-histories?sessionid=${sessionid}`;
+  const res = await axios.get(url);
+  console.log("deleteSessionHistories", sessionid, res.data.success,res.data);
+  return res.data;
 }

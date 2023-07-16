@@ -23,7 +23,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useState, useCallback, useEffect } from "react"
 import { useRouter } from 'next/router'
-import { fetchSession, recordEvent, updateSession } from '../lib/api'
+import { fetchSession, recordEvent, updateSession, deleteSessionHistories, getSessionHistory } from '../lib/api'
 import styled from 'styled-components';
 import ClearIcon from '@mui/icons-material/Clear';
 import { RWebShare } from "react-web-share";
@@ -40,6 +40,8 @@ import LightbulbCircleTwoToneIcon from '@mui/icons-material/LightbulbCircleTwoTo
 import TipsAndUpdatesTwoToneIcon from '@mui/icons-material/TipsAndUpdatesTwoTone';
 import ModeNightTwoToneIcon from '@mui/icons-material/ModeNightOutlined';
 import LightModeTwoToneIcon from '@mui/icons-material/LightModeOutlined';
+
+
 import {
   GetServerSidePropsContext,
 } from "next";
@@ -55,13 +57,10 @@ import { withSessionSsr, Options } from '../lib/with-session';
 import GreetingOutput from "../components/output";
 import GiftsOutput from "../components/gifts";
 import AvatarMenu from "../components/avatar-menu";
-import { useTheme } from '@mui/material/styles';
 import * as ga from '../lib/ga'
 import Combo from "../components/combo-text";
-import { light } from '@mui/material/styles/createPalette';
 import { isbot } from '../lib/isbot'
-import useDarkMode from '../hooks/mode';
-import { DarkModeTwoTone } from '@mui/icons-material';
+import PlayerToolbar from "../components/toolbar-player";
 
 const ModeSwitch = styled.div`
   position:absolute;
@@ -90,11 +89,11 @@ const WBLogo = styled.div`
 const Starter = styled.div`
   display:flex;
   justify-content:flex-start;
-  font-size:48px;
+  font-size:36px;
   align-items:center;
   `;
 const StarterMessage = styled.div`
-  font-size:24px;
+  font-size:14px;
   padding-left:10px;
   padding-right:10px;
   `;
@@ -126,9 +125,9 @@ const Sub = styled.div`
 const ClearButton = styled(IconButton)`
   width: auto;
  `;
-const ClearButtonContainer = styled.div`
+const ActionContainer = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content:space-between;
   width: 100%;
 `;
 const ClearText = styled.span`
@@ -145,11 +144,11 @@ const AppMenu = styled.div<ColorProps>`
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 let v = false;
-export default function Home({ prompt1: startPrompt1, prompt2: startPrompt2, prompt3: startPrompt3,
+export default function Home({ num: startNum = 0, max: startMax = 0, prompt1: startPrompt1, prompt2: startPrompt2, prompt3: startPrompt3,
   prompt4: startPrompt4, prompt5: startPrompt5,
   utm_medium, isbot, isfb, virgin: startVirgin, virgin2: startVirgin2, naive: startNaive, from: startFrom, to: startTo, occasion: startOccasion, reflections: startReflections, instructions: startInstructions, inastyleof: startInastyleof, language: startLanguage, interests: startInterests, ironsession: startSession }:
-  { prompt1: boolean, prompt2: boolean, prompt3: boolean, prompt4: boolean, prompt5: boolean, utm_medium: string, isbot: boolean, isfb: boolean, virgin: boolean, virgin2: boolean, naive: boolean, from: string, to: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string, ironsession: Options }) {
-  
+  { num: number, max: number, prompt1: boolean, prompt2: boolean, prompt3: boolean, prompt4: boolean, prompt5: boolean, utm_medium: string, isbot: boolean, isfb: boolean, virgin: boolean, virgin2: boolean, naive: boolean, from: string, to: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string, ironsession: Options }) {
+
   const [session, setSession] = useState(startSession);
   const [noExplain, setNoExplain] = useState(session.noExplain || false);
   const [occasion, setOccasion] = useState(startOccasion);
@@ -161,6 +160,9 @@ export default function Home({ prompt1: startPrompt1, prompt2: startPrompt2, pro
   const [prompt3, setPrompt3] = useState(startPrompt3);
   const [prompt4, setPrompt4] = useState(startPrompt4);
   const [prompt5, setPrompt5] = useState(startPrompt5);
+
+  const [num, setNum] = useState(startNum);
+  const [max, setMax] = useState(startMax);
 
   const [naive, setNaive] = useState(startNaive);
   const [reflections, setReflections] = useState(startReflections);
@@ -279,28 +281,28 @@ export default function Home({ prompt1: startPrompt1, prompt2: startPrompt2, pro
     //if(!modeIsSet){
     setDarkMode(!!(e.matches));
     updateSession2({ mode: e.matches });
-    setSystemMode(!!(e.matches));   
-   // }
+    setSystemMode(!!(e.matches));
+    // }
   };
   // console.log("_app:darkMode",darkMode,session?.mode||"")
   React.useEffect(() => {
     const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
-    setSystemMode(matchMedia.matches);   
+    setSystemMode(matchMedia.matches);
     if (matchMedia.matches != darkMode) {
       const assigned = { ...Object.assign(session ? session : {}, { mode: matchMedia.matches }) }
-    
-     if(!modeIsSet){
+
+      if (!modeIsSet) {
         document.body.setAttribute("data-theme", matchMedia.matches ? 'dark' : 'light');
         setDarkMode(!!(matchMedia.matches));
         updateSession2({ mode: matchMedia.matches });
-     }
+      }
     }
     // setDarkMode(matchMedia.matches);
     matchMedia.addEventListener("change", modeMe);
 
     return () => matchMedia.removeEventListener("change", modeMe);
-  }, [darkMode, session?.mode,modeIsSet]);
-
+  }, [darkMode, session?.mode, modeIsSet]);
+  console.log("RENDER", session, num, max, "startNum:", startNum, "startMax:", startMax)
   /*
   React.useEffect(() => {
     console.log("UPDATE session  MODE",mode)
@@ -308,6 +310,7 @@ export default function Home({ prompt1: startPrompt1, prompt2: startPrompt2, pro
   },[mode,session.mode])
 */
   const updateRoute = useCallback(({ to, from, occasion, naive, reflections, instructions, inastyleof, language, interests }: { to: string, from: string, occasion: string, naive: boolean, reflections: string, instructions: string, inastyleof: string, language: string, interests: string }) => {
+    console.log('value updateRoute', { to, from, occasion, naive, reflections, instructions, inastyleof, language, interests });
     const params = `/${occasion ? '?occasion=' : ''}${occasion ? encodeURIComponent(occasion) : ''}${naive ? `${occasion ? '&' : '?'}naive=${naive}` : ''}${reflections ? `${occasion ? '&' : '?'}reflections=${encodeURIComponent(reflections)}` : ``}${instructions ? `${occasion ? '&' : '?'}instructions=${encodeURIComponent(instructions)}` : ``}${inastyleof ? `${occasion ? '&' : '?'}inastyleof=${encodeURIComponent(inastyleof)}` : ``}${language ? `${occasion ? '&' : '?'}language=${encodeURIComponent(language)}` : ``}${to ? `${occasion ? '&' : '?'}to=${encodeURIComponent(to)}` : ``}${from ? `${occasion ? '&' : '?'}from=${encodeURIComponent(from)}` : ``}${interests ? `${occasion ? '&' : '?'}interests=${encodeURIComponent(interests)}` : ``}`;
     router.push(params, params, { shallow: true })
 
@@ -326,21 +329,24 @@ export default function Home({ prompt1: startPrompt1, prompt2: startPrompt2, pro
       })
   }, [session.sessionid, virgin]);
   const onOccasionChange = (id: string, value: string) => {
-    setMissingOccasion(false);
-    updateRoute({
-      from,
-      to,
-      occasion: value,
-      naive,
-      reflections,
-      instructions,
-      inastyleof,
-      language,
-      interests,
-    })
+    if (value != "") {
+      console.log("value=", value)
+      setMissingOccasion(false);
+      updateRoute({
+        from,
+        to,
+        occasion: value,
+        naive,
+        reflections,
+        instructions,
+        inastyleof,
+        language,
+        interests,
+      })
+      setPrompt1(true);
+      updateSession2({ occasion: value, prompt1: true });
+    }
     setOccasion(value);
-    setPrompt1(true);
-    updateSession2({ occasion: value, prompt1: true });
   }
 
   const onNaiveChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -476,6 +482,24 @@ export default function Home({ prompt1: startPrompt1, prompt2: startPrompt2, pro
   }
   // console.log("virgin", virgin, virgin2);
   //console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+  const processRecord = async (record:any,num:number) => {
+    const { greeting, params} = record;
+    console.log("PARSE",params,JSON.parse(params) );
+    const update = Object.assign(JSON.parse(params), { greeting,  num});
+    updateSession2(update);
+    const { to, from, occasion, naive, reflections, instructions, inastyleof, language, interests } = update;
+    setTo(to);
+    setFrom(from);
+    setOccasion(occasion);
+    setNaive(naive);
+    setReflections(reflections);
+    setInstructions(instructions);
+    setInastyleof(inastyleof);
+    setLanguage(language);
+    setInterests(interests);
+    setNum(num);
+    session.greeting = greeting;
+  }
   return (
     <>
       <Head>
@@ -578,17 +602,17 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               </Drawer>
             </Box>
             <Toolbar />
-            <Logo ><ModeSwitch><Button color={"inherit"} onClick={()=>{
-              setDarkMode(!darkMode); 
+            <Logo ><ModeSwitch><Button color={"inherit"} onClick={() => {
+              setDarkMode(!darkMode);
               setModeIsSet(true);
-              updateSession2({mode: !darkMode,modeIsSet: true});
-            }}>{darkMode?<LightModeTwoToneIcon/>:<ModeNightTwoToneIcon/>}</Button></ModeSwitch><LogoContainer><Image
+              updateSession2({ mode: !darkMode, modeIsSet: true });
+            }}>{darkMode ? <LightModeTwoToneIcon /> : <ModeNightTwoToneIcon />}</Button></ModeSwitch><LogoContainer><Image
 
               width={668 / 8}
               height={868 / 8}
               alt="Wish Text Composer"
               src={'/wish-text-candle-light.png'} />
-            </LogoContainer></Logo>
+              </LogoContainer></Logo>
             {!virgin ? <Box sx={{ my: 0, padding: 1, width: 1, color: noExplain ? 'normal' : 'white', backgroundColor: noExplain ? 'normal' : 'secondary' }}>
 
               {false && !noExplain ? <Typography
@@ -615,65 +639,109 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               /> : null}
             </Box> : null}
 
-            {virgin ? <ClearButtonContainer><ClearButton onClick={() => {
-              updateRoute({
-                from: '',
-                to: '',
-                occasion: '',
-                naive: false,
-                reflections: '',
-                instructions: '',
-                inastyleof: '',
-                language: '',
-                interests: '',
+            {virgin ? <ActionContainer>
+              <PlayerToolbar
+                num={num}
+                max={max}
+                onPrevClick={async () => {
+                  console.log("onPrevClick",num,max)
+                  if (num > 1) {
+                    const { success, record } = await getSessionHistory(session.sessionid, num - 1);
+                    console.log("onPrevClick2",success,record)
+                    if (success) {
+                     await processRecord(record,num-1);
+                    }
+                  }
+                }}
+                onNextClick={async () => {
+                  if (num < max) {
+                    const { success, record } = await getSessionHistory(session.sessionid, num + 1);
+                    if (success) {
+                     await processRecord(record,num+1);
+                    }
+                  }
+                }}
+                onFirstClick={async () => {
+                  
+                  const { success, record } = await getSessionHistory(session.sessionid, 1);
+                  if (success) {
+                   await processRecord(record,1);
+                  }
+                }}
+                onLastClick={async () => {
+                  const { success, record } = await getSessionHistory(session.sessionid, max);
+                  if (success) {
+                   await processRecord(record,max);
+                  }
+                }}
+              />
 
-              })
-              updateSession2({
-                from: '',
-                to: '',
-                occasion: '',
-                virgin: false,
-                prompt1: false,
-                prompt2: false,
-                prompt3: false,
-                prompt4: false,
-                prompt5: false,
-                naive: false,
-                reflections: '',
-                instructions: '',
-                inastyleof: '',
-                language: '',
-                interests: '',
-                greeting: '',
-                giftSuggestions: '',
-                imagesString: '',
-                selectedImage: '',
+              <ClearButton onClick={() => {
 
-              });
-              setFrom('');
-              setTo('');
-              setOccasion('');
-              setVirgin(false);
-              setVirgin2(false);
-              setPrompt1(false);
-              setPrompt2(false);
-              setPrompt3(false);
-              setPrompt4(false);
-              setPrompt5(false);
-              setNaive(false);
-              setReflections('');
-              setInstructions('');
-              setInastyleof('');
-              setLanguage('');
-              setInterests('');
+                updateRoute({
+                  from: '',
+                  to: '',
+                  occasion: '',
+                  naive: false,
+                  reflections: '',
+                  instructions: '',
+                  inastyleof: '',
+                  language: '',
+                  interests: '',
 
-            }}>
-              <ClearIcon />
-              <ClearText>Reset</ClearText>
-            </ClearButton></ClearButtonContainer> : null}
+                })
+                updateSession2({
+                  from: '',
+                  to: '',
+                  occasion: '',
+                  virgin: false,
+                  prompt1: false,
+                  prompt2: false,
+                  prompt3: false,
+                  prompt4: false,
+                  prompt5: false,
+                  naive: false,
+                  reflections: '',
+                  instructions: '',
+                  inastyleof: '',
+                  language: '',
+                  interests: '',
+                  greeting: '',
+                  giftSuggestions: '',
+                  imagesString: '',
+                  selectedImage: '',
+                  num:1,
+                  max:1,
+
+                });
+                setFrom('');
+                setTo('');
+                setOccasion('');
+                setVirgin(false);
+                setVirgin2(false);
+                setPrompt1(false);
+                setPrompt2(false);
+                setPrompt3(false);
+                setPrompt4(false);
+                setPrompt5(false);
+                setNaive(false);
+                setReflections('');
+                setInstructions('');
+                setInastyleof('');
+                setLanguage('');
+                setInterests('');
+                setNum(1);
+                setMax(1);
+                deleteSessionHistories(session.sessionid);
+
+
+              }}>
+                <ClearIcon />
+                <ClearText>Reset</ClearText>
+              </ClearButton></ActionContainer> : null}
             {!prompt1 ? <Box sx={{ mt: 5, width: 1, }}>
               <Starter><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
-                <StarterMessage><Typography color="secondary"/*color="#ffee58"*/>To begin, select or type an occasion for the greeting, for example &ldquo;Birthday&ldquo;:</Typography></StarterMessage></Starter></Box> : null}
+                <StarterMessage><Typography fontSize="inherit" color="secondary"/*color="#ffee58"*/>To begin, select or type an occasion for the greeting, for example &ldquo;Birthday&ldquo;:</Typography></StarterMessage></Starter></Box> : null}
             <Combo id="occasion"
               label="Occasion"
               value={occasion}
@@ -682,10 +750,10 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               helperText="Required for a meaningful result. For example: &ldquo;8th Birthday&rdquo;, &ldquo;Sweet Sixteen&rdquo;, &ldquo;Illness&rdquo; &ldquo;Death in the family&rdquo;, &ldquo;Christmas&rdquo;, &ldquo;Graduation&ldquo;"
             />
             {session.greeting && !prompt3 ? <Box sx={{ mt: 10, width: 1 }}>
-              <Starter><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
-                <StarterMessage><Typography color="secondary"/*color="#ffee58"*/>Experiment with inputs to make instructions to AI more specific:</Typography></StarterMessage></Starter></Box> : null}
+              <Starter onClick={()=>setPrompt3(true)}><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
+                <StarterMessage><Typography fontSize="inherit"  color="secondary"/*color="#ffee58"*/>Experiment with inputs to make instructions to AI more specific, for example switch between humours and serious by unchecking "Keep it light-hearted" in Advanced Inputs:</Typography></StarterMessage></Starter></Box> : null}
 
-            {virgin && session.greeting ? <Accordion sx={{ background: theme.palette.background.default }} expanded={expanded === 'custom'} onChange={handleAccordeonChange('custom')}>
+            {virgin && session.greeting ? <Accordion sx={{ mt:5,background: theme.palette.background.default }} expanded={expanded === 'custom'} onChange={handleAccordeonChange('custom')}>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel4bh-content"
@@ -781,13 +849,13 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               </AccordionDetails>
             </Accordion> : null}
             {session.greeting && !prompt4 ? <Box sx={{ mt: 10, width: 1, color: 'white', backgroundColor: 'secondary' }}>
-              <Starter><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
-                <StarterMessage><Typography color="secondary"/*color="#ffee58"*/>Click or tap on  &quot;Suggest New Wish Text&quot; to regenerate the text. Upload images to create downloadable greeting cards.</Typography></StarterMessage></Starter></Box> : null}
+              <Starter onClick={()=>setPrompt4(true)}><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
+                <StarterMessage><Typography fontSize="inherit"  color="secondary"/*color="#ffee58"*/>Click or tap on  &quot;Suggest New Wish Text&quot; to regenerate the text. Upload images to create downloadable greeting cards.</Typography></StarterMessage></Starter></Box> : null}
 
             {!prompt2 && occasion ? <Box sx={{ mt: 10, width: 1 }}>
               <Starter><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
-                <StarterMessage><Typography color="secondary"/*color="#ffee58"*/>Click or tap on the &quot;Suggest Wish Text&quot; button:</Typography></StarterMessage></Starter></Box> : null}
-            <GreetingOutput setPrompt5={setPrompt5} prompt5={prompt5} onVirgin={async () => {
+                <StarterMessage><Typography fontSize="inherit"  color="secondary"/*color="#ffee58"*/>Click or tap on the &quot;Suggest Wish Text&quot; button ⤵️:</Typography></StarterMessage></Starter></Box> : null}
+            <GreetingOutput setNum={setNum} setMax={setMax} max={max} num={num} setPrompt5={setPrompt5} prompt5={prompt5} onVirgin={async () => {
               await recordEvent(session.sessionid, 'virgin wish-text request', `occasion:${occasion}`);
               setVirgin(true);
               setPrompt2(true);
@@ -829,8 +897,8 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps(context: GetServerSidePropsContext): Promise<any> {
     try {
-      let { prompt1, prompt2, prompt3, prompt4, prompt5, fbclid, utm_medium, utm_campaign, utm_content, virgin, virgin2, from, to, occasion, naive, reflections, instructions, inastyleof, language, age, interests, sex }:
-        { prompt1: string, prompt2: string, prompt3: string, prompt4: string, prompt5: string, fbclid: string, utm_medium: string, utm_campaign: string, utm_content: string, virgin: boolean, virgin2: boolean, from: string, to: string, occasion: string, naive: boolean, reflections: string, instructions: string, inastyleof: string, language: string, age: string, interests: string, sex: string } = context.query as any;
+      let { num, max, prompt1, prompt2, prompt3, prompt4, prompt5, fbclid, utm_medium, utm_campaign, utm_content, virgin, virgin2, from, to, occasion, naive, reflections, instructions, inastyleof, language, age, interests, sex }:
+        { num: number, max: number, prompt1: string, prompt2: string, prompt3: string, prompt4: string, prompt5: string, fbclid: string, utm_medium: string, utm_campaign: string, utm_content: string, virgin: boolean, virgin2: boolean, from: string, to: string, occasion: string, naive: boolean, reflections: string, instructions: string, inastyleof: string, language: string, age: string, interests: string, sex: string } = context.query as any;
       from = from || '';
       to = to || '';
       occasion = occasion || '';
@@ -845,6 +913,9 @@ export const getServerSideProps = withSessionSsr(
       prompt3 = prompt3 || '';
       prompt4 = prompt4 || '';
       prompt5 = prompt5 || '';
+
+      num = num || 1;
+      max = max || 1;
 
       naive = naive || false;
       reflections = reflections || '';
@@ -866,7 +937,7 @@ export const getServerSideProps = withSessionSsr(
         imagesString: '',
         selectedImage: '',
       };
-      console.log("naive2=", naive)
+      console.log("startSession=", startoptions)
       const ua = context.req.headers['user-agent'];
       const botInfo = isbot({ ua });
       if (botInfo.bot)
@@ -889,7 +960,9 @@ export const getServerSideProps = withSessionSsr(
       prompt3 = prompt3 || options.prompt3 || '';
       prompt4 = prompt4 || options.prompt4 || '';
       prompt5 = prompt5 || options.prompt5 || '';
-
+      num = num || options.num || 1;
+      max = max || options.max || 1;
+      console.log("NUM, MAX:", num, max)
       naive = naive || options.naive || false;
       reflections = reflections || options.reflections || '';
       instructions = instructions || options.instructions || '';
@@ -910,6 +983,9 @@ export const getServerSideProps = withSessionSsr(
           prompt3: prompt3,
           prompt4: prompt4,
           prompt5: prompt5,
+
+          num: num,
+          max: max,
 
           naive: naive,
           reflections: reflections,

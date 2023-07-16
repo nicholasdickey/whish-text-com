@@ -52,7 +52,7 @@ const AmazonIdeaSearch = ({ session, search, text }: { session: any, search: str
       <Grid container spacing={6}>
         {/* Iterate over each Amazon search result and render a RichLink component */}
         {amazonSearch?.map((s, i) => (
-          <RichLink session={session} key={s.title} imageUrl={s.image} title={s.title} price={s.price} link={s.link} />
+          <RichLink session={session} key={s.title+1} imageUrl={s.image} title={s.title} price={s.price} link={s.link} />
         ))}
       </Grid>
      

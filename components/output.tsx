@@ -21,12 +21,13 @@ import * as ga from '../lib/ga'
 const Starter = styled.div`
   display:flex;
   justify-content:flex-start;
-  font-size:48px;
+  font-size:36px;
   align-items:center;
+  margin-top:4px;
   
   `;
 const StarterMessage = styled.div`
-  font-size:24px;
+  font-size:14px;
   padding-left:10px;
   padding-right:10px;
   `;
@@ -41,6 +42,10 @@ const BottomLink = styled.div`
 `;
 
 export default function Output({
+  setNum,
+  setMax,
+  num,
+  max,
   onVirgin,
   onVirgin2,
   virgin,
@@ -62,6 +67,10 @@ export default function Output({
   setPrompt5,
  // authSession
 }: {
+  setNum:any;
+  setMax:any;
+  num:number;
+  max:number;
   onVirgin: any;
   onVirgin2:any;
   virgin:boolean;
@@ -84,6 +93,8 @@ export default function Output({
 //  authSession: any;
 }) {
   const [value, setValue] = useState("");
+  //const [num,setNum]=useState(0);
+  //const [max,setMax]=useState(0);
   const [loading, setLoading] = useState(false);
   const [gift, setGift] = useState('');
   const [openLogin, setOpenLogin] = useState(false);
@@ -172,7 +183,7 @@ export default function Output({
       sessionid:session.sessionid,
     },null,4)),1000);
   
-    const result = await getWishText({
+    const {content:result,num} = await getWishText({
       style: "",
       from,
       to,
@@ -187,10 +198,13 @@ export default function Output({
     });
     setLoading(false);
     setLoadReady(false);
-
+    console.log("handleGenerate", result,num);
     if (result !== value && result) {
-      updateSession2({ greeting: result });
+      updateSession2({ greeting: result,num ,max:num});
       setValue(result);
+      setNum(num);
+      setMax(num);
+     
       setLoadReady(true);
       const elem = document.getElementById('wt-output');
       //elem?.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -299,8 +313,8 @@ export default function Output({
         <TextEditor  session={session} text={session.greeting || ''} onChange={(text: string) => { updateSession2({ greeting: text }); }} image={selectedImage} loading={loading} canvasRef={canvasRef} />
         <div  />
         {virgin&&!prompt5 && !loading ? <Box sx={{ mt: 0, width: 1 }}>
-            <Starter><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
-              <StarterMessage><Typography color="secondary"/*color="#ffee58"*/>Copy message to clipboard to be used with your favorite messenger or social media app.</Typography></StarterMessage></Starter></Box> : null}
+            <Starter onClick={()=>setPrompt5(true)}><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
+              <StarterMessage><Typography fontSize="inherit"  color="secondary"/*color="#ffee58"*/>Copy message to clipboard to be used with your favorite messenger or social media app.</Typography></StarterMessage></Starter></Box> : null}
         
         {session.greeting && !loading && <ToolbarAccept session={session} text={session.greeting} images={images} onDownloadClick={handleDownload} onAcceptClick={handleAccept} onCopyClick={handleCopy} />}
         {!loading && false && (

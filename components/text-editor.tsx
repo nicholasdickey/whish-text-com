@@ -225,7 +225,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ session, image, text, loading, 
   const mdParser = new MarkdownIt();
   const [editing, setEditing] = useState(false);
   const theme = useTheme();
-  console.log("texteditor", text);
+  //console.log("texteditor", text);
   const handleTextClick = () => {
     ga.event({
       action: "textClick",
@@ -269,10 +269,10 @@ const TextEditor: React.FC<TextEditorProps> = ({ session, image, text, loading, 
   const tw = text.split('\n');
   const headline=tw.length>1?tw[0]:'';
   const body=tw.length>1?tw.slice(1).join('\n'):tw[0];
-  console.log('tw=>:',tw, headline,body)
-  console.log('headline=>:',headline)
-  console.log('body=>:',body)
-  console.log("texteditor", text, image)
+ // console.log('tw=>:',tw, headline,body)
+ // console.log('headline=>:',headline)
+  //console.log('body=>:',body)
+ // console.log("texteditor", text, image)
   return (
     <div>
       <div style={{ position: "relative" }} ref={canvasRef}>
