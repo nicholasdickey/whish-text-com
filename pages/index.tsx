@@ -144,10 +144,10 @@ const AppMenu = styled.div<ColorProps>`
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 let v = false;
-export default function Home({ num: startNum = 0, max: startMax = 0, prompt1: startPrompt1, prompt2: startPrompt2, prompt3: startPrompt3,
+export default function Home({ dark,num: startNum = 0, max: startMax = 0, prompt1: startPrompt1, prompt2: startPrompt2, prompt3: startPrompt3,
   prompt4: startPrompt4, prompt5: startPrompt5,
   utm_medium, isbot, isfb, virgin: startVirgin, virgin2: startVirgin2, naive: startNaive, from: startFrom, to: startTo, occasion: startOccasion, reflections: startReflections, instructions: startInstructions, inastyleof: startInastyleof, language: startLanguage, interests: startInterests, ironsession: startSession }:
-  { num: number, max: number, prompt1: boolean, prompt2: boolean, prompt3: boolean, prompt4: boolean, prompt5: boolean, utm_medium: string, isbot: boolean, isfb: boolean, virgin: boolean, virgin2: boolean, naive: boolean, from: string, to: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string, ironsession: Options }) {
+  { dark:boolean,num: number, max: number, prompt1: boolean, prompt2: boolean, prompt3: boolean, prompt4: boolean, prompt5: boolean, utm_medium: string, isbot: boolean, isfb: boolean, virgin: boolean, virgin2: boolean, naive: boolean, from: string, to: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string, ironsession: Options }) {
 
   const [session, setSession] = useState(startSession);
   const [noExplain, setNoExplain] = useState(session.noExplain || false);
@@ -188,7 +188,7 @@ export default function Home({ num: startNum = 0, max: startMax = 0, prompt1: st
   const [missingOccasion, setMissingOccasion] = useState(false);
   const drawerWidth = 240;
   const navItems = ['Home', 'History', 'Share', 'Contact', 'Login'];
-
+ 
   let theme: any;
   if (darkMode) {
     theme = createTheme({
@@ -277,24 +277,34 @@ export default function Home({ num: startNum = 0, max: startMax = 0, prompt1: st
     setSession(assigned);
     await axios.post(`/api/session/save`, { session: assigned });
   }, [session]);
+  useEffect(() => {
+    if (dark&&!modeIsSet) {
+      setDarkMode(true);
+      setModeIsSet(true)
+      updateSession2({ mode: true ,modeIsSet:true,blah:'pblah'});
+      setSystemMode(true);
+    }
+  },[modeIsSet,dark,session?.mode]);
+
   const modeMe = (e: any) => {
     //if(!modeIsSet){
     setDarkMode(!!(e.matches));
-    updateSession2({ mode: e.matches });
+    updateSession2({ mode: e.matches,blah:'bleh' ,modeIsSet:false});
     setSystemMode(!!(e.matches));
     // }
   };
   // console.log("_app:darkMode",darkMode,session?.mode||"")
   React.useEffect(() => {
     const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
-    setSystemMode(matchMedia.matches);
+   
     if (matchMedia.matches != darkMode) {
       const assigned = { ...Object.assign(session ? session : {}, { mode: matchMedia.matches }) }
 
       if (!modeIsSet) {
+        setSystemMode(matchMedia.matches);
         document.body.setAttribute("data-theme", matchMedia.matches ? 'dark' : 'light');
         setDarkMode(!!(matchMedia.matches));
-        updateSession2({ mode: matchMedia.matches });
+        updateSession2({ mode: matchMedia.matches,blah:'blah' });
       }
     }
     // setDarkMode(matchMedia.matches);
@@ -900,8 +910,9 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps(context: GetServerSidePropsContext): Promise<any> {
     try {
-      let { num, max, prompt1, prompt2, prompt3, prompt4, prompt5, fbclid, utm_medium, utm_campaign, utm_content, virgin, virgin2, from, to, occasion, naive, reflections, instructions, inastyleof, language, age, interests, sex }:
-        { num: number, max: number, prompt1: string, prompt2: string, prompt3: string, prompt4: string, prompt5: string, fbclid: string, utm_medium: string, utm_campaign: string, utm_content: string, virgin: boolean, virgin2: boolean, from: string, to: string, occasion: string, naive: boolean, reflections: string, instructions: string, inastyleof: string, language: string, age: string, interests: string, sex: string } = context.query as any;
+      let { dark,num, max, prompt1, prompt2, prompt3, prompt4, prompt5, fbclid, utm_medium, utm_campaign, utm_content, virgin, virgin2, from, to, occasion, naive, reflections, instructions, inastyleof, language, age, interests, sex }:
+        { dark:boolean,num: number, max: number, prompt1: string, prompt2: string, prompt3: string, prompt4: string, prompt5: string, fbclid: string, utm_medium: string, utm_campaign: string, utm_content: string, virgin: boolean, virgin2: boolean, from: string, to: string, occasion: string, naive: boolean, reflections: string, instructions: string, inastyleof: string, language: string, age: string, interests: string, sex: string } = context.query as any;
+      
       from = from || '';
       to = to || '';
       occasion = occasion || '';
@@ -919,7 +930,7 @@ export const getServerSideProps = withSessionSsr(
 
       num = num || 1;
       max = max || 1;
-
+      dark=dark||false;
       naive = naive || false;
       reflections = reflections || '';
       instructions = instructions || '';
@@ -935,7 +946,6 @@ export const getServerSideProps = withSessionSsr(
       let startoptions: Options = await fetchSession(sessionid);
       startoptions = startoptions || {
         sessionid,
-        dark: -1,
         noExplain: false,
         imagesString: '',
         selectedImage: '',
@@ -972,7 +982,7 @@ export const getServerSideProps = withSessionSsr(
       inastyleof = inastyleof || options.inastyleof || '';
       language = language || options.language || '';
       interests = interests || options.interests || '';
-      console.log("naive3=", naive)
+      console.log("dark=", dark)
       return {
         props: {
           from: from,
@@ -980,7 +990,7 @@ export const getServerSideProps = withSessionSsr(
           occasion: occasion,
           virgin: virgin,
           virgin2: virgin2,
-
+          dark:dark,
           prompt1: prompt1,
           prompt2: prompt2,
           prompt3: prompt3,
