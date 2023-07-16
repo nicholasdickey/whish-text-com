@@ -747,7 +747,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               value={occasion}
               error={missingOccasion}
               onChange={onOccasionChange}
-              helperText="Required for a meaningful result. For example: &ldquo;8th Birthday&rdquo;, &ldquo;Sweet Sixteen&rdquo;, &ldquo;Illness&rdquo; &ldquo;Death in the family&rdquo;, &ldquo;Christmas&rdquo;, &ldquo;Graduation&ldquo;"
+              helperText="Required for a meaningful result. For example: &ldquo;8th Birthday for a boy&rdquo;, &ldquo;Sweet Sixteen&rdquo;, &ldquo;Illness&rdquo; &ldquo;Death in the family&rdquo;, &ldquo;Christmas&rdquo;, &ldquo;Graduation&ldquo;"
             />
             {session.greeting && !prompt3 ? <Box sx={{ mt: 10, width: 1 }}>
               <Starter onClick={()=>setPrompt3(true)}><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
@@ -850,7 +850,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             </Accordion> : null}
             {session.greeting && !prompt4 ? <Box sx={{ mt: 10, width: 1, color: 'white', backgroundColor: 'secondary' }}>
               <Starter onClick={()=>setPrompt4(true)}><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
-                <StarterMessage><Typography fontSize="inherit"  color="secondary"/*color="#ffee58"*/>Click or tap on  &quot;Suggest New Wish Text&quot; to regenerate the text. Upload images to create downloadable greeting cards.</Typography></StarterMessage></Starter></Box> : null}
+                <StarterMessage><Typography fontSize="inherit"  color="secondary"/*color="#ffee58"*/>Click or tap on  &quot;New Wish Text&quot; to regenerate the text. Upload images to create downloadable greeting cards.</Typography></StarterMessage></Starter></Box> : null}
 
             {!prompt2 && occasion ? <Box sx={{ mt: 10, width: 1 }}>
               <Starter><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
