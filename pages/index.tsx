@@ -510,7 +510,7 @@ export default function Home({ dark,num: startNum = 0, max: startMax = 0, prompt
     setNum(num);
     session.greeting = greeting;
   }
-  const OutputPlayerToolbar=<PlayerToolbar
+  const OutputPlayerToolbar=<>{max>1?<PlayerToolbar
   num={num}
   max={max}
   onPrevClick={async () => {
@@ -544,7 +544,7 @@ export default function Home({ dark,num: startNum = 0, max: startMax = 0, prompt
      await processRecord(record,max);
     }
   }}
-/>
+/>:null}</>
 
   return (
     <>

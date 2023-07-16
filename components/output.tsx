@@ -313,7 +313,7 @@ export default function Output({
       {occasion&&<ToolbarGenerate error={occasion?.length>0?false:true} onGenerateClick={handleGenerate} onUploadClick={onUpload} hasGreeting={session.greeting ? true : false} />}
      
       <Box sx={{ my: 3, width: { xs: 1 } }} textAlign="center">
-      {PlayerToolbar}
+      {session.greeting&&PlayerToolbar}
         <TextEditor  session={session} text={session.greeting || ''} onChange={(text: string) => { updateSession2({ greeting: text }); }} image={selectedImage} loading={loading} canvasRef={canvasRef} />
         <div  />
         {false&&virgin&&!prompt5 && !loading ? <Box sx={{ mt: 0, width: 1 }}>
