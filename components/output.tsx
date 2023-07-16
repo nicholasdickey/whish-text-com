@@ -65,6 +65,7 @@ export default function Output({
   language,
   greeting,
   setPrompt5,
+  PlayerToolbar,
  // authSession
 }: {
   setNum:any;
@@ -90,6 +91,7 @@ export default function Output({
   language: string;
   greeting: string;
   setPrompt5: any;
+  PlayerToolbar: any;
 //  authSession: any;
 }) {
   const [value, setValue] = useState("");
@@ -309,10 +311,12 @@ export default function Output({
   return (
     <>
       {occasion&&<ToolbarGenerate error={occasion?.length>0?false:true} onGenerateClick={handleGenerate} onUploadClick={onUpload} hasGreeting={session.greeting ? true : false} />}
-      <Box sx={{ my: 1, width: { xs: 1 } }} textAlign="center">
+     
+      <Box sx={{ my: 3, width: { xs: 1 } }} textAlign="center">
+      {PlayerToolbar}
         <TextEditor  session={session} text={session.greeting || ''} onChange={(text: string) => { updateSession2({ greeting: text }); }} image={selectedImage} loading={loading} canvasRef={canvasRef} />
         <div  />
-        {virgin&&!prompt5 && !loading ? <Box sx={{ mt: 0, width: 1 }}>
+        {false&&virgin&&!prompt5 && !loading ? <Box sx={{ mt: 0, width: 1 }}>
             <Starter onClick={()=>setPrompt5(true)}><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
               <StarterMessage><Typography fontSize="inherit"  color="secondary"/*color="#ffee58"*/>Copy message to clipboard to be used with your favorite messenger or social media app.</Typography></StarterMessage></Starter></Box> : null}
         

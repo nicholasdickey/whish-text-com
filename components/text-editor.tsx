@@ -21,7 +21,7 @@ justify-content:center;
  // color: #fff;
   text-align: center;
   padding: 2px;
-  margin-top: 20px;
+ // margin-top: 20px;
   //margin-bottom: 2px;
   @media (max-width: 990px) {
     font-size: 18px;
@@ -276,7 +276,9 @@ const TextEditor: React.FC<TextEditorProps> = ({ session, image, text, loading, 
   return (
     <div>
       <div style={{ position: "relative" }} ref={canvasRef}>
+       
         <InnerOutput image={image.url} ref={ref} className="inner-output" div={canvasRef.current} height={image.height + (text.length > 400 ? horiz ? 150 : 50 : 0)} width={image.width} data-id="GreetingsOutput:InnerOutput" length={text.length} horiz={horiz} editable={editing}>
+         
           {!editing ? (
             <Mark image={image.url?true:false} onClick={() => handleTextClick()} >
               <Headline ><ReactMarkdown>

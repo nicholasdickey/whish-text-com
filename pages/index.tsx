@@ -127,7 +127,7 @@ const ClearButton = styled(IconButton)`
  `;
 const ActionContainer = styled.div`
   display: flex;
-  justify-content:space-between;
+  justify-content:flex-end;
   width: 100%;
 `;
 const ClearText = styled.span`
@@ -500,6 +500,42 @@ export default function Home({ num: startNum = 0, max: startMax = 0, prompt1: st
     setNum(num);
     session.greeting = greeting;
   }
+  const OutputPlayerToolbar=<PlayerToolbar
+  num={num}
+  max={max}
+  onPrevClick={async () => {
+    console.log("onPrevClick",num,max)
+    if (num > 1) {
+      const { success, record } = await getSessionHistory(session.sessionid, num - 1);
+      console.log("onPrevClick2",success,record)
+      if (success) {
+       await processRecord(record,num-1);
+      }
+    }
+  }}
+  onNextClick={async () => {
+    if (num < max) {
+      const { success, record } = await getSessionHistory(session.sessionid, num + 1);
+      if (success) {
+       await processRecord(record,num+1);
+      }
+    }
+  }}
+  onFirstClick={async () => {
+    
+    const { success, record } = await getSessionHistory(session.sessionid, 1);
+    if (success) {
+     await processRecord(record,1);
+    }
+  }}
+  onLastClick={async () => {
+    const { success, record } = await getSessionHistory(session.sessionid, max);
+    if (success) {
+     await processRecord(record,max);
+    }
+  }}
+/>
+
   return (
     <>
       <Head>
@@ -640,41 +676,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             </Box> : null}
 
             {virgin ? <ActionContainer>
-              <PlayerToolbar
-                num={num}
-                max={max}
-                onPrevClick={async () => {
-                  console.log("onPrevClick",num,max)
-                  if (num > 1) {
-                    const { success, record } = await getSessionHistory(session.sessionid, num - 1);
-                    console.log("onPrevClick2",success,record)
-                    if (success) {
-                     await processRecord(record,num-1);
-                    }
-                  }
-                }}
-                onNextClick={async () => {
-                  if (num < max) {
-                    const { success, record } = await getSessionHistory(session.sessionid, num + 1);
-                    if (success) {
-                     await processRecord(record,num+1);
-                    }
-                  }
-                }}
-                onFirstClick={async () => {
-                  
-                  const { success, record } = await getSessionHistory(session.sessionid, 1);
-                  if (success) {
-                   await processRecord(record,1);
-                  }
-                }}
-                onLastClick={async () => {
-                  const { success, record } = await getSessionHistory(session.sessionid, max);
-                  if (success) {
-                   await processRecord(record,max);
-                  }
-                }}
-              />
+              
 
               <ClearButton onClick={() => {
 
@@ -737,7 +739,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
 
               }}>
                 <ClearIcon />
-                <ClearText>Reset</ClearText>
+                <ClearText>Reset Session</ClearText>
               </ClearButton></ActionContainer> : null}
             {!prompt1 ? <Box sx={{ mt: 5, width: 1, }}>
               <Starter><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
@@ -855,7 +857,8 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             {!prompt2 && occasion ? <Box sx={{ mt: 10, width: 1 }}>
               <Starter><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
                 <StarterMessage><Typography fontSize="inherit"  color="secondary"/*color="#ffee58"*/>Click or tap on the &quot;Suggest Wish Text&quot; button ⤵️:</Typography></StarterMessage></Starter></Box> : null}
-            <GreetingOutput setNum={setNum} setMax={setMax} max={max} num={num} setPrompt5={setPrompt5} prompt5={prompt5} onVirgin={async () => {
+            
+            <GreetingOutput PlayerToolbar={OutputPlayerToolbar} setNum={setNum} setMax={setMax} max={max} num={num} setPrompt5={setPrompt5} prompt5={prompt5} onVirgin={async () => {
               await recordEvent(session.sessionid, 'virgin wish-text request', `occasion:${occasion}`);
               setVirgin(true);
               setPrompt2(true);
