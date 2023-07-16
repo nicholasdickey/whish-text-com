@@ -751,7 +751,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             />
             {session.greeting && !prompt3 ? <Box sx={{ mt: 10, width: 1 }}>
               <Starter onClick={()=>setPrompt3(true)}><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
-                <StarterMessage><Typography fontSize="inherit"  color="secondary"/*color="#ffee58"*/>Experiment with inputs to make instructions to AI more specific, for example switch between humours and serious by unchecking "Keep it light-hearted" in Advanced Inputs:</Typography></StarterMessage></Starter></Box> : null}
+                <StarterMessage><Typography fontSize="inherit"  color="secondary"/*color="#ffee58"*/>Experiment with inputs to make instructions to AI more specific, for example switch between humours and serious by unchecking &ldquo;Keep it light-hearted&rdquo; in Advanced Inputs:</Typography></StarterMessage></Starter></Box> : null}
 
             {virgin && session.greeting ? <Accordion sx={{ mt:5,background: theme.palette.background.default }} expanded={expanded === 'custom'} onChange={handleAccordeonChange('custom')}>
               <AccordionSummary
