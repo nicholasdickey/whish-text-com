@@ -1021,7 +1021,7 @@ export const getServerSideProps = withSessionSsr(
           ironsession: options,
           isbot: botInfo.bot,
           isfb: botInfo.fb || utm_medium ? 1 : 0,
-          utm_medium: `{"fbclid":${fbclid},"utm_content":${utm_content}}}}`,
+          utm_medium: `{"fbclid":"${fbclid}","utm_content":"${utm_content}"}`,
         }
       }
     } catch (x) {
