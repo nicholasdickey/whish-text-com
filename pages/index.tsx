@@ -299,7 +299,7 @@ export default function Home({ dark, num: startNum = 0, max: startMax = 0, promp
     setSystemMode(!!(matchMedia.matches));
     if (matchMedia.matches != darkMode) {
       //const assigned = { ...Object.assign(session ? session : {}, { mode: matchMedia.matches }) }
-    //  setSystemMode(matchMedia.matches);
+      //  setSystemMode(matchMedia.matches);
       document.body.setAttribute("data-theme", matchMedia.matches ? 'dark' : 'light');
       if (!modeIsSet) {
         setDarkMode(!!(matchMedia.matches));
@@ -886,7 +886,11 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             </Typography></Sub>
               <Sub><Typography variant="caption" gutterBottom>
                 Contact: support@hudsonwilde.com
-              </Typography></Sub></Copyright>
+              </Typography></Sub>
+              <Sub><Typography variant="caption" gutterBottom>
+                Made in Northern Minnesota, USA.
+              </Typography></Sub>
+            </Copyright>
           </Container>
           <div className="container">
             <Script src={`https://www.googletagmanager.com/gtag/js?${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`} />
@@ -963,8 +967,8 @@ export const getServerSideProps = withSessionSsr(
       if (context.req.session.sessionid != sessionid) {
         context.req.session.sessionid = sessionid;
         //await context.req.session.save();
-        setTimeout(async ()=>
-          await context.req.session.save(),1);
+        setTimeout(async () =>
+          await context.req.session.save(), 1);
       }
       let options: Options = startoptions;
 

@@ -163,10 +163,19 @@ const BandContainer = styled.div<{ darkText?: boolean }>`
 
 const Title = styled(Typography)`
   margin-bottom: 1rem;
+  @media (max-width: 900px) {
+    font-size:2rem;
+  }
 `;
 
 const Subtitle = styled(Typography)`
   margin-bottom: 2rem;
+  text-overflow: wrap;
+  padding:10px;
+  @media (max-width: 700px) {
+    font-size:1rem;;
+  }
+  
 `;
 
 const CTAButton = styled(Button)`
@@ -189,6 +198,10 @@ const FirstBandContainer = styled.div`
 
   background-size: 900px 491px;
   font-size:5rem;
+  font-size:4rem;
+  @media (max-width: 700px) {
+    font-size:4rem;;
+  }
   
 `;
 const SecondBandContainer = styled.div`
@@ -208,12 +221,26 @@ const SecondBandContainer = styled.div`
 
   background-size: 900px 491px;
   font-size:4rem;
+  @media (max-width: 700px) {
+    font-size:3rem;
+  }
   
 `;
 
 
 const ImageDemo = styled.div`
-margin-top:20px;
+//max-width: 100%;
+//padding:60px;
+position:relative;
+width:${1380 / 3}px;
+height:${777 / 3}px;
+  
+//height:fit-content;
+@media (max-width: 700px) {
+    width:${1380 / 5}px;
+    height:${777 / 5}px;
+  }
+margin-top:40px;
 `;
 
 
@@ -382,15 +409,16 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                                 Upload your images and create greeting cards
                             </Title>
                             <Subtitle variant="h5">
-                                Download on your device and use in social networks and messengers with the direct upload.
+                                Download on your device<br/> and use in social networks <br/>and messengers 
+                                with the direct upload.
                                 <ImageDemo>
-                                    <Image src="/demo-card1.png" width={1380 / 3} height={777 / 3} alt="Wish Text Composer Logo" />
+                                    <img src="/demo-card1.png" width="100%" alt="Wish Text Composer Logo" />
                                 </ImageDemo>
                                 <ImageDemo>
-                                    <Image src="/demo-card2.png" width={1380 / 3} height={777 / 3} alt="Wish Text Composer Logo" />
+                                    <img src="/demo-card2.png" width="100%" alt="Wish Text Composer Logo" />
                                 </ImageDemo>
                                 <ImageDemo>
-                                    <Image src="/demo-card3.png" width={1380 / 3} height={777 / 3} alt="Wish Text Composer Logo" />
+                                    <img src="/demo-card3.png" width="100%"  alt="Wish Text Composer Logo" />
                                 </ImageDemo>
 
                             </Subtitle>
