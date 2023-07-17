@@ -144,10 +144,10 @@ const AppMenu = styled.div<ColorProps>`
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 let v = false;
-export default function Home({ dark,num: startNum = 0, max: startMax = 0, prompt1: startPrompt1, prompt2: startPrompt2, prompt3: startPrompt3,
+export default function Home({ dark, num: startNum = 0, max: startMax = 0, prompt1: startPrompt1, prompt2: startPrompt2, prompt3: startPrompt3,
   prompt4: startPrompt4, prompt5: startPrompt5,
   utm_medium, isbot, isfb, virgin: startVirgin, virgin2: startVirgin2, naive: startNaive, from: startFrom, to: startTo, occasion: startOccasion, reflections: startReflections, instructions: startInstructions, inastyleof: startInastyleof, language: startLanguage, interests: startInterests, ironsession: startSession }:
-  { dark:boolean,num: number, max: number, prompt1: boolean, prompt2: boolean, prompt3: boolean, prompt4: boolean, prompt5: boolean, utm_medium: string, isbot: boolean, isfb: boolean, virgin: boolean, virgin2: boolean, naive: boolean, from: string, to: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string, ironsession: Options }) {
+  { dark: boolean, num: number, max: number, prompt1: boolean, prompt2: boolean, prompt3: boolean, prompt4: boolean, prompt5: boolean, utm_medium: string, isbot: boolean, isfb: boolean, virgin: boolean, virgin2: boolean, naive: boolean, from: string, to: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string, ironsession: Options }) {
 
   const [session, setSession] = useState(startSession);
   const [noExplain, setNoExplain] = useState(session.noExplain || false);
@@ -188,7 +188,7 @@ export default function Home({ dark,num: startNum = 0, max: startMax = 0, prompt
   const [missingOccasion, setMissingOccasion] = useState(false);
   const drawerWidth = 240;
   const navItems = ['Home', 'History', 'Share', 'Contact', 'Login'];
- 
+
   let theme: any;
   if (darkMode) {
     theme = createTheme({
@@ -278,32 +278,32 @@ export default function Home({ dark,num: startNum = 0, max: startMax = 0, prompt
     await axios.post(`/api/session/save`, { session: assigned });
   }, [session]);
   useEffect(() => {
-    if (dark&&!modeIsSet) {
+    if (dark && !modeIsSet) {
       setDarkMode(true);
       setModeIsSet(true)
-      updateSession2({ mode: true ,modeIsSet:true,blah:'pblah'});
-     // setSystemMode(true);
+      updateSession2({ mode: true, modeIsSet: true, blah: 'pblah' });
+      // setSystemMode(true);
     }
-  },[modeIsSet,dark,session?.mode]);
+  }, [modeIsSet, dark, session?.mode]);
 
   const modeMe = (e: any) => {
     //if(!modeIsSet){
     setDarkMode(!!(e.matches));
-    updateSession2({ mode: e.matches,blah:'bleh' ,modeIsSet:false});
+    updateSession2({ mode: e.matches, blah: 'bleh', modeIsSet: false });
     setSystemMode(!!(e.matches));
     // }
   };
   // console.log("_app:darkMode",darkMode,session?.mode||"")
   React.useEffect(() => {
     const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
-   
+
     if (matchMedia.matches != darkMode) {
       const assigned = { ...Object.assign(session ? session : {}, { mode: matchMedia.matches }) }
       setSystemMode(matchMedia.matches);
       document.body.setAttribute("data-theme", matchMedia.matches ? 'dark' : 'light');
       if (!modeIsSet) {
         setDarkMode(!!(matchMedia.matches));
-        updateSession2({ mode: matchMedia.matches,blah:'blah' });
+        updateSession2({ mode: matchMedia.matches, blah: 'blah' });
       }
     }
     // setDarkMode(matchMedia.matches);
@@ -491,10 +491,10 @@ export default function Home({ dark,num: startNum = 0, max: startMax = 0, prompt
   }
   // console.log("virgin", virgin, virgin2);
   //console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-  const processRecord = async (record:any,num:number) => {
-    const { greeting, params} = record;
-    console.log("PARSE",params,JSON.parse(params) );
-    const update = Object.assign(JSON.parse(params), { greeting,  num});
+  const processRecord = async (record: any, num: number) => {
+    const { greeting, params } = record;
+    console.log("PARSE", params, JSON.parse(params));
+    const update = Object.assign(JSON.parse(params), { greeting, num });
     updateSession2(update);
     const { to, from, occasion, naive, reflections, instructions, inastyleof, language, interests } = update;
     setTo(to);
@@ -509,41 +509,41 @@ export default function Home({ dark,num: startNum = 0, max: startMax = 0, prompt
     setNum(num);
     session.greeting = greeting;
   }
-  const OutputPlayerToolbar=<>{max>1?<PlayerToolbar
-  num={num}
-  max={max}
-  onPrevClick={async () => {
-    console.log("onPrevClick",num,max)
-    if (num > 1) {
-      const { success, record } = await getSessionHistory(session.sessionid, num - 1);
-      console.log("onPrevClick2",success,record)
-      if (success) {
-       await processRecord(record,num-1);
+  const OutputPlayerToolbar = <>{max > 1 ? <PlayerToolbar
+    num={num}
+    max={max}
+    onPrevClick={async () => {
+      console.log("onPrevClick", num, max)
+      if (num > 1) {
+        const { success, record } = await getSessionHistory(session.sessionid, num - 1);
+        console.log("onPrevClick2", success, record)
+        if (success) {
+          await processRecord(record, num - 1);
+        }
       }
-    }
-  }}
-  onNextClick={async () => {
-    if (num < max) {
-      const { success, record } = await getSessionHistory(session.sessionid, num + 1);
-      if (success) {
-       await processRecord(record,num+1);
+    }}
+    onNextClick={async () => {
+      if (num < max) {
+        const { success, record } = await getSessionHistory(session.sessionid, num + 1);
+        if (success) {
+          await processRecord(record, num + 1);
+        }
       }
-    }
-  }}
-  onFirstClick={async () => {
-    
-    const { success, record } = await getSessionHistory(session.sessionid, 1);
-    if (success) {
-     await processRecord(record,1);
-    }
-  }}
-  onLastClick={async () => {
-    const { success, record } = await getSessionHistory(session.sessionid, max);
-    if (success) {
-     await processRecord(record,max);
-    }
-  }}
-/>:null}</>
+    }}
+    onFirstClick={async () => {
+
+      const { success, record } = await getSessionHistory(session.sessionid, 1);
+      if (success) {
+        await processRecord(record, 1);
+      }
+    }}
+    onLastClick={async () => {
+      const { success, record } = await getSessionHistory(session.sessionid, max);
+      if (success) {
+        await processRecord(record, max);
+      }
+    }}
+  /> : null}</>
 
   return (
     <>
@@ -685,7 +685,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             </Box> : null}
 
             {virgin ? <ActionContainer>
-              
+
 
               <ClearButton onClick={() => {
 
@@ -721,8 +721,8 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                   giftSuggestions: '',
                   imagesString: '',
                   selectedImage: '',
-                  num:1,
-                  max:1,
+                  num: 1,
+                  max: 1,
 
                 });
                 setFrom('');
@@ -761,10 +761,10 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               helperText="Required for a meaningful result. For example: &ldquo;8th Birthday for a boy&rdquo;, &ldquo;Sweet Sixteen&rdquo;, &ldquo;Illness&rdquo; &ldquo;Death in the family&rdquo;, &ldquo;Christmas&rdquo;, &ldquo;Graduation&ldquo;"
             />
             {session.greeting && !prompt3 ? <Box sx={{ mt: 10, width: 1 }}>
-              <Starter onClick={()=>setPrompt3(true)}><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
-                <StarterMessage><Typography fontSize="inherit"  color="secondary"/*color="#ffee58"*/>Experiment with inputs to make instructions to AI more specific, for example switch between humours and serious by unchecking &ldquo;Keep it light-hearted&rdquo; in Advanced Inputs:</Typography></StarterMessage></Starter></Box> : null}
+              <Starter onClick={() => setPrompt3(true)}><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
+                <StarterMessage><Typography fontSize="inherit" color="secondary"/*color="#ffee58"*/>Experiment with inputs to make instructions to AI more specific, for example switch between humours and serious by unchecking &ldquo;Keep it light-hearted&rdquo; in Advanced Inputs:</Typography></StarterMessage></Starter></Box> : null}
 
-            {virgin && session.greeting ? <Accordion sx={{ mt:5,background: theme.palette.background.default }} expanded={expanded === 'custom'} onChange={handleAccordeonChange('custom')}>
+            {virgin && session.greeting ? <Accordion sx={{ mt: 5, background: theme.palette.background.default }} expanded={expanded === 'custom'} onChange={handleAccordeonChange('custom')}>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel4bh-content"
@@ -860,13 +860,13 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               </AccordionDetails>
             </Accordion> : null}
             {session.greeting && !prompt4 ? <Box sx={{ mt: 10, width: 1, color: 'white', backgroundColor: 'secondary' }}>
-              <Starter onClick={()=>setPrompt4(true)}><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
-                <StarterMessage><Typography fontSize="inherit"  color="secondary"/*color="#ffee58"*/>Click or tap on  &quot;New Wish Text&quot; to regenerate the text. Upload images to create downloadable greeting cards.</Typography></StarterMessage></Starter></Box> : null}
+              <Starter onClick={() => setPrompt4(true)}><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
+                <StarterMessage><Typography fontSize="inherit" color="secondary"/*color="#ffee58"*/>Click or tap on  &quot;New Wish Text&quot; to regenerate the text. Upload images to create downloadable greeting cards.</Typography></StarterMessage></Starter></Box> : null}
 
             {!prompt2 && occasion ? <Box sx={{ mt: 10, width: 1 }}>
               <Starter><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
-                <StarterMessage><Typography fontSize="inherit"  color="secondary"/*color="#ffee58"*/>Click or tap on the &quot;Suggest Wish Text&quot; button ⤵️:</Typography></StarterMessage></Starter></Box> : null}
-            
+                <StarterMessage><Typography fontSize="inherit" color="secondary"/*color="#ffee58"*/>Click or tap on the &quot;Suggest Wish Text&quot; button ⤵️:</Typography></StarterMessage></Starter></Box> : null}
+
             <GreetingOutput PlayerToolbar={OutputPlayerToolbar} setNum={setNum} setMax={setMax} max={max} num={num} setPrompt5={setPrompt5} prompt5={prompt5} onVirgin={async () => {
               await recordEvent(session.sessionid, 'virgin wish-text request', `occasion:${occasion}`);
               setVirgin(true);
@@ -909,9 +909,9 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps(context: GetServerSidePropsContext): Promise<any> {
     try {
-      let { dark,num, max, prompt1, prompt2, prompt3, prompt4, prompt5, fbclid, utm_medium, utm_campaign, utm_content, virgin, virgin2, from, to, occasion, naive, reflections, instructions, inastyleof, language, age, interests, sex }:
-        { dark:boolean,num: number, max: number, prompt1: string, prompt2: string, prompt3: string, prompt4: string, prompt5: string, fbclid: string, utm_medium: string, utm_campaign: string, utm_content: string, virgin: boolean, virgin2: boolean, from: string, to: string, occasion: string, naive: boolean, reflections: string, instructions: string, inastyleof: string, language: string, age: string, interests: string, sex: string } = context.query as any;
-      
+      let { dark, num, max, prompt1, prompt2, prompt3, prompt4, prompt5, fbclid, utm_medium, utm_campaign, utm_content, virgin, virgin2, from, to, occasion, naive, reflections, instructions, inastyleof, language, age, interests, sex }:
+        { dark: boolean, num: number, max: number, prompt1: string, prompt2: string, prompt3: string, prompt4: string, prompt5: string, fbclid: string, utm_medium: string, utm_campaign: string, utm_content: string, virgin: boolean, virgin2: boolean, from: string, to: string, occasion: string, naive: boolean, reflections: string, instructions: string, inastyleof: string, language: string, age: string, interests: string, sex: string } = context.query as any;
+
       from = from || '';
       to = to || '';
       occasion = occasion || '';
@@ -929,7 +929,7 @@ export const getServerSideProps = withSessionSsr(
 
       num = num || 1;
       max = max || 1;
-      dark=dark||false;
+      dark = dark || false;
       naive = naive || false;
       reflections = reflections || '';
       instructions = instructions || '';
@@ -952,12 +952,19 @@ export const getServerSideProps = withSessionSsr(
       console.log("startSession=", startoptions)
       const ua = context.req.headers['user-agent'];
       const botInfo = isbot({ ua });
-      if (botInfo.bot)
-        setTimeout(async () => await recordEvent(sessionid, 'bot', `{ua:${ua},utm_medium:${utm_medium},utm_campaign:${utm_campaign},utm_content:${utm_content}}`), 100);
+      if (!botInfo.bot && !context.req.session.sessionid)
+        setTimeout(async () => await recordEvent(sessionid, 'ssr-index-init', `{"fbclid":"${fbclid}","ua":"${ua}","utm_content":"${utm_content}"}`), 100);
+      if (botInfo.bot && !context.req.session.sessionid)
+        setTimeout(async () => await recordEvent(sessionid, 'ssr-bot-index-init', `{"fbclid":"${fbclid}","ua":"${ua}","utm_content":"${utm_content}"}`), 100);
+
+      // if (botInfo.bot)
+      //   setTimeout(async () => await recordEvent(sessionid, 'bot', `{ua:${ua},utm_medium:${utm_medium},utm_campaign:${utm_campaign},utm_content:${utm_content}}`), 100);
 
       if (context.req.session.sessionid != sessionid) {
         context.req.session.sessionid = sessionid;
-        await context.req.session.save();
+        //await context.req.session.save();
+        setTimeout(async ()=>
+          await context.req.session.save(),1);
       }
       let options: Options = startoptions;
 
@@ -989,7 +996,7 @@ export const getServerSideProps = withSessionSsr(
           occasion: occasion,
           virgin: virgin,
           virgin2: virgin2,
-          dark:dark,
+          dark: dark,
           prompt1: prompt1,
           prompt2: prompt2,
           prompt3: prompt3,
@@ -1010,7 +1017,7 @@ export const getServerSideProps = withSessionSsr(
           ironsession: options,
           isbot: botInfo.bot,
           isfb: botInfo.fb || utm_medium ? 1 : 0,
-          utm_medium: `{fbclid:${fbclid},utm_medium:${utm_medium},utm_campaign:${utm_campaign},utm_content:${utm_content}}}}`,
+          utm_medium: `{"fbclid":${fbclid},"utm_content":${utm_content}}}}`,
         }
       }
     } catch (x) {
