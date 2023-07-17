@@ -155,7 +155,7 @@ const BandContainer = styled.div<{ darkText?: boolean }>`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 5rem 5rem;
+  padding: 4rem 1rem;
   text-align: center;
   color: ${({ darkText }) => (darkText ? '#fff' : '#2d2b38')};
   background-color: ${({ darkText }) => (darkText ? '#2d2b38' : '#fff')};
