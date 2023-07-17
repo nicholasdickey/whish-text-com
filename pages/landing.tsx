@@ -191,15 +191,33 @@ const FirstBandContainer = styled.div`
   font-size:5rem;
   
 `;
+const SecondBandContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 0;
+  text-align: center;
+  background: url('wide-candles.jpg') ; /* Replace with your image URL */
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('wide-christmas-candles.jpg'); /* Replace with your image URL */
+ 
+  color: #fff;
+  min-height: 380px;
+  background-repeat: repeat;
+
+  background-size: 900px 491px;
+  font-size:4rem;
+  
+`;
+
+
+const ImageDemo = styled.div`
+margin-top:20px;
+`;
 
 
 
-
-
-
-const handleCTAClick = () => {
-    // Handle CTA button click
-};
 
 const Body = styled.div`
   width:100%;
@@ -212,6 +230,10 @@ export default function Home({ dark, fresh, fbclid, utm_content, isbot, isfb, se
 
     const [darkMode, setDarkMode] = React.useState(true);
     const [systemMode, setSystemMode] = React.useState(false);
+    const router = useRouter();
+    const handleCTAClick = () => {
+        router.push(`/`);
+    };
 
     let theme: any;
     if (darkMode) {
@@ -282,7 +304,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
 
             </Head>
             <ThemeProvider theme={theme}>
-                <div className={roboto.className} >
+                <main className={roboto.className} >
 
                     <div>
 
@@ -334,19 +356,58 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                                 Generate Personalized Messages And Gift Recommendations For Any Occasion
                             </Title>
                             <Subtitle variant="h5">
-                                With the assistance of the award winning AI. Best of all: It&apos;s free!
+                                With the assistance of the award winning AI. Optimized for social media and messengers: emoticons!<br /> Best of all: It&apos;s free!
                             </Subtitle>
-                            <CTAButton variant="contained" color="secondary" onClick={handleCTAClick}>
+                            <CTAButton variant="contained" color="primary" onClick={handleCTAClick}>
                                 Get Started
                             </CTAButton>
 
                         </BandContainer>
+                        <SecondBandContainer>
+                            <Title variant="h3">
+                                Messages To Celebrate,<br />
+                                To Comfort, To Encourage.
+                            </Title>
+                            <Subtitle variant="h5">
+                                Start by just choosing or free-typing the occasion. <br /> Explore what is possible with advanced customization options.
+                            </Subtitle>
+
+                            <CTAButton variant="contained" color="primary" onClick={handleCTAClick}>
+                                Start Creating Now!
+                            </CTAButton>
+                        </SecondBandContainer>
+
                         <BandContainer>
-                            Using AI!
+                            <Title variant="h3">
+                                Upload your images and create greeting cards
+                            </Title>
+                            <Subtitle variant="h5">
+                                Download on your device and use in social networks and messengers with the direct upload.
+                                <ImageDemo>
+                                    <Image src="/demo-card1.png" width={1380 / 3} height={777 / 3} alt="Wish Text Composer Logo" />
+                                </ImageDemo>
+                                <ImageDemo>
+                                    <Image src="/demo-card2.png" width={1380 / 3} height={777 / 3} alt="Wish Text Composer Logo" />
+                                </ImageDemo>
+                                <ImageDemo>
+                                    <Image src="/demo-card3.png" width={1380 / 3} height={777 / 3} alt="Wish Text Composer Logo" />
+                                </ImageDemo>
+
+                            </Subtitle>
+                            <CTAButton variant="contained" color="primary" onClick={handleCTAClick}>
+                               Let us show you how!
+                            </CTAButton>
                         </BandContainer>
                     </Body>
-
-                </div>
+                    <Copyright> <Sub> <Typography variant="caption" gutterBottom>
+                        Copyright: Wish-Text.Com
+                    </Typography></Sub>
+                        <Sub><Typography variant="caption" gutterBottom>
+                            Contact: support@hudsonwilde.com
+                        </Typography></Sub><Sub><Typography variant="caption" gutterBottom>
+                            Made in Northern Minnesota, USA.
+                        </Typography></Sub></Copyright>
+                </main>
 
             </ThemeProvider>
         </>
