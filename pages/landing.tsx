@@ -334,7 +334,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                                 Generate Personalized Messages And Gift Recommendations For Any Occasion
                             </Title>
                             <Subtitle variant="h5">
-                                With the assistance of the award winning AI. Best of all: It's free!
+                                With the assistance of the award winning AI. Best of all: It&apos;s free!
                             </Subtitle>
                             <CTAButton variant="contained" color="secondary" onClick={handleCTAClick}>
                                 Get Started
