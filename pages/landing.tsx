@@ -409,7 +409,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                                 Upload your images and create greeting cards
                             </Title>
                             <Subtitle variant="h5">
-                                Download on your device<br/> and use in social networks <br/>and messengers 
+                                Download on your device<br /> and use in social networks <br />and messengers
                                 with the direct upload.
                                 <ImageDemo>
                                     <img src="/demo-card1.png" width="100%" alt="Wish Text Composer Logo" />
@@ -418,12 +418,12 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                                     <img src="/demo-card2.png" width="100%" alt="Wish Text Composer Logo" />
                                 </ImageDemo>
                                 <ImageDemo>
-                                    <img src="/demo-card3.png" width="100%"  alt="Wish Text Composer Logo" />
+                                    <img src="/demo-card3.png" width="100%" alt="Wish Text Composer Logo" />
                                 </ImageDemo>
 
                             </Subtitle>
                             <CTAButton variant="contained" color="primary" onClick={handleCTAClick}>
-                               Let us show you how!
+                                Let us show you how!
                             </CTAButton>
                         </BandContainer>
                     </Body>
@@ -458,15 +458,24 @@ export const getServerSideProps = withSessionSsr(
             const fresh = !context.req.session.sessionid;
             if (!botInfo.bot && fresh) {
                 console.log('ssr-landing-init');
-                setTimeout(async () => await recordEvent(sessionid, 'ssr-landing-init', `{"fbclid":"${fbclid}",ua:"${ua}","utm_content":"${utm_content}"}`), 100);
+                try {
+                    recordEvent(sessionid, 'ssr-landing-init', `{"fbclid":"${fbclid}",ua:"${ua}","utm_content":"${utm_content}"}`);
+                } catch (x) {
+                    console.log('ssr-landing-init-error', x);
+                }
 
             }
-            if (botInfo.bot && fresh)
-                setTimeout(async () => await recordEvent(sessionid, 'ssr-bot-landing-init', `{"fbclid":"${fbclid}","ua":"${ua}","utm_content":"${utm_content}"}`), 100);
+            if (botInfo.bot && fresh) {
+                try {
+                    await recordEvent(sessionid, 'ssr-bot-landing-init', `{"fbclid":"${fbclid}","ua":"${ua}","utm_content":"${utm_content}"}`);
+                } catch (x) {
+                    console.log('ssr-bot-landing-init-error', x);
+                }
+            }
             if (fresh || context.req.session.sessionid != sessionid) {
                 context.req.session.sessionid = sessionid;
-                setTimeout(async () =>
-                    await context.req.session.save(), 1);
+               
+                    await context.req.session.save();
             }
             return {
                 props: {

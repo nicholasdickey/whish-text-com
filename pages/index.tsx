@@ -956,10 +956,22 @@ export const getServerSideProps = withSessionSsr(
       console.log("startSession=", startoptions)
       const ua = context.req.headers['user-agent'];
       const botInfo = isbot({ ua });
-      if (!botInfo.bot && !context.req.session.sessionid)
-        setTimeout(async () => await recordEvent(sessionid, 'ssr-index-init', `{"fbclid":"${fbclid}","ua":"${ua}","utm_content":"${utm_content}"}`), 100);
-      if (botInfo.bot && !context.req.session.sessionid)
-        setTimeout(async () => await recordEvent(sessionid, 'ssr-bot-index-init', `{"fbclid":"${fbclid}","ua":"${ua}","utm_content":"${utm_content}"}`), 100);
+      if (!botInfo.bot && !context.req.session.sessionid) {
+        try {
+          await recordEvent(sessionid, 'ssr-index-init', `{"fbclid":"${fbclid}","ua":"${ua}","utm_content":"${utm_content}"}`);
+        }
+        catch (e) {
+          console.log("record event error", e)
+        }
+      }
+      if (botInfo.bot && !context.req.session.sessionid) {
+        try {
+          await recordEvent(sessionid, 'ssr-bot-index-init', `{"fbclid":"${fbclid}","ua":"${ua}","utm_content":"${utm_content}"}`);
+        }
+        catch (e) {
+          console.log("record event error", e);
+        }
+      }
 
       // if (botInfo.bot)
       //   setTimeout(async () => await recordEvent(sessionid, 'bot', `{ua:${ua},utm_medium:${utm_medium},utm_campaign:${utm_campaign},utm_content:${utm_content}}`), 100);
@@ -967,8 +979,13 @@ export const getServerSideProps = withSessionSsr(
       if (context.req.session.sessionid != sessionid) {
         context.req.session.sessionid = sessionid;
         //await context.req.session.save();
-        setTimeout(async () =>
-          await context.req.session.save(), 1);
+        try {
+          await context.req.session.save();
+        }
+        catch (e) {
+          console.log("session save error", e)
+        }
+
       }
       let options: Options = startoptions;
 
