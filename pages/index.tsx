@@ -296,10 +296,10 @@ export default function Home({ dark, num: startNum = 0, max: startMax = 0, promp
   // console.log("_app:darkMode",darkMode,session?.mode||"")
   React.useEffect(() => {
     const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
-
+    setSystemMode(!!(matchMedia.matches));
     if (matchMedia.matches != darkMode) {
-      const assigned = { ...Object.assign(session ? session : {}, { mode: matchMedia.matches }) }
-      setSystemMode(matchMedia.matches);
+      //const assigned = { ...Object.assign(session ? session : {}, { mode: matchMedia.matches }) }
+    //  setSystemMode(matchMedia.matches);
       document.body.setAttribute("data-theme", matchMedia.matches ? 'dark' : 'light');
       if (!modeIsSet) {
         setDarkMode(!!(matchMedia.matches));
