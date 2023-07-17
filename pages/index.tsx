@@ -282,7 +282,7 @@ export default function Home({ dark,num: startNum = 0, max: startMax = 0, prompt
       setDarkMode(true);
       setModeIsSet(true)
       updateSession2({ mode: true ,modeIsSet:true,blah:'pblah'});
-      setSystemMode(true);
+     // setSystemMode(true);
     }
   },[modeIsSet,dark,session?.mode]);
 
@@ -299,10 +299,9 @@ export default function Home({ dark,num: startNum = 0, max: startMax = 0, prompt
    
     if (matchMedia.matches != darkMode) {
       const assigned = { ...Object.assign(session ? session : {}, { mode: matchMedia.matches }) }
-
+      setSystemMode(matchMedia.matches);
+      document.body.setAttribute("data-theme", matchMedia.matches ? 'dark' : 'light');
       if (!modeIsSet) {
-        setSystemMode(matchMedia.matches);
-        document.body.setAttribute("data-theme", matchMedia.matches ? 'dark' : 'light');
         setDarkMode(!!(matchMedia.matches));
         updateSession2({ mode: matchMedia.matches,blah:'blah' });
       }
