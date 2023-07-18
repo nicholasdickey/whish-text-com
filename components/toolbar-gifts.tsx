@@ -5,6 +5,7 @@ import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
 
 const ToolbarContainer = styled.div`
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   z-index: 100;

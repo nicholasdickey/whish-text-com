@@ -910,7 +910,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               <Starter><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
                 <StarterMessage><Typography fontSize="inherit" color="secondary"/*color="#ffee58"*/>Click or tap on the &quot;Suggest Wish Text&quot; button ⤵️:</Typography></StarterMessage></Starter></Box> : null}
 
-            <GreetingOutput PlayerToolbar={OutputPlayerToolbar} setNum={setNum} setMax={setMax} max={max} num={num} setPrompt5={setPrompt5} prompt5={prompt5} onVirgin={async () => {
+             <GreetingOutput PlayerToolbar={OutputPlayerToolbar} setNum={setNum} setMax={setMax} max={max} num={num} setPrompt5={setPrompt5} prompt5={prompt5} onVirgin={async () => {
               await recordEvent(session.sessionid, 'virgin wish-text request', `occasion:${occasion}`);
               setVirgin(true);
               setPrompt2(true);

@@ -9,7 +9,7 @@ import "react-markdown-editor-lite/lib/index.css";
 import { useTheme } from '@mui/material/styles';
 import * as ga from '../lib/ga';
 import LinearProgress from '@mui/material/LinearProgress';
-
+import ImageOverlay from "./image-overlay";
 const Headline = styled.div`
 width:100%;
 display:flex;
@@ -28,28 +28,27 @@ justify-content:center;
   
   }
   `;
-
-const Body = styled.div`
-width:100%;
-display:flex;
-
-justify-content:center;
-//border: 1px solid #fff;
-
-  font-size: 18px;
+interface BodyProps {
+  l:number;
+}
+const Body = styled.div<BodyProps>`
+  width:100%;
+  display:flex;
+  justify-content:center;
+  font-size:18px;
   font-weight: 400;
   line-height: 1.7;
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
  // color: #fff;
 
-  padding-left: 20px;
+ // padding-left: 20px;
   padding-top:1px;
   padding-bottom:20px;
-  padding-right:10px;
+  //padding-right:10px;
   margin-bottom: 20px;
+
   @media (max-width: 990px) {
-    font-size: 16px;
-  
+    font-size:${({l})=>l>600?11:l>400?12:l>300?13:l>200?14:16}px;
   }
   `;
 
@@ -71,6 +70,9 @@ interface StyledImageProps {
   height: number;
   width: number;
   div: any;
+
+  adjHeight: string;
+  adjWidth: string;
 }
 
 const BackgroundImage = styled.img<StyledImageProps>`
@@ -78,11 +80,9 @@ const BackgroundImage = styled.img<StyledImageProps>`
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: ${({ height, div, width }) => {
-    const ratio = height / width;
-    return div ? div.clientWidth * ratio : height;
-  }}px;
+
+  height:auto;//${({adjHeight})=>adjHeight};
+  width:100%;//${({adjWidth})=>adjWidth};
   z-index: 1;
 `;
 
@@ -94,6 +94,8 @@ interface InnerOutputProps {
   horiz?: boolean;
   editable: boolean;
   image: string;
+  adjHeight: string;
+  adjWidth: string;
 }
 
 const InnerOutput = styled.div<InnerOutputProps>`
@@ -104,8 +106,9 @@ const InnerOutput = styled.div<InnerOutputProps>`
   justify-content: flex-end;
   overflow-wrap: break-word;
   font-size: ${({ length, horiz }) =>
-    `${length < 600 ? (horiz ? '17' : '19') : length < 500 ? (horiz ? '18' : '20') : length < 400 ? (horiz ? '19' : '21') : horiz ? '16' : '18'}`}px;
-  width: 100%;
+    `${length > 600 ? (horiz ? '12' : '19') : length > 500 ? (horiz ? '12' : '20') : length > 100 ? (horiz ? '12' : '12') : horiz ? '12' : '12'}`}px;
+  width:'100%';
+  height:${({adjHeight})=>adjHeight};
 
   @media (max-width: 990px) {
     font-weight: 400;
@@ -113,10 +116,10 @@ const InnerOutput = styled.div<InnerOutputProps>`
     `${length < 600 ? (horiz ? '9' : '14') : length < 500 ? (horiz ? '10' : '15') : length < 400 ? (horiz ? '11' : '16') : horiz ? '7' : '12'}`}px;
   }
 
-  height: ${({ div, width, height }) => {
+ /* height: ${({ div, width, height }) => {
     const ratio: number = height / width;
     return div ? div.clientWidth * ratio : height;
-  }}px;
+  }}px;*/
 
   &::before {
     content: '';
@@ -140,8 +143,8 @@ const InnerOutput = styled.div<InnerOutputProps>`
   }
 
   & p {
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: ${({image})=>image?20:4}px;
+    padding-right:  ${({image})=>image?10:4}px;
     padding-top: 10px;
     opacity: 0.9;
     margin-top: auto;
@@ -273,12 +276,56 @@ const TextEditor: React.FC<TextEditorProps> = ({ session, image, text, loading, 
  // console.log('headline=>:',headline)
   //console.log('body=>:',body)
  // console.log("texteditor", text, image)
-  return (
+  console.log("image:",image); 
+  const div=canvasRef.current;
+  const nominalWidth=div?div.clientWidth>500?div.clientWidth:552:552;
+  const {height,width}=image;
+  let grow= 1;//div ? div.clientWidth<nominalWidth?nominalWidth/width:1:1;
+  if(grow>1)grow=1;
+  const ratio = height / width;
+  const minWidth=nominalWidth?nominalWidth:div?div.clientWidth:552;
+  const adjHeight= image.url?div ? `${minWidth * ratio*grow}px` : `${height}px`:'100%';
+  const adjWidth=image.url?div ? div.clientWidth<nominalWidth?`${nominalWidth}px`:'100%':'100%':'100%';
+  console.log("image-props:",{minWidth,ratio,grow,nominalWidth,divWidth:div?div.clientWidth:0,adjWidth,adjHeight});
+  console.log("text-image:",text.length,horiz)
+ return (
     <div>
       <div style={{ position: "relative" }} ref={canvasRef}>
-       
-        <InnerOutput image={image.url} ref={ref} className="inner-output" div={canvasRef.current} height={image.height + (text.length > 400 ? horiz ? 150 : 50 : 0)} width={image.width} data-id="GreetingsOutput:InnerOutput" length={text.length} horiz={horiz} editable={editing}>
-         
+      {false&&<ImageOverlay text={body} image={image.url}/>}
+        <InnerOutput image={image.url} ref={ref} className="inner-output" div={canvasRef.current} adjHeight={adjHeight} height={image.height + (text.length > 400 ? horiz ? 150 : 50 : 0)} adjWidth={adjWidth} width={image.width} data-id="GreetingsOutput:InnerOutput" length={text.length} horiz={horiz} editable={editing}>
+        
+          {!editing ? (
+            <Mark image={image.url?true:false} onClick={() => handleTextClick()} >
+              <Headline ><ReactMarkdown>
+                {loading ? "" : headline}
+              </ReactMarkdown></Headline>
+              <div />
+              {loading&&<LinearProgress />}
+             <Body l={text.length}  id='wt-output'> <ReactMarkdown>
+                {loading ? "Generating..." : body}
+              </ReactMarkdown></Body>
+            </Mark>
+          ) : (
+            <MarkdownEditorWrap><MdEditor
+              name={'text-editor'}
+              value={text}
+              style={editorStyles} // Apply custom editor styles
+              renderHTML={(text) => mdParser.render(text)}
+              onChange={handleTextChange}
+              view={{ menu: false, md: true, html: false }}
+            /></MarkdownEditorWrap>
+          )}
+        </InnerOutput>
+        <BackgroundWrapper>{image && <BackgroundImage adjHeight={adjHeight} adjWidth={adjWidth} div={canvasRef.current} height={image.height} width={image.width} src={image.url} />}<BackgroundFiller /></BackgroundWrapper>
+      </div>
+    </div>
+  );
+};
+
+export default TextEditor;
+/*
+ <InnerOutput image={image.url} ref={ref} className="inner-output" div={canvasRef.current} height={image.height + (text.length > 400 ? horiz ? 150 : 50 : 0)} width={image.width} data-id="GreetingsOutput:InnerOutput" length={text.length} horiz={horiz} editable={editing}>
+        
           {!editing ? (
             <Mark image={image.url?true:false} onClick={() => handleTextClick()} >
               <Headline ><ReactMarkdown>
@@ -301,10 +348,6 @@ const TextEditor: React.FC<TextEditorProps> = ({ session, image, text, loading, 
             /></MarkdownEditorWrap>
           )}
         </InnerOutput>
-        <BackgroundWrapper>{image && <BackgroundImage div={canvasRef.current} height={image.height} width={image.width} src={image.url} />}<BackgroundFiller /></BackgroundWrapper>
-      </div>
-    </div>
-  );
-};
 
-export default TextEditor;
+
+        */

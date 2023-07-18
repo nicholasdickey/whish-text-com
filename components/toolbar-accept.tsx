@@ -9,6 +9,7 @@ import useCopyToClipboard from '../lib/copy-to-clipboard';
 import * as ga from '../lib/ga';
 const ToolbarContainer = styled.div`
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   z-index: 100;

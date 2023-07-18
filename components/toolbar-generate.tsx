@@ -6,6 +6,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { CldUploadWidget} from 'next-cloudinary';
 const ToolbarContainer = styled.div`
   display: flex;
+  flex-wrap: wrap;
   justify-content: center; 
   align-items: center;
  
