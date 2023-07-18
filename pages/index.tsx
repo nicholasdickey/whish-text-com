@@ -877,7 +877,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                     label="Instructions to AI"
                     value={instructions}
                     onChange={onInstructionsChange}
-                    helperText="Example: 'Keep it very short', 'Do not wish cake', ' As a methodist prayer', 'As a Hebrew prayer', 'No special day'"
+                    helperText="Example: 'Keep it very short', 'Create a headline and plenty of emoticons', 'Do not wish cake', ' As a methodist prayer', 'As a Hebrew prayer', 'No special day'"
                   />
                 </Box>
                 <Box sx={{ my: 4 }}>

@@ -45,7 +45,7 @@ const amazonSearch = async (
     items = items.slice(0, 3);
     return res.status(200).json({ items })
   }
-  catch (e) {
+  catch (e:any) {
     console.log("AMAZON search error:", e);
     return res.status(500).json({ error: e.message })
   }
