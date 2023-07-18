@@ -178,7 +178,7 @@ const FirstBandContainer = styled.div`
   @media (max-width: 700px) {
     margin-top:50px;
     font-size:3rem;;
-    min-height: 120px;
+    height: 120px;
     padding:40px
   }
   
