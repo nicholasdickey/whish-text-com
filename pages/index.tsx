@@ -282,7 +282,7 @@ export default function Home({ dark, num: startNum = 0, max: startMax = 0, promp
     })
   }
   const handleMenuClick = (item: string) => {
-    console.log('handleMenuClick', item);
+    //console.log('handleMenuClick', item);
     if (item == 'Login') {
       // signIn();
     }
@@ -310,7 +310,7 @@ export default function Home({ dark, num: startNum = 0, max: startMax = 0, promp
   const container = undefined;
   //saves the changes to the session on the local web server. 
   const updateSession2 = useCallback(async (updSession: object) => {
-    console.log('===>pdate session:', updSession);
+    //console.log('===>pdate session:', updSession);
     if (!updSession)
       return;
     const assigned = { ...Object.assign(session, updSession) }
@@ -352,7 +352,7 @@ export default function Home({ dark, num: startNum = 0, max: startMax = 0, promp
 
     return () => matchMedia.removeEventListener("change", modeMe);
   }, [systemMode,darkMode, session?.mode, modeIsSet]);
-  console.log("RENDER", session, num, max, "startNum:", startNum, "startMax:", startMax)
+  //console.log("RENDER", session, num, max, "startNum:", startNum, "startMax:", startMax)
   /*
   React.useEffect(() => {
     console.log("UPDATE session  MODE",mode)
@@ -360,7 +360,7 @@ export default function Home({ dark, num: startNum = 0, max: startMax = 0, promp
   },[mode,session.mode])
 */
   const updateRoute = useCallback(({ to, from, occasion, naive, reflections, instructions, inastyleof, language, interests }: { to: string, from: string, occasion: string, naive: boolean, reflections: string, instructions: string, inastyleof: string, language: string, interests: string }) => {
-    console.log('value updateRoute', { to, from, occasion, naive, reflections, instructions, inastyleof, language, interests });
+    //console.log('value updateRoute', { to, from, occasion, naive, reflections, instructions, inastyleof, language, interests });
     const params = `/${occasion ? '?occasion=' : ''}${occasion ? encodeURIComponent(occasion) : ''}${naive ? `${occasion ? '&' : '?'}naive=${naive}` : ''}${reflections ? `${occasion ? '&' : '?'}reflections=${encodeURIComponent(reflections)}` : ``}${instructions ? `${occasion ? '&' : '?'}instructions=${encodeURIComponent(instructions)}` : ``}${inastyleof ? `${occasion ? '&' : '?'}inastyleof=${encodeURIComponent(inastyleof)}` : ``}${language ? `${occasion ? '&' : '?'}language=${encodeURIComponent(language)}` : ``}${to ? `${occasion ? '&' : '?'}to=${encodeURIComponent(to)}` : ``}${from ? `${occasion ? '&' : '?'}from=${encodeURIComponent(from)}` : ``}${interests ? `${occasion ? '&' : '?'}interests=${encodeURIComponent(interests)}` : ``}`;
     router.push(params, params, { shallow: true })
 
@@ -380,7 +380,7 @@ export default function Home({ dark, num: startNum = 0, max: startMax = 0, promp
   }, [session.sessionid, virgin]);
   const onOccasionChange = (id: string, value: string) => {
     if (value != "") {
-      console.log("value=", value)
+     // console.log("value=", value)
       setMissingOccasion(false);
       updateRoute({
         from,
@@ -534,7 +534,7 @@ export default function Home({ dark, num: startNum = 0, max: startMax = 0, promp
   //console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
   const processRecord = async (record: any, num: number) => {
     const { greeting, params } = record;
-    console.log("PARSE", params, JSON.parse(params));
+    //console.log("PARSE", params, JSON.parse(params));
     const update = Object.assign(JSON.parse(params), { greeting, num });
     updateSession2(update);
     const { to, from, occasion, naive, reflections, instructions, inastyleof, language, interests } = update;
@@ -554,10 +554,10 @@ export default function Home({ dark, num: startNum = 0, max: startMax = 0, promp
     num={num}
     max={max}
     onPrevClick={async () => {
-      console.log("onPrevClick", num, max)
+      //console.log("onPrevClick", num, max)
       if (num > 1) {
         const { success, record } = await getSessionHistory(session.sessionid, num - 1);
-        console.log("onPrevClick2", success, record)
+        //console.log("onPrevClick2", success, record)
         if (success) {
           await processRecord(record, num - 1);
         }
@@ -653,7 +653,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                         title: 'Wish-Text.Com -  Wish Text Composer',
                       }}
                       onClick={() => {
-                        console.log("shared successfully!");
+                        //console.log("shared successfully!");
                         ga.event({
                           action: "share",
                           params: {
@@ -996,7 +996,7 @@ export const getServerSideProps = withSessionSsr(
       utm_campaign = utm_campaign || '';
       utm_content = utm_content || '';
       fbclid = fbclid || '';
-      console.log("naive1=", naive)
+      //console.log("naive1=", naive)
       var randomstring = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
       let sessionid = context.req.session?.sessionid || randomstring();
       let startoptions: Options = await fetchSession(sessionid);
@@ -1006,7 +1006,7 @@ export const getServerSideProps = withSessionSsr(
         imagesString: '',
         selectedImage: '',
       };
-      console.log("startSession=", startoptions)
+      //console.log("startSession=", startoptions)
       const ua = context.req.headers['user-agent'];
       const botInfo = isbot({ ua });
       if (!botInfo.bot && !context.req.session.sessionid) {
@@ -1055,14 +1055,14 @@ export const getServerSideProps = withSessionSsr(
       prompt5 = prompt5 || options.prompt5 || '';
       num = num || options.num || 1;
       max = max || options.max || 1;
-      console.log("NUM, MAX:", num, max)
+      //("NUM, MAX:", num, max)
       naive = naive || options.naive || false;
       reflections = reflections || options.reflections || '';
       instructions = instructions || options.instructions || '';
       inastyleof = inastyleof || options.inastyleof || '';
       language = language || options.language || '';
       interests = interests || options.interests || '';
-      console.log("dark=", dark)
+      //console.log("dark=", dark)
       return {
         props: {
           from: from,

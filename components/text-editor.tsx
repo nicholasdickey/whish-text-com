@@ -276,7 +276,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ session, image, text, loading, 
  // console.log('headline=>:',headline)
   //console.log('body=>:',body)
  // console.log("texteditor", text, image)
-  console.log("image:",image); 
+ // console.log("image:",image); 
   const div=canvasRef.current;
   const nominalWidth=div?div.clientWidth>500?div.clientWidth:552:552;
   const {height,width}=image;
@@ -286,8 +286,8 @@ const TextEditor: React.FC<TextEditorProps> = ({ session, image, text, loading, 
   const minWidth=nominalWidth?nominalWidth:div?div.clientWidth:552;
   const adjHeight= image.url?div ? `${minWidth * ratio*grow}px` : `${height}px`:'100%';
   const adjWidth=image.url?div ? div.clientWidth<nominalWidth?`${nominalWidth}px`:'100%':'100%':'100%';
-  console.log("image-props:",{minWidth,ratio,grow,nominalWidth,divWidth:div?div.clientWidth:0,adjWidth,adjHeight});
-  console.log("text-image:",text.length,horiz)
+  //console.log("image-props:",{minWidth,ratio,grow,nominalWidth,divWidth:div?div.clientWidth:0,adjWidth,adjHeight});
+  //console.log("text-image:",text.length,horiz)
  return (
     <div>
       <div style={{ position: "relative" }} ref={canvasRef}>

@@ -135,7 +135,7 @@ export default function Output({
       }
     })
     setTimeout(async ()=>await recordEvent(session.sessionid, 'stripClickHandler',image?.url||''),1000);
-         
+   // console.log("image-stripClickHandler", image);    
     if (image == null) {
       image = {
         url: '',
@@ -148,14 +148,14 @@ export default function Output({
     }
 
     setSelectedImage(image);
-    if (image?.url)
+   // if (image?.url)
       updateSession2({ selectedImage: JSON.stringify(image) });
   },[updateSession2, session.sessionid]);
  
   useEffect(() => {
-    console.log("useEffect", greeting)
+    //console.log("useEffect", greeting)
     if (!greeting && selectedImage?.url) {
-      console.log("useEffect stripClickHandler null")
+      //console.log("useEffect stripClickHandler null")
       stripClickHandler(null);
     }
   }, [greeting, selectedImage, stripClickHandler]);
@@ -200,7 +200,7 @@ export default function Output({
     });
     setLoading(false);
     setLoadReady(false);
-    console.log("handleGenerate", result,num);
+    //console.log("handleGenerate", result,num);
     if (result !== value && result) {
       updateSession2({ greeting: result,num ,max:num});
       setValue(result);
@@ -307,7 +307,7 @@ export default function Output({
     setImages(session.imagesString ? JSON.parse(session.imagesString) : []);
     setSelectedImage(session.selectedImage ? JSON.parse(session.selectedImage) : { url: "", publicId: "" });
   }, [session.imagesString, session.selectedImage]);
-  console.log('error', occasion?.length>0?false:true)
+  //console.log('error', occasion?.length>0?false:true)
   return (
     <>
       {occasion&&<ToolbarGenerate error={occasion?.length>0?false:true} onGenerateClick={handleGenerate} onUploadClick={onUpload} hasGreeting={session.greeting ? true : false} />}
