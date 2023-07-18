@@ -413,13 +413,13 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                                 Download on your device<br /> and use in social networks <br />and messengers
                                 with the direct upload.
                                 <ImageDemo>
-                                    <img src="/demo-card1.png" width="100%" alt="Wish Text Composer Logo" />
+                                    <img src="/demo-card1-small.png" width="100%" alt="Wish Text Composer Logo" />
                                 </ImageDemo>
                                 <ImageDemo>
-                                    <img src="/demo-card4.png" width="100%" alt="Wish Text Composer Logo" />
+                                    <img src="/demo-card5-small.png" width="100%" alt="Wish Text Composer Logo" />
                                 </ImageDemo>
                                 <ImageDemo>
-                                    <img src="/demo-card3.png" width="100%" alt="Wish Text Composer Logo" />
+                                    <img src="/demo-card3-small.png" width="100%" alt="Wish Text Composer Logo" />
                                 </ImageDemo>
 
                             </Subtitle>

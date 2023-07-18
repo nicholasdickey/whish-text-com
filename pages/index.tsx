@@ -64,10 +64,17 @@ import PlayerToolbar from "../components/toolbar-player";
 
 const ModeSwitch = styled.div`
   position:absolute;
-  right:0px;
+  right:200px;
   top:20px;  
   z-index:100; 
-  color:grey; 
+  color:white; 
+ 
+  @media (max-width: 700px) {
+    top:0px;
+    right:0px;
+    font-size:3rem;;
+    min-height: 120px;
+  }
   `;
 interface BackgroundMode {
   colorDark: string;
@@ -97,10 +104,17 @@ const StarterMessage = styled.div`
   padding-left:10px;
   padding-right:10px;
   `;
-const Logo = styled.div`
+  
+  
+  const Wide=styled.div`
   position:relative;
-  width:100%;
-  height:100%;
+   width:100%; 
+    `;
+  
+const Logo = styled.div`
+  position:absolute;
+  //width:100%;
+  //height:100%;
   display:flex;
   align-items:center;
   justify-content: center;
@@ -127,6 +141,7 @@ const ClearButton = styled(IconButton)`
   width: auto;
  `;
 const ActionContainer = styled.div`
+  margin-top:20px;
   display: flex;
   justify-content:flex-end;
   width: 100%;
@@ -142,7 +157,32 @@ const AppMenu = styled.div<ColorProps>`
   display:flex;
   color:${({ color }) => color};
 `;
+const FirstBandContainer = styled.div`
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 0;
+  text-align: center;
+  background: url('wide-candles.jpg') ; /* Replace with your image URL */
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('wide-candles.jpg'); /* Replace with your image URL */
+ 
+  color: #fff;
+  min-height: 300px;
+  background-repeat: repeat;
 
+  background-size: 900px 491px;
+  padding:5rem 0rem;
+  font-size:4rem;
+  margin-top:60px;
+  @media (max-width: 700px) {
+    margin-top:50px;
+    font-size:3rem;;
+    min-height: 120px;
+    padding:40px
+  }
+  
+`;
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 let v = false;
 export default function Home({ dark, num: startNum = 0, max: startMax = 0, prompt1: startPrompt1, prompt2: startPrompt2, prompt3: startPrompt3,
@@ -575,7 +615,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
       <ThemeProvider theme={theme}>
         <main className={roboto.className} >
 
-          <Container maxWidth="sm">
+          
 
             <CssBaseline />
             <AppBar position="absolute" component="nav">
@@ -632,35 +672,35 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
 
               </Toolbar>
             </AppBar>
-            <Box component="nav">
-              <Drawer
-                container={container}
-                variant="temporary"
-                open={mobileOpen}
-                onClose={handleDrawerToggle}
-                ModalProps={{
-                  keepMounted: true, // Better open performance on mobile.
-                }}
-                sx={{
-                  display: { xs: 'block', sm: 'none' },
-                  '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-                }}
-              >
-                {drawer}
-              </Drawer>
-            </Box>
-            <Toolbar />
-            <Logo ><ModeSwitch><Button color={"inherit"} onClick={() => {
+            <Wide>
+            <FirstBandContainer>
+                            WISH&nbsp;IT? TEXT&nbsp;IT!
+                            
+                        </FirstBandContainer>
+                      
+                        <ModeSwitch><Button color={"inherit"} onClick={() => {
               setDarkMode(!darkMode);
               setModeIsSet(true);
               updateSession2({ mode: !darkMode, modeIsSet: true });
-            }}>{darkMode ? <LightModeTwoToneIcon /> : <ModeNightTwoToneIcon />}</Button></ModeSwitch><LogoContainer><Image
+            }}>{darkMode ? <LightModeTwoToneIcon /> : <ModeNightTwoToneIcon />}</Button></ModeSwitch>
+</Wide>
+
+
+
+                        <Logo ><ModeSwitch><Button color={"inherit"} onClick={() => {
+              setDarkMode(!darkMode);
+              setModeIsSet(true);
+              updateSession2({ mode: !darkMode, modeIsSet: true });
+            }}>{darkMode ? <LightModeTwoToneIcon /> : <ModeNightTwoToneIcon />}</Button></ModeSwitch>{false&&<LogoContainer><Image
 
               width={668 / 8}
               height={868 / 8}
               alt="Wish Text Composer"
               src={'/wish-text-candle-light.png'} />
-              </LogoContainer></Logo>
+              </LogoContainer>}</Logo>
+                        <Container maxWidth="sm">
+            
+            
             {!virgin ? <Box sx={{ my: 0, padding: 1, width: 1, color: noExplain ? 'normal' : 'white', backgroundColor: noExplain ? 'normal' : 'secondary' }}>
 
               {false && !noExplain ? <Typography
