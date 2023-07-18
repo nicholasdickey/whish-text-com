@@ -120,7 +120,8 @@ const Copyright = styled.div`
 
   `;
 const Sub = styled.div`
-  margin:20px;
+  margin:10px;
+  text-align:center;
 `;
 const ClearButton = styled(IconButton)`
   width: auto;
@@ -310,7 +311,7 @@ export default function Home({ dark, num: startNum = 0, max: startMax = 0, promp
     matchMedia.addEventListener("change", modeMe);
 
     return () => matchMedia.removeEventListener("change", modeMe);
-  }, [darkMode, session?.mode, modeIsSet]);
+  }, [systemMode,darkMode, session?.mode, modeIsSet]);
   console.log("RENDER", session, num, max, "startNum:", startNum, "startMax:", startMax)
   /*
   React.useEffect(() => {
@@ -549,6 +550,8 @@ export default function Home({ dark, num: startNum = 0, max: startMax = 0, promp
     <>
       <Head>
         <title>Wish Text Composer</title>
+        <meta name="name" content="Wish Text"/>
+        <meta name="slogan" content="Greetings Text"/>
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@wishtext" />
         <meta name="twitter:title" content="Wish Text Composer" />
@@ -880,7 +883,15 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             }} virgin={virgin} virgin2={virgin2} setMissingOccasion={setMissingOccasion} setLoadReady={setLoadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} naive={naive} reflections={reflections} instructions={instructions} inastyleof={inastyleof} language={language} /*authSession={authSession}*/ />
 
             {session.greeting && <GiftsOutput loadReady={loadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} reflections={reflections} interests={interests} onInterestsChange={onInterestsChange} />}
+            {!virgin&&!prompt1&&<Copyright> <Sub>
+              <hr/>
+   <Typography variant="caption" gutterBottom>Create the &quot;wishing&quot; or greeting text for you to paste into your favorite messaging app.
+                  AI will provide the helpful suggestions that you can edit by clicking on the suggestion.
 
+                Additionally, Wish Text Composer can generate a &apos;postcard&apos; greeting over an uploaded image. You can download the card and share from any device.
+                Utilizing AI, it also provides the gift suggestions.</Typography></Sub></Copyright>
+  }
+                <hr/>
             <Copyright> <Sub> <Typography variant="caption" gutterBottom>
               Copyright: Wish-Text.Com
             </Typography></Sub>
@@ -891,6 +902,8 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                 Made in Northern Minnesota, USA.
               </Typography></Sub>
             </Copyright>
+            
+            
           </Container>
           <div className="container">
             <Script src={`https://www.googletagmanager.com/gtag/js?${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`} />

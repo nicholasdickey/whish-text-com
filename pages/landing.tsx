@@ -293,9 +293,8 @@ export default function Home({ dark, fresh, fbclid, utm_content, isbot, isfb, se
 
     React.useEffect(() => {
         const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
-
+        setSystemMode(matchMedia.matches);
         if (matchMedia.matches != darkMode) {
-            setSystemMode(matchMedia.matches);
             document.body.setAttribute("data-theme", matchMedia.matches ? 'dark' : 'light');
             setDarkMode(!!(matchMedia.matches));
         }
@@ -310,6 +309,8 @@ export default function Home({ dark, fresh, fbclid, utm_content, isbot, isfb, se
         <>
             <Head>
                 <title>Wish Text Composer</title>
+                <meta name="name" content="Wish Text" />
+                <meta name="slogan" content="Greetings Text" />
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta name="twitter:site" content="@wishtext" />
                 <meta name="twitter:title" content="Wish Text Composer" />
@@ -474,8 +475,8 @@ export const getServerSideProps = withSessionSsr(
             }
             if (fresh || context.req.session.sessionid != sessionid) {
                 context.req.session.sessionid = sessionid;
-               
-                    await context.req.session.save();
+
+                await context.req.session.save();
             }
             return {
                 props: {
