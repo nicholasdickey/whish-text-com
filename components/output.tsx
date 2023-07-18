@@ -112,7 +112,7 @@ export default function Output({
   const [convertedImage, setConvertedImage] = useState('');
 
   const canvasRef = useRef<HTMLDivElement>(null);
-  const horiz: boolean = selectedImage.width > selectedImage.height;
+
 
   const convertDivToPng = async (div: any) => {
     const canvas = await html2canvas(div, {

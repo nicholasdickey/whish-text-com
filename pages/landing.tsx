@@ -397,7 +397,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                                 To Comfort, To Encourage.
                             </Title>
                             <Subtitle variant="h5">
-                                Start by just choosing or free-typing the occasion. <br /> Explore what is possible with advanced customization options.
+                            Begin by either selecting or typing the specific occasion. <br /> Explore what is possible with advanced customization options.
                             </Subtitle>
 
                             <CTAButton variant="contained" color="primary" onClick={handleCTAClick}>
@@ -416,7 +416,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                                     <img src="/demo-card1.png" width="100%" alt="Wish Text Composer Logo" />
                                 </ImageDemo>
                                 <ImageDemo>
-                                    <img src="/demo-card2.png" width="100%" alt="Wish Text Composer Logo" />
+                                    <img src="/demo-card4.png" width="100%" alt="Wish Text Composer Logo" />
                                 </ImageDemo>
                                 <ImageDemo>
                                     <img src="/demo-card3.png" width="100%" alt="Wish Text Composer Logo" />
