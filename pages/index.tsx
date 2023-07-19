@@ -674,7 +674,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             </AppBar>
             <Wide>
             <FirstBandContainer>
-                            WISH&nbsp;IT? TEXT&nbsp;IT!
+                            WISH&nbsp;IT?  TEXT&nbsp;IT!
                             
                         </FirstBandContainer>
                       

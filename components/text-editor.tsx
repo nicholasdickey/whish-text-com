@@ -54,7 +54,7 @@ const Body = styled.div<BodyProps>`
 
 const BackgroundWrapper = styled.div`
   width: 100%;
-  //background-color: #000; /* Add black background color */
+  background-color: #000; /* Add black background color */
   display:flex;
   flex-direction:column;
   height:auto;
@@ -64,7 +64,6 @@ const BackgroundWrapper = styled.div`
 const BackgroundFiller = styled.div`
   width: 100%;
   flex-grow: 1;
- 
   `;
 interface StyledImageProps {
   height: number;
@@ -88,9 +87,9 @@ const BackgroundImage = styled.img<StyledImageProps>`
 
 interface InnerOutputProps {
   length: number;
-  height: number;
-  width: number;
-  div: any;
+  //height: number;
+ // width: number;
+  //div: any;
   horiz?: boolean;
   editable: boolean;
   image: string;
@@ -116,10 +115,6 @@ const InnerOutput = styled.div<InnerOutputProps>`
     `${length < 600 ? (horiz ? '9' : '14') : length < 500 ? (horiz ? '10' : '15') : length < 400 ? (horiz ? '11' : '16') : horiz ? '7' : '12'}`}px;
   }
 
- /* height: ${({ div, width, height }) => {
-    const ratio: number = height / width;
-    return div ? div.clientWidth * ratio : height;
-  }}px;*/
 
   &::before {
     content: '';
@@ -284,15 +279,15 @@ const TextEditor: React.FC<TextEditorProps> = ({ session, image, text, loading, 
   if(grow>1)grow=1;
   const ratio = height / width;
   const minWidth=nominalWidth?nominalWidth:div?div.clientWidth:552;
-  const adjHeight= image.url?div ? `${minWidth * ratio*grow}px` : `${height}px`:'100%';
+  const adjHeight= image.url?div ? `${Math.floor(minWidth * ratio*grow)}px` : `${height}px`:'100%';
   const adjWidth=image.url?div ? div.clientWidth<nominalWidth?`${nominalWidth}px`:'100%':'100%':'100%';
   //console.log("image-props:",{minWidth,ratio,grow,nominalWidth,divWidth:div?div.clientWidth:0,adjWidth,adjHeight});
   //console.log("text-image:",text.length,horiz)
  return (
     <div>
-      <div style={{ position: "relative" }} ref={canvasRef}>
+      <div data-id="canvas" style={{ position: "relative"}} ref={canvasRef}>
       {false&&<ImageOverlay text={body} image={image.url}/>}
-        <InnerOutput image={image.url} ref={ref} className="inner-output" div={canvasRef.current} adjHeight={adjHeight} height={image.height + (text.length > 400 ? horiz ? 150 : 50 : 0)} adjWidth={adjWidth} width={image.width} data-id="GreetingsOutput:InnerOutput" length={text.length} horiz={horiz} editable={editing}>
+        <InnerOutput image={image.url} ref={ref} className="inner-output" adjHeight={adjHeight}  adjWidth={adjWidth} data-id="GreetingsOutput:InnerOutput" length={text.length} horiz={horiz} editable={editing}>
         
           {!editing ? (
             <Mark image={image.url?true:false} onClick={() => handleTextClick()} >
@@ -316,7 +311,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ session, image, text, loading, 
             /></MarkdownEditorWrap>
           )}
         </InnerOutput>
-        <BackgroundWrapper>{image && <BackgroundImage adjHeight={adjHeight} adjWidth={adjWidth} div={canvasRef.current} height={image.height} width={image.width} src={image.url} />}<BackgroundFiller /></BackgroundWrapper>
+        {image.url&&<BackgroundWrapper>{image && <BackgroundImage adjHeight={adjHeight} adjWidth={adjWidth} div={canvasRef.current} height={image.height} width={image.width} src={image.url} />}<BackgroundFiller /></BackgroundWrapper>}
       </div>
     </div>
   );
