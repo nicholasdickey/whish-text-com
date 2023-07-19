@@ -70,8 +70,8 @@ interface StyledImageProps {
   width: number;
   div: any;
 
-  adjHeight: string;
-  adjWidth: string;
+  adjheight: string;
+  adjwidth: string;
 }
 
 const BackgroundImage = styled.img<StyledImageProps>`
@@ -80,8 +80,8 @@ const BackgroundImage = styled.img<StyledImageProps>`
   top: 0;
   left: 0;
 
-  height:auto;//${({adjHeight})=>adjHeight};
-  width:100%;//${({adjWidth})=>adjWidth};
+  height:auto; 
+  width:100%;
   z-index: 1;
 `;
 
@@ -90,29 +90,32 @@ interface InnerOutputProps {
   //height: number;
  // width: number;
   //div: any;
-  horiz?: boolean;
-  editable: boolean;
+  horiz?: string;
   image: string;
-  adjHeight: string;
-  adjWidth: string;
+  adjheight: string;
+  adjwidth: string;
 }
 
 const InnerOutput = styled.div<InnerOutputProps>`
+  
   position: relative;
   //display: flex;
   //flex-direction: column;
   white-space: pre-line;
   justify-content: flex-end;
   overflow-wrap: break-word;
-  font-size: ${({ length, horiz }) =>
-    `${length > 600 ? (horiz ? '12' : '19') : length > 500 ? (horiz ? '12' : '20') : length > 100 ? (horiz ? '12' : '12') : horiz ? '12' : '12'}`}px;
+  font-size: ${({ length, horiz }) =>{
+    const h=horiz=="true";
+    return `${length > 600 ? (h ? '12' : '19') : length > 500 ? (h ? '12' : '20') : length > 100 ? (h? '12' : '12') : h ? '12' : '12'}`}}px;
+  
   width:'100%';
-  height:${({adjHeight})=>adjHeight};
+  height:${({adjheight})=>adjheight};
 
   @media (max-width: 990px) {
     font-weight: 400;
-    font-size: ${({ length, horiz }) =>
-    `${length < 600 ? (horiz ? '9' : '14') : length < 500 ? (horiz ? '10' : '15') : length < 400 ? (horiz ? '11' : '16') : horiz ? '7' : '12'}`}px;
+    font-size: ${({ length, horiz }) =>{
+    const h=horiz=="true";
+    return `${length < 600 ? (h ? '9' : '14') : length < 500 ? (h ? '10' : '15') : length < 400 ? (h ? '11' : '16') : h ? '7' : '12'}`}}px;
   }
 
 
@@ -123,7 +126,7 @@ const InnerOutput = styled.div<InnerOutputProps>`
     left: 0;
     width: 100%;
     height: 100%; /* Set the height to 100% */
-    background: ${({ image }) => image ? `linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.6) 60%, rgba(0, 0, 0, 1.0) 100%)` : null};
+    background: ${({ image }) => image=="true" ? `linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.6) 60%, rgba(0, 0, 0, 1.0) 100%)` : null};
     z-index: 4;
   }
 
@@ -138,14 +141,14 @@ const InnerOutput = styled.div<InnerOutputProps>`
   }
 
   & p {
-    padding-left: ${({image})=>image?20:4}px;
-    padding-right:  ${({image})=>image?10:4}px;
+    padding-left: ${({image})=>image=="true"?20:4}px;
+    padding-right:  ${({image})=>image=="true"?10:4}px;
     padding-top: 10px;
     opacity: 0.9;
     margin-top: auto;
     margin-bottom: 10px; /* Add margin-bottom to prevent text overflow */
     bottom: 0;
-    color:${({ image }) => image ? 'white' : null};
+    color:${({ image }) => image=="true" ? 'white' : null};
     z-index: 6;
     overflow-wrap: break-word;
     text-align: left;
@@ -189,10 +192,10 @@ const editorStyles = {
 
 };
 interface MarkProps {
-  image:boolean;
+  image:string;
 }
 const Mark=styled.div<MarkProps>`
-position: ${({image})=>image?'absolute':'relative'};
+position: ${({image})=>image=="true"?'absolute':'relative'};
 bottom:0;
 `;
 const MarkdownEditorWrap = styled.div`
@@ -286,11 +289,11 @@ const TextEditor: React.FC<TextEditorProps> = ({ session, image, text, loading, 
  return (
     <div>
       <div data-id="canvas" style={{ position: "relative"}} ref={canvasRef}>
-      {false&&<ImageOverlay text={body} image={image.url}/>}
-        <InnerOutput image={image.url} ref={ref} className="inner-output" adjHeight={adjHeight}  adjWidth={adjWidth} data-id="GreetingsOutput:InnerOutput" length={text.length} horiz={horiz} editable={editing}>
+     
+        <InnerOutput image={image.url?"true":"false"} ref={ref} className="inner-output" adjheight={adjHeight}  adjwidth={adjWidth} data-id="GreetingsOutput:InnerOutput" length={text.length} horiz={horiz?"true":"false"}>
         
           {!editing ? (
-            <Mark image={image.url?true:false} onClick={() => handleTextClick()} >
+            <Mark image={image.url?"true":"false"} onClick={() => handleTextClick()} >
               <Headline ><ReactMarkdown>
                 {loading ? "" : headline}
               </ReactMarkdown></Headline>
@@ -311,7 +314,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ session, image, text, loading, 
             /></MarkdownEditorWrap>
           )}
         </InnerOutput>
-        {image.url&&<BackgroundWrapper>{image && <BackgroundImage adjHeight={adjHeight} adjWidth={adjWidth} div={canvasRef.current} height={image.height} width={image.width} src={image.url} />}<BackgroundFiller /></BackgroundWrapper>}
+        {image.url&&<BackgroundWrapper>{image && <BackgroundImage adjheight={adjHeight} adjwidth={adjWidth} div={canvasRef.current} height={image.height} width={image.width} src={image.url} />}<BackgroundFiller /></BackgroundWrapper>}
       </div>
     </div>
   );

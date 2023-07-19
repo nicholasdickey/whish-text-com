@@ -192,12 +192,12 @@ const FirstBandContainer = styled.div`
   
 `;
 interface FooterProps {
-  darkMode: boolean;
+  darkmode: string;
 };
 const Footer=styled.div<FooterProps>`
   padding:20px;
   width:100%;
-  background-color: ${({darkMode})=>darkMode?'#252330':'#ddd'};
+  background-color: ${({darkmode})=>darkmode=="true"?'#252330':'#ddd'};
  
   `;
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
@@ -920,7 +920,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             <Container maxWidth="md">  
              </Container>
 
-            <Footer darkMode={darkMode||false}>
+            <Footer darkmode={darkMode?"true":"false"}>
             {!virgin&&!prompt1&&<Copyright> 
            
               <Sub>

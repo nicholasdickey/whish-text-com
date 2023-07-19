@@ -150,15 +150,15 @@ const StyledContainer = styled(Container)`
   min-height: 100vh;
 `;
 
-const BandContainer = styled.div<{ darkText?: boolean }>`
+const BandContainer = styled.div<{ darktext?: string }>`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 4rem 1rem;
   text-align: center;
-  color: ${({ darkText }) => (darkText ? '#fff' : '#2d2b38')};
-  background-color: ${({ darkText }) => (darkText ? '#2d2b38' : '#fff')};
+  color: ${({ darktext }) => (darktext=="true" ? '#fff' : '#2d2b38')};
+  background-color: ${({ darktext }) => (darktext=="true" ? '#2d2b38' : '#fff')};
 `;
 
 const Title = styled(Typography)`
@@ -243,12 +243,12 @@ height:${777 / 3}px;
 margin-top:40px;
 `;
 interface FooterProps {
-    darkMode: boolean;
+    darkmode: string;
 };
 const Footer = styled.div<FooterProps>`
     padding:20px;
     width:100%;
-    background-color: ${({ darkMode }) => darkMode ? '#252330' : '#ddd'};
+    background-color: ${({ darkmode }) => darkmode=="true" ? '#252330' : '#ddd'};
 
 `;
 
@@ -267,7 +267,7 @@ export default function Home({ dark, fresh, fbclid, utm_content, isbot, isfb, se
     const [systemMode, setSystemMode] = React.useState(false);
     const router = useRouter();
     const handleCTAClick = () => {
-        router.push(`/`);
+        router.push(`/?fbclid=${fbclid}&utm_content=${utm_content}`);
     };
 
     let theme: any;
@@ -387,7 +387,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                         <FirstBandContainer>
                             WISH IT? TEXT IT!
                         </FirstBandContainer>
-                        <BandContainer darkText>
+                        <BandContainer darktext={"true"}>
                             <Title variant="h3">
                                 Generate Personalized Messages And Gift Recommendations For Any Occasion
                             </Title>
@@ -436,7 +436,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                             </CTAButton>
                         </BandContainer>
                     </Body>
-                    <Footer darkMode={true}>
+                    <Footer darkmode={"true"}>
                         <Copyright>
 
                             <Sub>
@@ -483,7 +483,7 @@ export const getServerSideProps = withSessionSsr(
             if (!botInfo.bot && fresh) {
                 console.log('ssr-landing-init');
                 try {
-                    recordEvent(sessionid, 'ssr-landing-init', `{"fbclid":"${fbclid}",ua:"${ua}","utm_content":"${utm_content}"}`);
+                    recordEvent(sessionid, 'ssr-landing-init', `{"fbclid":"${fbclid}","ua":"${ua}","utm_content":"${utm_content}"}`);
                 } catch (x) {
                     console.log('ssr-landing-init-error', x);
                 }

@@ -9,7 +9,7 @@ import axios from "axios";
 const search = async (id: string, value: string): Promise<string[]> => {
   const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/search/combo?id=${id}&text=${value}`;
   const res = await axios.get(url);
-  console.log("combo lookup", value, res.data.results);
+ // console.log("combo lookup", value, res.data.results);
   return res.data.results;
 };
 
@@ -36,7 +36,7 @@ const Combo: React.FC<FormFieldProps> = ({
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log("combo search", id, inputValue);
+      //console.log("combo search", id, inputValue);
       const results = await search(id, inputValue);
       setOptions(results);
     };
