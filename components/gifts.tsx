@@ -211,7 +211,7 @@ export default function Output({
           />
         </FormContainer>
       ) : null}
-       <hr/>
+      
     </OuterWrap>
   );
 }

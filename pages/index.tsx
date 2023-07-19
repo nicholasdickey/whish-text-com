@@ -125,16 +125,24 @@ const LogoContainer = styled.div`
   z-index:-1;
   `;
 const Copyright = styled.div`
+  width:100%;
   display:flex;
   justify-content:center;
   align-items:center;
   flex-wrap: wrap;
-  margin-top:20px;
+  //margin-top:20px;
   color:grey;
 
   `;
+  const HR = styled.div`
+  width:100%;
+ // margin:10px;
+  color:grey;
+  text-align:center;
+`;
 const Sub = styled.div`
-  margin:10px;
+  width:100%;
+ // margin:10px;
   text-align:center;
 `;
 const ClearButton = styled(IconButton)`
@@ -183,6 +191,15 @@ const FirstBandContainer = styled.div`
   }
   
 `;
+interface FooterProps {
+  darkMode: boolean;
+};
+const Footer=styled.div<FooterProps>`
+  padding:20px;
+  width:100%;
+  background-color: ${({darkMode})=>darkMode?'#252330':'#ddd'};
+ 
+  `;
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 let v = false;
 export default function Home({ dark, num: startNum = 0, max: startMax = 0, prompt1: startPrompt1, prompt2: startPrompt2, prompt3: startPrompt3,
@@ -673,129 +690,95 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               </Toolbar>
             </AppBar>
             <Wide>
-            <FirstBandContainer>
-                            WISH&nbsp;IT?  TEXT&nbsp;IT!
-                            
-                        </FirstBandContainer>
-                      
-                        <ModeSwitch><Button color={"inherit"} onClick={() => {
-              setDarkMode(!darkMode);
-              setModeIsSet(true);
-              updateSession2({ mode: !darkMode, modeIsSet: true });
-            }}>{darkMode ? <LightModeTwoToneIcon /> : <ModeNightTwoToneIcon />}</Button></ModeSwitch>
-</Wide>
+              <FirstBandContainer>
+                              WISH&nbsp;IT?  TEXT&nbsp;IT!  
+              </FirstBandContainer>
+                        
+              <ModeSwitch>
+                <Button color={"inherit"} onClick={() => {
+                  setDarkMode(!darkMode);
+                  setModeIsSet(true);
+                  updateSession2({ mode: !darkMode, modeIsSet: true });
+                }}>
+                {darkMode ? <LightModeTwoToneIcon /> : <ModeNightTwoToneIcon />}
+                </Button>
+              </ModeSwitch>
+            </Wide>         
+            <Container maxWidth="sm"><br/>
+            {virgin ? 
+            <ActionContainer>
+              <ClearButton 
+                onClick={() => {
+                  updateRoute({
+                    from: '',
+                    to: '',
+                    occasion: '',
+                    naive: false,
+                    reflections: '',
+                    instructions: '',
+                    inastyleof: '',
+                    language: '',
+                    interests: '',
 
+                  })
+                  updateSession2({
+                    from: '',
+                    to: '',
+                    occasion: '',
+                    virgin: false,
+                    prompt1: false,
+                    prompt2: false,
+                    prompt3: false,
+                    prompt4: false,
+                    prompt5: false,
+                    naive: false,
+                    reflections: '',
+                    instructions: '',
+                    inastyleof: '',
+                    language: '',
+                    interests: '',
+                    greeting: '',
+                    giftSuggestions: '',
+                    imagesString: '',
+                    selectedImage: '',
+                    num: 1,
+                    max: 1,
 
-
-                        <Logo ><ModeSwitch><Button color={"inherit"} onClick={() => {
-              setDarkMode(!darkMode);
-              setModeIsSet(true);
-              updateSession2({ mode: !darkMode, modeIsSet: true });
-            }}>{darkMode ? <LightModeTwoToneIcon /> : <ModeNightTwoToneIcon />}</Button></ModeSwitch>{false&&<LogoContainer><Image
-
-              width={668 / 8}
-              height={868 / 8}
-              alt="Wish Text Composer"
-              src={'/wish-text-candle-light.png'} />
-              </LogoContainer>}</Logo>
-                        <Container maxWidth="sm">
-            
-            
-            {!virgin ? <Box sx={{ my: 0, padding: 1, width: 1, color: noExplain ? 'normal' : 'white', backgroundColor: noExplain ? 'normal' : 'secondary' }}>
-
-              {false && !noExplain ? <Typography
-                variant="body2"
-                component="div"
-                sx={{ flexGrow: 1, display: { xs: 'block', sm: 'block' } }}
-              >
-                <p>Create the &quot;wishing&quot; or greeting text for you to paste into your favorite messaging app.
-                  AI will provide the helpful suggestions that you can edit by clicking on the suggestion.</p>
-
-                Additionally, Wish Text Composer can generate a &apos;postcard&apos; greeting over an uploaded image. You can download the card and share from any device.
-                <p>Utilizing AI, it also provides the gift suggestions.</p>
-              </Typography> : null}
-
-              {false ? <FormControlLabel
-                label="Do not show the description"
-                control={
-                  <Checkbox
-                    sx={{ color: 'white' }}
-                    checked={noExplain}
-                    onChange={handleNoExplanChange}
-                  />
-                }
-              /> : null}
-            </Box> : null}
-
-            {virgin ? <ActionContainer>
-
-
-              <ClearButton onClick={() => {
-
-                updateRoute({
-                  from: '',
-                  to: '',
-                  occasion: '',
-                  naive: false,
-                  reflections: '',
-                  instructions: '',
-                  inastyleof: '',
-                  language: '',
-                  interests: '',
-
-                })
-                updateSession2({
-                  from: '',
-                  to: '',
-                  occasion: '',
-                  virgin: false,
-                  prompt1: false,
-                  prompt2: false,
-                  prompt3: false,
-                  prompt4: false,
-                  prompt5: false,
-                  naive: false,
-                  reflections: '',
-                  instructions: '',
-                  inastyleof: '',
-                  language: '',
-                  interests: '',
-                  greeting: '',
-                  giftSuggestions: '',
-                  imagesString: '',
-                  selectedImage: '',
-                  num: 1,
-                  max: 1,
-
-                });
-                setFrom('');
-                setTo('');
-                setOccasion('');
-                setVirgin(false);
-                setVirgin2(false);
-                setPrompt1(false);
-                setPrompt2(false);
-                setPrompt3(false);
-                setPrompt4(false);
-                setPrompt5(false);
-                setNaive(false);
-                setReflections('');
-                setInstructions('');
-                setInastyleof('');
-                setLanguage('');
-                setInterests('');
-                setNum(1);
-                setMax(1);
-                deleteSessionHistories(session.sessionid);
-
-
-              }}>
+                  });
+                  setFrom('');
+                  setTo('');
+                  setOccasion('');
+                  setVirgin(false);
+                  setVirgin2(false);
+                  setPrompt1(false);
+                  setPrompt2(false);
+                  setPrompt3(false);
+                  setPrompt4(false);
+                  setPrompt5(false);
+                  setNaive(false);
+                  setReflections('');
+                  setInstructions('');
+                  setInastyleof('');
+                  setLanguage('');
+                  setInterests('');
+                  setNum(1);
+                  setMax(1);
+                  deleteSessionHistories(session.sessionid);
+                }}>
                 <ClearIcon />
                 <ClearText>Reset Session</ClearText>
-              </ClearButton></ActionContainer> : null}
-            {!prompt1 ? <Box sx={{ mt: 5, width: 1, }}>
-              <Starter><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
-                <StarterMessage><Typography fontSize="inherit" color="secondary"/*color="#ffee58"*/>To begin, select or type an occasion for the greeting, for example &ldquo;Birthday&ldquo;:</Typography></StarterMessage></Starter></Box> : null}
+              </ClearButton>
+            </ActionContainer> : null}
+            {!prompt1 ? 
+              <Box sx={{ mt: 5, width: 1, }}>
+                <Starter>
+                  <ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
+                  <StarterMessage>
+                    <Typography fontSize="inherit" color="secondary"/*color="#ffee58"*/>To begin, select or type an occasion for the greeting, for example &ldquo;Birthday&ldquo;:</Typography>
+                  </StarterMessage>
+                </Starter>
+              </Box> 
+            : null}
             <Combo id="occasion"
               label="Occasion"
               value={occasion}
@@ -803,11 +786,20 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               onChange={onOccasionChange}
               helperText="Required for a meaningful result. For example: &ldquo;8th Birthday for a boy&rdquo;, &ldquo;Sweet Sixteen&rdquo;, &ldquo;Illness&rdquo; &ldquo;Death in the family&rdquo;, &ldquo;Christmas&rdquo;, &ldquo;Graduation&ldquo;"
             />
-            {session.greeting && !prompt3 ? <Box sx={{ mt: 10, width: 1 }}>
-              <Starter onClick={() => setPrompt3(true)}><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
-                <StarterMessage><Typography fontSize="inherit" color="secondary"/*color="#ffee58"*/>Experiment with inputs to make instructions to AI more specific, for example switch between humours and serious by unchecking &ldquo;Keep it light-hearted&rdquo; in Advanced Inputs:</Typography></StarterMessage></Starter></Box> : null}
+            {session.greeting && !prompt3 ? 
+              <Box sx={{ mt: 10, width: 1 }}>
+                <Starter onClick={() => setPrompt3(true)}>
+                  <ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
+                  <StarterMessage>
+                    <Typography fontSize="inherit" color="secondary"/*color="#ffee58"*/>Experiment with inputs to make instructions to AI more specific, for example switch between humours and serious by unchecking &ldquo;Keep it light-hearted&rdquo; in Advanced Inputs:
+                    </Typography>
+                  </StarterMessage>
+                </Starter>
+              </Box> 
+            : null}
 
-            {virgin && session.greeting ? <Accordion sx={{ mt: 5, background: theme.palette.background.default }} expanded={expanded === 'custom'} onChange={handleAccordeonChange('custom')}>
+            {virgin && session.greeting ? 
+            <Accordion sx={{ mt: 5, background: theme.palette.background.default }} expanded={expanded === 'custom'} onChange={handleAccordeonChange('custom')}>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel4bh-content"
@@ -921,30 +913,42 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               setPrompt4(true);
               updateSession2({ virgin2: true, prompt4: true });
             }} virgin={virgin} virgin2={virgin2} setMissingOccasion={setMissingOccasion} setLoadReady={setLoadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} naive={naive} reflections={reflections} instructions={instructions} inastyleof={inastyleof} language={language} /*authSession={authSession}*/ />
-
+            </Container>
+            <Container maxWidth="sm">
             {session.greeting && <GiftsOutput loadReady={loadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} reflections={reflections} interests={interests} onInterestsChange={onInterestsChange} />}
-            {!virgin&&!prompt1&&<Copyright> <Sub>
-              <hr/>
-   <Typography variant="caption" gutterBottom>Create the &quot;wishing&quot; or greeting text for you to paste into your favorite messaging app.
+            </Container>
+            <Container maxWidth="md">  
+             </Container>
+
+            <Footer darkMode={darkMode||false}>
+            {!virgin&&!prompt1&&<Copyright> 
+           
+              <Sub>
+                <Typography variant="caption" gutterBottom>Create the &quot;wishing&quot; or greeting text for you to paste into your favorite messaging app.
                   AI will provide the helpful suggestions that you can edit by clicking on the suggestion.
 
                 Additionally, Wish Text Composer can generate a &apos;postcard&apos; greeting over an uploaded image. You can download the card and share from any device.
-                Utilizing AI, it also provides the gift suggestions.</Typography></Sub></Copyright>
-  }
-                <hr/>
+                Utilizing AI, it also provides the gift suggestions.
+                </Typography>
+              </Sub>
+            </Copyright>
+           
+            }
+            
+            
             <Copyright> <Sub> <Typography variant="caption" gutterBottom>
-              Copyright: Wish-Text.Com
+              Copyright 2023 Wish-Text.Com, All Rights Reserved
             </Typography></Sub>
               <Sub><Typography variant="caption" gutterBottom>
                 Contact: support@hudsonwilde.com
               </Typography></Sub>
               <Sub><Typography variant="caption" gutterBottom>
-                Made in Northern Minnesota, USA.
+                Crafted in Northern Minnesota, USA.
               </Typography></Sub>
             </Copyright>
+            </Footer>
             
-            
-          </Container>
+         
           <div className="container">
             <Script src={`https://www.googletagmanager.com/gtag/js?${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`} />
             <Script id="google-analytics">

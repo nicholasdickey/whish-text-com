@@ -115,7 +115,7 @@ const Copyright = styled.div`
   justify-content:center;
   align-items:center;
   flex-wrap: wrap;
-  margin-top:20px;
+
   color:grey;
 
   `;
@@ -242,7 +242,15 @@ height:${777 / 3}px;
   }
 margin-top:40px;
 `;
+interface FooterProps {
+    darkMode: boolean;
+};
+const Footer = styled.div<FooterProps>`
+    padding:20px;
+    width:100%;
+    background-color: ${({ darkMode }) => darkMode ? '#252330' : '#ddd'};
 
+`;
 
 
 
@@ -397,7 +405,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                                 To Comfort, To Encourage.
                             </Title>
                             <Subtitle variant="h5">
-                            Begin by either selecting or typing the specific occasion. <br /> Explore what is possible with advanced customization options.
+                                Begin by either selecting or typing the specific occasion. <br /> Explore what is possible with advanced customization options.
                             </Subtitle>
 
                             <CTAButton variant="contained" color="primary" onClick={handleCTAClick}>
@@ -428,14 +436,29 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                             </CTAButton>
                         </BandContainer>
                     </Body>
-                    <Copyright> <Sub> <Typography variant="caption" gutterBottom>
-                        Copyright: Wish-Text.Com
-                    </Typography></Sub>
-                        <Sub><Typography variant="caption" gutterBottom>
-                            Contact: support@hudsonwilde.com
-                        </Typography></Sub><Sub><Typography variant="caption" gutterBottom>
-                            Made in Northern Minnesota, USA.
-                        </Typography></Sub></Copyright>
+                    <Footer darkMode={true}>
+                        <Copyright>
+
+                            <Sub>
+                                <Typography variant="caption" gutterBottom>Create the &quot;wishing&quot; or greeting text for you to paste into your favorite messaging app.
+                                    AI will provide the helpful suggestions that you can edit by clicking on the suggestion.
+
+                                    Additionally, Wish Text Composer can generate a &apos;postcard&apos; greeting over an uploaded image. You can download the card and share from any device.
+                                    Utilizing AI, it also provides the gift suggestions.
+                                </Typography>
+                            </Sub>
+                        </Copyright>
+                        <Copyright> <Sub> <Typography variant="caption" gutterBottom>
+                            Copyright 2023 Wish-Text.Com, All Rights Reserved
+                        </Typography></Sub>
+                            <Sub><Typography variant="caption" gutterBottom>
+                                Contact: support@hudsonwilde.com
+                            </Typography></Sub>
+                            <Sub><Typography variant="caption" gutterBottom>
+                                Crafted in Northern Minnesota, USA.
+                            </Typography></Sub>
+                        </Copyright>
+                    </Footer>
                 </main>
 
             </ThemeProvider>
