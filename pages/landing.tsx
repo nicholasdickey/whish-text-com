@@ -53,63 +53,19 @@ import Image from 'next/image'
 //import { useSession, signIn, signOut } from "next-auth/react"
 import { Roboto } from 'next/font/google';
 import { withSessionSsr, Options } from '../lib/with-session';
-
-import GreetingOutput from "../components/output";
-import GiftsOutput from "../components/gifts";
-import AvatarMenu from "../components/avatar-menu";
-import * as ga from '../lib/ga'
-import Combo from "../components/combo-text";
 import { isbot } from '../lib/isbot'
-import PlayerToolbar from "../components/toolbar-player";
-
-const ModeSwitch = styled.div`
-  position:absolute;
-  right:0px;
-  top:20px;  
-  z-index:100; 
-  color:grey; 
-  `;
 interface BackgroundMode {
     colorDark: string;
     colorLight: string;
 }
-const Background = styled.div<BackgroundMode>`
-  z-index:-100;
-  //background2: ${({ colorDark, colorLight }) => `linear-gradient(to top, ${colorDark}, ${colorLight})`};
-`;
 interface WebShareProps {
     color: string;
 }
-const WebShare = styled.div<WebShareProps>`
-  color:${props => props.color};
-`;
+
 const WBLogo = styled.div`
   margin-right:30px;
 `;
-const Starter = styled.div`
-  display:flex;
-  justify-content:flex-start;
-  font-size:36px;
-  align-items:center;
-  `;
-const StarterMessage = styled.div`
-  font-size:14px;
-  padding-left:10px;
-  padding-right:10px;
-  `;
-const Logo = styled.div`
-  position:relative;
-  width:100%;
-  height:100%;
-  display:flex;
-  align-items:center;
-  justify-content: center;
-  z-index:20;
-`;
-const LogoContainer = styled.div`
-  margin-top:50px;
-  z-index:-1;
-  `;
+
 const Copyright = styled.div`
   display:flex;
   justify-content:center;
@@ -122,40 +78,17 @@ const Copyright = styled.div`
 const Sub = styled.div`
   margin:20px;
 `;
-const ClearButton = styled(IconButton)`
-  width: auto;
- `;
-const ActionContainer = styled.div`
-  display: flex;
-  justify-content:flex-end;
-  width: 100%;
-`;
-const ClearText = styled.span`
-  font-size: 12px;
-`;
 
 interface ColorProps {
     color: string;
 }
-const AppMenu = styled.div<ColorProps>`
-  display:flex;
-  color:${({ color }) => color};
-`;
-
-const StyledContainer = styled(Container)`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-`;
 
 const BandContainer = styled.div<{ darktext?: string }>`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 4rem 1rem;
+  padding: 4rem 2rem;
   text-align: center;
   color: ${({ darktext }) => (darktext=="true" ? '#fff' : '#2d2b38')};
   background-color: ${({ darktext }) => (darktext=="true" ? '#2d2b38' : '#fff')};
@@ -210,7 +143,7 @@ const SecondBandContainer = styled.div`
   width: 100%;
   align-items: center;
   justify-content: center;
-  padding: 5rem 0;
+  padding: 5rem 2rem;
   text-align: center;
   background: url('wide-candles.jpg') ; /* Replace with your image URL */
   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('wide-christmas-candles.jpg'); /* Replace with your image URL */
@@ -246,7 +179,7 @@ interface FooterProps {
     darkmode: string;
 };
 const Footer = styled.div<FooterProps>`
-    padding:20px;
+    padding:1rem 5rem;
     width:100%;
     background-color: ${({ darkmode }) => darkmode=="true" ? '#252330' : '#ddd'};
 

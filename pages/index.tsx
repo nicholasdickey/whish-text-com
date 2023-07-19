@@ -195,7 +195,7 @@ interface FooterProps {
   darkmode: string;
 };
 const Footer=styled.div<FooterProps>`
-  padding:20px;
+  padding:1rem 5rem;
   width:100%;
   background-color: ${({darkmode})=>darkmode=="true"?'#252330':'#ddd'};
  
@@ -379,7 +379,10 @@ export default function Home({ dark, num: startNum = 0, max: startMax = 0, promp
   const updateRoute = useCallback(({ to, from, occasion, naive, reflections, instructions, inastyleof, language, interests }: { to: string, from: string, occasion: string, naive: boolean, reflections: string, instructions: string, inastyleof: string, language: string, interests: string }) => {
     //console.log('value updateRoute', { to, from, occasion, naive, reflections, instructions, inastyleof, language, interests });
     const params = `/${occasion ? '?occasion=' : ''}${occasion ? encodeURIComponent(occasion) : ''}${naive ? `${occasion ? '&' : '?'}naive=${naive}` : ''}${reflections ? `${occasion ? '&' : '?'}reflections=${encodeURIComponent(reflections)}` : ``}${instructions ? `${occasion ? '&' : '?'}instructions=${encodeURIComponent(instructions)}` : ``}${inastyleof ? `${occasion ? '&' : '?'}inastyleof=${encodeURIComponent(inastyleof)}` : ``}${language ? `${occasion ? '&' : '?'}language=${encodeURIComponent(language)}` : ``}${to ? `${occasion ? '&' : '?'}to=${encodeURIComponent(to)}` : ``}${from ? `${occasion ? '&' : '?'}from=${encodeURIComponent(from)}` : ``}${interests ? `${occasion ? '&' : '?'}interests=${encodeURIComponent(interests)}` : ``}`;
-    router.push(params, params, { shallow: true })
+    if(occasion)
+      router.push(params, params, { shallow: true })
+    else
+      router.replace(params, params, { shallow: true })
 
   }, [router]);
 
