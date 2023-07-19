@@ -279,7 +279,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ session, image, text, loading, 
   if(grow>1)grow=1;
   const ratio = height / width;
   const minWidth=nominalWidth?nominalWidth:div?div.clientWidth:552;
-  const adjHeight= image.url?div ? `${Math.floor(minWidth * ratio*grow)}px` : `${height}px`:'100%';
+  const adjHeight= image.url?div ? `${Math.ceil(minWidth * ratio*grow)}px` : `${height}px`:'100%';
   const adjWidth=image.url?div ? div.clientWidth<nominalWidth?`${nominalWidth}px`:'100%':'100%':'100%';
   //console.log("image-props:",{minWidth,ratio,grow,nominalWidth,divWidth:div?div.clientWidth:0,adjWidth,adjHeight});
   //console.log("text-image:",text.length,horiz)
