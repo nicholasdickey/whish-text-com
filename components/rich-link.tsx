@@ -97,7 +97,7 @@ export const RichLink: React.FC<RichLinkProps> = ({ session,title, imageUrl, pri
           </MediaWrapper>
           <CardContent>
             <Title color={theme.palette.primary.main} variant="subtitle1">
-              {title}
+              <Typography>{title}</Typography>
             </Title>
             <RichLinkContainer href={link}>
               <Price variant="body2" color={theme.palette.primary.main}>

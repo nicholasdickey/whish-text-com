@@ -117,8 +117,6 @@ const InnerOutput = styled.div<InnerOutputProps>`
     const h=horiz=="true";
     return `${length < 600 ? (h ? '9' : '14') : length < 500 ? (h ? '10' : '15') : length < 400 ? (h ? '11' : '16') : h ? '7' : '12'}`}}px;
   }
-
-
   &::before {
     content: '';
     position: absolute;
@@ -129,7 +127,6 @@ const InnerOutput = styled.div<InnerOutputProps>`
     background: ${({ image }) => image=="true" ? `linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.6) 60%, rgba(0, 0, 0, 1.0) 100%)` : null};
     z-index: 4;
   }
-
   &::after {
     content: '';
     position: absolute;
@@ -139,7 +136,6 @@ const InnerOutput = styled.div<InnerOutputProps>`
     height:100%;
     z-index: 5;
   }
-
   & p {
     padding-left: ${({image})=>image=="true"?20:4}px;
     padding-right:  ${({image})=>image=="true"?10:4}px;
@@ -155,7 +151,6 @@ const InnerOutput = styled.div<InnerOutputProps>`
     font-family: PingFangSC-Regular, 'Roboto', sans-serif;
     letter-spacing: 0.01px;
   }
-
   & div#adintro {
     opacity: 1.0;
     margin-bottom: 10px;

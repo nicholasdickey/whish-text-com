@@ -23,7 +23,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useState, useCallback, useEffect } from "react"
 import { useRouter } from 'next/router'
-import { fetchSession, recordEvent, updateSession, deleteSessionHistories, getSessionHistory } from '../lib/api'
+import { fetchSession, recordEvent, updateSession, deleteSessionHistories, getSessionHistory, fetchSharedImages } from '../lib/api'
 import styled from 'styled-components';
 import ClearIcon from '@mui/icons-material/Clear';
 import { RWebShare } from "react-web-share";
@@ -40,7 +40,7 @@ import LightbulbCircleTwoToneIcon from '@mui/icons-material/LightbulbCircleTwoTo
 import TipsAndUpdatesTwoToneIcon from '@mui/icons-material/TipsAndUpdatesTwoTone';
 import ModeNightTwoToneIcon from '@mui/icons-material/ModeNightOutlined';
 import LightModeTwoToneIcon from '@mui/icons-material/LightModeOutlined';
-
+import ImageData from '../lib/image-data';
 
 import {
   GetServerSidePropsContext,
@@ -216,10 +216,10 @@ background-color: ${({darkmode})=>darkmode=="true"?'#999':'rgb(232, 236, 239)'};
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 let v = false;
-export default function Home({ dark, num: startNum = 0, max: startMax = 0, prompt1: startPrompt1, prompt2: startPrompt2, prompt3: startPrompt3,
-  prompt4: startPrompt4, prompt5: startPrompt5,
+export default function Home({ sharedImages,dark, num: startNum = 0, max: startMax = 0, prompt1: startPrompt1, prompt2: startPrompt2, prompt3: startPrompt3,
+  prompt4: startPrompt4, prompt5: startPrompt5,prompt6:startPrompt6,
   utm_medium, isbot, isfb, virgin: startVirgin, virgin2: startVirgin2, naive: startNaive, from: startFrom, to: startTo, occasion: startOccasion, reflections: startReflections, instructions: startInstructions, inastyleof: startInastyleof, language: startLanguage, interests: startInterests, ironsession: startSession }:
-  { dark: boolean, num: number, max: number, prompt1: boolean, prompt2: boolean, prompt3: boolean, prompt4: boolean, prompt5: boolean, utm_medium: string, isbot: boolean, isfb: boolean, virgin: boolean, virgin2: boolean, naive: boolean, from: string, to: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string, ironsession: Options }) {
+  { sharedImages:ImageData[],dark: boolean, num: number, max: number, prompt1: boolean, prompt2: boolean, prompt3: boolean, prompt4: boolean, prompt5: boolean, prompt6:boolean,utm_medium: string, isbot: boolean, isfb: boolean, virgin: boolean, virgin2: boolean, naive: boolean, from: string, to: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string, ironsession: Options }) {
 
   const [session, setSession] = useState(startSession);
   const [noExplain, setNoExplain] = useState(session.noExplain || false);
@@ -232,7 +232,7 @@ export default function Home({ dark, num: startNum = 0, max: startMax = 0, promp
   const [prompt3, setPrompt3] = useState(startPrompt3);
   const [prompt4, setPrompt4] = useState(startPrompt4);
   const [prompt5, setPrompt5] = useState(startPrompt5);
-
+  const [prompt6, setPrompt6] = useState(startPrompt6);
   const [num, setNum] = useState(startNum);
   const [max, setMax] = useState(startMax);
 
@@ -251,7 +251,7 @@ export default function Home({ dark, num: startNum = 0, max: startMax = 0, promp
   const [darkMode, setDarkMode] = React.useState(startSession.mode);
   const [modeIsSet, setModeIsSet] = React.useState(startSession.modeIsSet);
   const [systemMode, setSystemMode] = React.useState(false);
-
+  console.log("sharedImages",sharedImages)
   //const { data: authSession } = useSession();
   const router = useRouter();
   //const theme = useTheme();
@@ -748,6 +748,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                     prompt3: false,
                     prompt4: false,
                     prompt5: false,
+                    prompt6: false,
                     naive: false,
                     reflections: '',
                     instructions: '',
@@ -772,6 +773,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                   setPrompt3(false);
                   setPrompt4(false);
                   setPrompt5(false);
+                  setPrompt6(false);
                   setNaive(false);
                   setReflections('');
                   setInstructions('');
@@ -917,9 +919,9 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
 
             {!prompt2 && occasion ? <Box sx={{ mt: 10, width: 1 }}>
               <Starter><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
-                <StarterMessage><Typography fontSize="inherit" color="secondary"/*color="#ffee58"*/>Click or tap on the &quot;Suggest Wish Text&quot; button ⤵️:</Typography></StarterMessage></Starter></Box> : null}
+                <StarterMessage><Typography fontSize="inherit" color="secondary"/*color="#ffee58"*/>Click or tap on the &quot;Suggest Wish Text&quot; button:</Typography></StarterMessage></Starter></Box> : null}
 
-             <GreetingOutput PlayerToolbar={OutputPlayerToolbar} setNum={setNum} setMax={setMax} max={max} num={num} setPrompt5={setPrompt5} prompt5={prompt5} onVirgin={async () => {
+             <GreetingOutput sharedImages={sharedImages} PlayerToolbar={OutputPlayerToolbar} setNum={setNum} setMax={setMax} max={max} num={num} setPrompt5={setPrompt5} prompt5={prompt5} prompt6={prompt6} setPrompt6={setPrompt6} onVirgin={async () => {
               await recordEvent(session.sessionid, 'virgin wish-text request', `occasion:${occasion}`);
               setVirgin(true);
               setPrompt2(true);
@@ -987,8 +989,8 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps(context: GetServerSidePropsContext): Promise<any> {
     try {
-      let { dark, num, max, prompt1, prompt2, prompt3, prompt4, prompt5, fbclid, utm_medium, utm_campaign, utm_content, virgin, virgin2, from, to, occasion, naive, reflections, instructions, inastyleof, language, age, interests, sex }:
-        { dark: boolean, num: number, max: number, prompt1: string, prompt2: string, prompt3: string, prompt4: string, prompt5: string, fbclid: string, utm_medium: string, utm_campaign: string, utm_content: string, virgin: boolean, virgin2: boolean, from: string, to: string, occasion: string, naive: boolean, reflections: string, instructions: string, inastyleof: string, language: string, age: string, interests: string, sex: string } = context.query as any;
+      let { dark, num, max, prompt1, prompt2, prompt3, prompt4, prompt5, prompt6, fbclid, utm_medium, utm_campaign, utm_content, virgin, virgin2, from, to, occasion, naive, reflections, instructions, inastyleof, language, age, interests, sex }:
+        { dark: boolean, num: number, max: number, prompt1: string, prompt2: string, prompt3: string, prompt4: string, prompt5: string,prompt6:string, fbclid: string, utm_medium: string, utm_campaign: string, utm_content: string, virgin: boolean, virgin2: boolean, from: string, to: string, occasion: string, naive: boolean, reflections: string, instructions: string, inastyleof: string, language: string, age: string, interests: string, sex: string } = context.query as any;
 
       from = from || '';
       to = to || '';
@@ -1004,6 +1006,7 @@ export const getServerSideProps = withSessionSsr(
       prompt3 = prompt3 || '';
       prompt4 = prompt4 || '';
       prompt5 = prompt5 || '';
+      prompt6 = prompt6 || '';
 
       num = num || 1;
       max = max || 1;
@@ -1021,6 +1024,8 @@ export const getServerSideProps = withSessionSsr(
       var randomstring = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
       let sessionid = context.req.session?.sessionid || randomstring();
       let startoptions: Options = await fetchSession(sessionid);
+      let sharedImages:ImageData[]=await fetchSharedImages();
+      //console.log("sharedImages",sharedImages)
       startoptions = startoptions || {
         sessionid,
         noExplain: false,
@@ -1113,6 +1118,7 @@ export const getServerSideProps = withSessionSsr(
           isbot: botInfo.bot,
           isfb: botInfo.fb || utm_medium ? 1 : 0,
           utm_medium: `{"fbclid":"${fbclid}","utm_content":"${utm_content}"}`,
+          sharedImages
         }
       }
     } catch (x) {

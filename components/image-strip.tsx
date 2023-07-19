@@ -8,6 +8,7 @@ import ImageData from '../lib/image-data';
 
 interface ImageStripProps {
   images: ImageData[];
+  sharedImages:ImageData[];
   onImageClick: (image: ImageData | null) => void;
 }
 
@@ -77,9 +78,9 @@ const ArrowRight = styled(ArrowRightIcon)`
   color: #888;
 `;
 
-const ImageStrip: React.FC<ImageStripProps> = ({ images, onImageClick }) => {
+const ImageStrip: React.FC<ImageStripProps> = ({ sharedImages,images, onImageClick }) => {
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
-
+  console.log("images",images)
   const handleScrollLeft = () => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollLeft -= 200; // Adjust the scroll distance as needed
@@ -97,7 +98,8 @@ const ImageStrip: React.FC<ImageStripProps> = ({ images, onImageClick }) => {
       onImageClick(image);
     }
   };
-
+  const combinedImages=images.concat(sharedImages);
+  console.log("combined images ",{combinedImages})
   return (
     <Box>
       <ImageStripContainer ref={scrollContainerRef}>
@@ -106,7 +108,7 @@ const ImageStrip: React.FC<ImageStripProps> = ({ images, onImageClick }) => {
             <PlaceholderText>No Image</PlaceholderText>
           </PlaceholderContainer>
         </ImageContainer>
-        {images.map((image) => (
+        {combinedImages.map((image) => (
           <ImageContainer key={image.publicId} onClick={() => handleImageClick(image)}>
             <Image src={image.thumbnailUrl} alt={image.publicId} />
           </ImageContainer>

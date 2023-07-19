@@ -52,6 +52,7 @@ export default function Output({
   virgin,
   virgin2,
   prompt5,
+  prompt6,
   setMissingOccasion,
   setLoadReady,
   session,
@@ -66,7 +67,9 @@ export default function Output({
   language,
   greeting,
   setPrompt5,
+  setPrompt6,
   PlayerToolbar,
+  sharedImages
  // authSession
 }: {
   setNum:any;
@@ -77,7 +80,8 @@ export default function Output({
   onVirgin2:any;
   virgin:boolean;
   virgin2:boolean;
-  prompt5:boolean
+  prompt5:boolean;
+  prompt6:boolean;
   setMissingOccasion: any;
   setLoadReady: any;
   session: Options;
@@ -92,7 +96,9 @@ export default function Output({
   language: string;
   greeting: string;
   setPrompt5: any;
+  setPrompt6:any;
   PlayerToolbar: any;
+  sharedImages:ImageData[];
 //  authSession: any;
 }) {
   const [value, setValue] = useState("");
@@ -135,6 +141,7 @@ export default function Output({
         image: image?.url,
       }
     })
+    setPrompt6(true)
     setTimeout(async ()=>await recordEvent(session.sessionid, 'stripClickHandler',image?.url||''),1000);
    // console.log("image-stripClickHandler", image);    
     if (image == null) {
@@ -318,16 +325,17 @@ export default function Output({
       {occasion&&<ToolbarGenerate error={occasion?.length>0?false:true} onGenerateClick={handleGenerate} onUploadClick={onUpload} hasGreeting={session.greeting ? true : false} />}
      
       <Box sx={{ my: 3,  }} textAlign="center">
+      {virgin&&!prompt5&&session.greeting&&!loading  ? <Box sx={{ mt: 0, width: 1 }}>
+            <Starter onClick={()=>setPrompt5(true)}><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
+              <StarterMessage><Typography fontSize="inherit"  color="secondary"/*color="#ffee58"*/>Click or tap on message to manually edit:</Typography></StarterMessage></Starter></Box> : null}
+       
       {session.greeting&&PlayerToolbar}
         <TextEditor  onClick={onTextEditorClick} session={session} text={session.greeting || ''} onChange={(text: string) => { updateSession2({ greeting: text }); }} image={selectedImage} loading={loading} canvasRef={canvasRef} />
         <div  />
         {false&&virgin&&!prompt5 && !loading ? <Box sx={{ mt: 0, width: 1 }}>
             <Starter onClick={()=>setPrompt5(true)}><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
               <StarterMessage><Typography fontSize="inherit"  color="secondary"/*color="#ffee58"*/>Copy message to clipboard to be used with your favorite messenger or social media app.</Typography></StarterMessage></Starter></Box> : null}
-              {virgin&&!prompt5 && !loading ? <Box sx={{ mt: 0, width: 1 }}>
-            <Starter onClick={()=>setPrompt5(true)}><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
-              <StarterMessage><Typography fontSize="inherit"  color="secondary"/*color="#ffee58"*/><ReactMarkdown>Click or tap on message to manually edit ⤴️.</ReactMarkdown></Typography></StarterMessage></Starter></Box> : null}
-        
+             
         {session.greeting && !loading && <ToolbarAccept session={session} text={session.greeting} images={images} onDownloadClick={handleDownload} onAcceptClick={handleAccept} onCopyClick={handleCopy} />}
         {!loading && false && (
           <BottomLink>
@@ -335,9 +343,15 @@ export default function Output({
           </BottomLink>
         )}
       </Box>
+      {!prompt6&&value&&virgin&&!loading  ? <Box sx={{ mt: 0, width: 1 }}>
+            <Starter onClick={()=>setPrompt6(true)}><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
+              <StarterMessage><Typography fontSize="inherit"  color="secondary"/*color="#ffee58"*/>Use stock AI-generated images or upload your own:</Typography></StarterMessage></Starter></Box> : null}
+  
+ 
       <Box sx={{ my: 4, width: { xs: 1 } }} textAlign="center">
-        {images.length > 0 && <ImageStrip images={images} onImageClick={stripClickHandler} />}
+        {(images.length > 0 ||sharedImages.length>0)&& session.greeting&&<ImageStrip sharedImages={sharedImages} images={images} onImageClick={stripClickHandler} />}
       </Box>
-    </>
+     
+        </>
   );
 }

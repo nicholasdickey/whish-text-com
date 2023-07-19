@@ -153,6 +153,20 @@ export const fetchSession = async (sessionid: string) => {
   }
 
 }
+// Fetches the session
+export const fetchSharedImages = async () => {
+  try {
+    const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/session/fetchSharedImages`;
+    const res = await axios.get(url);
+    console.log("fetchSharedImages", res.data.session);
+    if(res.data.success)
+      return res.data.images;
+   
+  } catch (x) {
+    console.log("fetchSession", x);
+  }
+  return [];
+}
 
 // Saves the wish text to history
 export const saveToHistory = async (username: string, greeting: string, image: string, to: string, occasion: string, gift: string) => {
