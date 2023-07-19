@@ -179,7 +179,8 @@ export interface TextEditorProps {
   loading: boolean;
   onChange: (text: string) => void;
   canvasRef: React.RefObject<HTMLDivElement>;
-  session: any
+  session: any,
+  onClick:any;
 }
 const editorStyles = {
   // background:"transparent",// "#262644", // Dark background color
@@ -221,7 +222,7 @@ const MarkdownEditorWrap = styled.div`
     overflow:auto;
   }
 `;
-const TextEditor: React.FC<TextEditorProps> = ({ session, image, text, loading, onChange, canvasRef }) => {
+const TextEditor: React.FC<TextEditorProps> = ({ session, image, text, loading, onChange, canvasRef,onClick }) => {
   const horiz: boolean = image.width > image.height;
   const mdParser = new MarkdownIt();
   const [editing, setEditing] = useState(false);
@@ -236,6 +237,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ session, image, text, loading, 
       }
     })
     setEditing(true);
+    onClick();
   };
 
   /*const handleTextChange = (value: string) => {

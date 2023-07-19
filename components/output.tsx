@@ -12,6 +12,7 @@ import ImageData from "../lib/image-data";
 import html2canvas from "html2canvas";
 import FileSaver from "file-saver";
 import Typography from '@mui/material/Typography';
+import ReactMarkdown from "react-markdown";
 import TextEditor, { TextEditorProps, ImageProps } from "./text-editor";
 import { recordEvent } from '../lib/api'
 import LooksFiveOutlinedIcon from '@mui/icons-material/Looks5Outlined';
@@ -240,7 +241,11 @@ export default function Output({
     }
    // await saveToHistory(authSession.username, greeting, occasion, to, image, gift);
   };
-
+  const onTextEditorClick=()=>{
+    setTimeout(async ()=>await recordEvent(session.sessionid, 'clickOnTextEditor',''),1000);
+    setPrompt5(true);
+    updateSession2({ prompt5: true });
+  }
   const handleCopy: () => void = () => {
     // Add your implementation here
     setTimeout(async ()=>await recordEvent(session.sessionid, 'copyToClipboard',''),1000);
@@ -314,11 +319,14 @@ export default function Output({
      
       <Box sx={{ my: 3,  }} textAlign="center">
       {session.greeting&&PlayerToolbar}
-        <TextEditor  session={session} text={session.greeting || ''} onChange={(text: string) => { updateSession2({ greeting: text }); }} image={selectedImage} loading={loading} canvasRef={canvasRef} />
+        <TextEditor  onClick={onTextEditorClick} session={session} text={session.greeting || ''} onChange={(text: string) => { updateSession2({ greeting: text }); }} image={selectedImage} loading={loading} canvasRef={canvasRef} />
         <div  />
         {false&&virgin&&!prompt5 && !loading ? <Box sx={{ mt: 0, width: 1 }}>
             <Starter onClick={()=>setPrompt5(true)}><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
               <StarterMessage><Typography fontSize="inherit"  color="secondary"/*color="#ffee58"*/>Copy message to clipboard to be used with your favorite messenger or social media app.</Typography></StarterMessage></Starter></Box> : null}
+              {virgin&&!prompt5 && !loading ? <Box sx={{ mt: 0, width: 1 }}>
+            <Starter onClick={()=>setPrompt5(true)}><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
+              <StarterMessage><Typography fontSize="inherit"  color="secondary"/*color="#ffee58"*/><ReactMarkdown>Click or tap on message to manually edit ⤴️.</ReactMarkdown></Typography></StarterMessage></Starter></Box> : null}
         
         {session.greeting && !loading && <ToolbarAccept session={session} text={session.greeting} images={images} onDownloadClick={handleDownload} onAcceptClick={handleAccept} onCopyClick={handleCopy} />}
         {!loading && false && (
