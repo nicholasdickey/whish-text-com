@@ -195,11 +195,25 @@ interface FooterProps {
   darkmode: string;
 };
 const Footer=styled.div<FooterProps>`
-  padding:1rem 5rem;
+  padding:10px 10rem;
   width:100%;
-  background-color: ${({darkmode})=>darkmode=="true"?'#252330':'#ddd'};
- 
-  `;
+  color:rgb(44, 46, 56);
+  background-color: ${({darkmode})=>darkmode=="true"?'#252330':'rgb(232, 236, 239)'};
+  @media (max-width:990px){
+        padding:10px;
+    }
+ `;
+const LineContainer=styled.div<FooterProps>`
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+padding:8px;  
+text-align: center;
+color:#2d2b38;
+background-color: ${({darkmode})=>darkmode=="true"?'#999':'rgb(232, 236, 239)'};
+`;
+
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 let v = false;
 export default function Home({ dark, num: startNum = 0, max: startMax = 0, prompt1: startPrompt1, prompt2: startPrompt2, prompt3: startPrompt3,
@@ -696,7 +710,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               <FirstBandContainer>
                               WISH&nbsp;IT?  TEXT&nbsp;IT!  
               </FirstBandContainer>
-                        
+              <LineContainer darkmode={darkMode?"true":"false"}/>     
               <ModeSwitch>
                 <Button color={"inherit"} onClick={() => {
                   setDarkMode(!darkMode);

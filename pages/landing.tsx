@@ -79,10 +79,30 @@ const Sub = styled.div`
   margin:20px;
 `;
 
-interface ColorProps {
-    color: string;
-}
 
+interface FooterProps {
+    darkmode: string;
+  };
+  const Footer=styled.div<FooterProps>`
+    padding:10px 10rem;
+    width:100%;
+    color:rgb(44, 46, 56);
+    background-color: ${({darkmode})=>darkmode=="true"?'#252330':'rgb(232, 236, 239)'};
+    @media (max-width:990px){
+        padding:10px;
+    }
+    `;
+  const LineContainer=styled.div<FooterProps>`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding:8px;  
+    text-align: center;
+    color:#2d2b38;
+    background-color: ${({darkmode})=>darkmode=="true"?'#999':'rgb(232, 236, 239)'};
+  `;
+  
 const BandContainer = styled.div<{ darktext?: string }>`
   display: flex;
   flex-direction: column;
@@ -133,7 +153,7 @@ const FirstBandContainer = styled.div`
   font-size:5rem;
   font-size:4rem;
   @media (max-width: 700px) {
-    font-size:4rem;;
+    font-size:4rem;
   }
   
 `;
@@ -175,21 +195,11 @@ height:${777 / 3}px;
   }
 margin-top:40px;
 `;
-interface FooterProps {
-    darkmode: string;
-};
-const Footer = styled.div<FooterProps>`
-    padding:1rem 5rem;
-    width:100%;
-    background-color: ${({ darkmode }) => darkmode=="true" ? '#252330' : '#ddd'};
-
-`;
-
 
 
 const Body = styled.div`
   width:100%;
-    `;
+`;
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 let v = false;
@@ -320,6 +330,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                         <FirstBandContainer>
                             WISH IT? TEXT IT!
                         </FirstBandContainer>
+                        <LineContainer darkmode={"false"}/>
                         <BandContainer darktext={"true"}>
                             <Title variant="h3">
                                 Generate Personalized Messages And Gift Recommendations For Any Occasion
@@ -332,6 +343,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                             </CTAButton>
 
                         </BandContainer>
+                        <LineContainer darkmode={"false"}/>
                         <SecondBandContainer>
                             <Title variant="h3">
                                 Messages To Celebrate,<br />
@@ -345,7 +357,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                                 Start Creating Now!
                             </CTAButton>
                         </SecondBandContainer>
-
+                        <LineContainer darkmode={"false"}/>
                         <BandContainer>
                             <Title variant="h3">
                                 Upload your images and create greeting cards
@@ -368,8 +380,9 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                                 Let us show you how!
                             </CTAButton>
                         </BandContainer>
+                     
                     </Body>
-                    <Footer darkmode={"true"}>
+                    <Footer darkmode={"false"}>
                         <Copyright>
 
                             <Sub>
