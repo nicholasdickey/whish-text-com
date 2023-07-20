@@ -46,7 +46,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
       <ToolbarButton color={error?"error":"success"} size="large" onClick={onGenerateClick}>
      
         <TextFieldsIcon />
-        <ToolbarText>{hasGreeting?'New':'Suggest'} Wish Text</ToolbarText>
+        <ToolbarText>{hasGreeting?'Suggest':'Suggest'} Wish Text</ToolbarText>
       </ToolbarButton>
       {hasGreeting&&<CldUploadWidget onUpload={onUploadClick} uploadPreset="h17xjq8e">
           {({ open }) => {
