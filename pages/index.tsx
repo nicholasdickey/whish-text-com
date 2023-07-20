@@ -251,7 +251,7 @@ export default function Home({ sharedImages,dark, num: startNum = 0, max: startM
   const [darkMode, setDarkMode] = React.useState(startSession.mode);
   const [modeIsSet, setModeIsSet] = React.useState(startSession.modeIsSet);
   const [systemMode, setSystemMode] = React.useState(false);
-  console.log("sharedImages",sharedImages)
+  
   //const { data: authSession } = useSession();
   const router = useRouter();
   //const theme = useTheme();
@@ -722,7 +722,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               </ModeSwitch>
             </Wide>         
             <Container maxWidth="sm"><br/>
-            {virgin ? 
+            {virgin&&session.greeting ? 
             <ActionContainer>
               <ClearButton 
                 onClick={() => {
@@ -1025,14 +1025,14 @@ export const getServerSideProps = withSessionSsr(
       let sessionid = context.req.session?.sessionid || randomstring();
       let startoptions: Options = await fetchSession(sessionid);
       let sharedImages:ImageData[]=await fetchSharedImages();
-      //console.log("sharedImages",sharedImages)
+    
       startoptions = startoptions || {
         sessionid,
         noExplain: false,
         imagesString: '',
         selectedImage: '',
       };
-      //console.log("startSession=", startoptions)
+     // console.log("startSession=", startoptions)
       const ua = context.req.headers['user-agent'];
       const botInfo = isbot({ ua });
       if (!botInfo.bot && !context.req.session.sessionid) {

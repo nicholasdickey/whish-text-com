@@ -133,7 +133,7 @@ export default function Output({
     return image;
   };
 
-  const stripClickHandler = useCallback((image: ImageData | null): void => {
+  const stripClickHandler = (image: ImageData | null): void => {
     ga.event({
       action: "stipClickHandler",
       params : {
@@ -141,7 +141,8 @@ export default function Output({
         image: image?.url,
       }
     })
-    setPrompt6(true)
+    if(image?.url)
+      setPrompt6(true)
     setTimeout(async ()=>await recordEvent(session.sessionid, 'stripClickHandler',image?.url||''),1000);
    // console.log("image-stripClickHandler", image);    
     if (image == null) {
@@ -158,7 +159,7 @@ export default function Output({
     setSelectedImage(image);
    // if (image?.url)
       updateSession2({ selectedImage: JSON.stringify(image) });
-  },[updateSession2, session.sessionid]);
+  };
  
   useEffect(() => {
     //console.log("useEffect", greeting)
@@ -343,6 +344,7 @@ export default function Output({
           </BottomLink>
         )}
       </Box>
+   
       {!prompt6&&value&&virgin&&!loading  ? <Box sx={{ mt: 0, width: 1 }}>
             <Starter onClick={()=>setPrompt6(true)}><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
               <StarterMessage><Typography fontSize="inherit"  color="secondary"/*color="#ffee58"*/>Use stock AI-generated images or upload your own:</Typography></StarterMessage></Starter></Box> : null}
