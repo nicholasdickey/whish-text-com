@@ -176,7 +176,7 @@ const FirstBandContainer = styled.div`
   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('wide-candles.jpg'); /* Replace with your image URL */
  
   color: #fff;
-  min-height: 300px;
+  min-height: 380px;
   background-repeat: repeat;
 
   background-size: 900px 491px;
@@ -708,7 +708,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             </AppBar>
             <Wide>
               <FirstBandContainer>
-                              WISH&nbsp;IT?  TEXT&nbsp;IT!  
+                              Find The Right Words!{false&&<div>WISH&nbsp;IT?  TEXT&nbsp;IT!</div>}  
               </FirstBandContainer>
               <LineContainer darkmode={darkMode?"true":"false"}/>     
               <ModeSwitch>
@@ -791,7 +791,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             {!prompt1 ? 
               <Box sx={{ mt: 5, width: 1, }}>
                 <Starter>
-                  <ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
+                  <LooksOneOutlinedIcon fontSize="inherit" color='success' />
                   <StarterMessage>
                     <Typography fontSize="inherit" color="secondary"/*color="#ffee58"*/>To begin, select or type an occasion for the greeting, for example &ldquo;Birthday&ldquo;:</Typography>
                   </StarterMessage>
@@ -918,7 +918,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                 <StarterMessage><Typography fontSize="inherit" color="secondary"/*color="#ffee58"*/>Click or tap on  &quot;New Wish Text&quot; to regenerate the text. Upload images to create downloadable greeting cards.</Typography></StarterMessage></Starter></Box> : null}
 
             {!prompt2 && occasion ? <Box sx={{ mt: 10, width: 1 }}>
-              <Starter><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
+              <Starter><LooksTwoOutlinedIcon fontSize="inherit" color='success' />
                 <StarterMessage><Typography fontSize="inherit" color="secondary"/*color="#ffee58"*/>Click or tap on the &quot;Suggest Wish Text&quot; button:</Typography></StarterMessage></Starter></Box> : null}
 
              <GreetingOutput sharedImages={sharedImages} PlayerToolbar={OutputPlayerToolbar} setNum={setNum} setMax={setMax} max={max} num={num} setPrompt5={setPrompt5} prompt5={prompt5} prompt6={prompt6} setPrompt6={setPrompt6} onVirgin={async () => {

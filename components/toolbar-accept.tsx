@@ -30,7 +30,7 @@ interface ToolbarProps {
   onDownloadClick: () => void;
   onCopyClick: () => void;
   onAcceptClick: () => void;
-  images: any;
+  selected:boolean;
   session: any;
 }
 
@@ -39,7 +39,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
   onDownloadClick,
   onCopyClick,
   onAcceptClick,
-  images,
+  selected,
   session
 }) => {
   const [copied, setCopied] = React.useState(false);
@@ -57,7 +57,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
   }, [copied]);
   return (
     <ToolbarContainer>
-      {images && images.length > 0 && <ToolbarButton color="primary" size="large" onClick={onDownloadClick}>
+      {selected && <ToolbarButton color="primary" size="large" onClick={onDownloadClick}>
         <CloudDownloadIcon />
         <ToolbarText> Download Card</ToolbarText>
       </ToolbarButton>}

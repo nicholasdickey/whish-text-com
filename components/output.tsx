@@ -336,7 +336,7 @@ export default function Output({
             <Starter onClick={()=>setPrompt5(true)}><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
               <StarterMessage><Typography fontSize="inherit"  color="secondary"/*color="#ffee58"*/>Copy message to clipboard to be used with your favorite messenger or social media app.</Typography></StarterMessage></Starter></Box> : null}
              
-        {session.greeting && !loading && <ToolbarAccept session={session} text={session.greeting} images={images} onDownloadClick={handleDownload} onAcceptClick={handleAccept} onCopyClick={handleCopy} />}
+        {session.greeting && !loading && <ToolbarAccept session={session} text={session.greeting} selected={selectedImage.url?true:false} onDownloadClick={handleDownload} onAcceptClick={handleAccept} onCopyClick={handleCopy} />}
         {!loading && false && (
           <BottomLink>
             <Link href="https://www.american-outdoorsman.news">Sponsor: www.american-outdoorsman.news</Link>
