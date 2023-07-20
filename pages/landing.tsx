@@ -139,6 +139,7 @@ const FirstBandContainer = styled.div`
   display: flex;
   width: 100%;
   align-items: center;
+  flex-wrap: wrap;
   justify-content: center;
   padding: 5rem 0;
   text-align: center;
@@ -328,7 +329,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                     </div>
                     <Body>
                         <FirstBandContainer>
-                            WISH IT? TEXT IT!
+                            WISH&nbsp;IT? TEXT&nbsp;IT!
                         </FirstBandContainer>
                         <LineContainer darkmode={"false"}/>
                         <BandContainer darktext={"true"}>
