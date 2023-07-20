@@ -144,7 +144,7 @@ const FirstBandContainer = styled.div`
   font-size:5rem;
   font-size:4rem;
   @media (max-width: 700px) {
-    font-size:4rem;
+    font-size:3rem;
   }
   
 `;
