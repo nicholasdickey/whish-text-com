@@ -80,7 +80,7 @@ const ArrowRight = styled(ArrowRightIcon)`
 
 const ImageStrip: React.FC<ImageStripProps> = ({ sharedImages,images, onImageClick }) => {
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
-  console.log("images",images)
+ 
   const handleScrollLeft = () => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollLeft -= 200; // Adjust the scroll distance as needed
@@ -99,7 +99,7 @@ const ImageStrip: React.FC<ImageStripProps> = ({ sharedImages,images, onImageCli
     }
   };
   const combinedImages=images.concat(sharedImages);
-  console.log("combined images ",{combinedImages})
+  
   return (
     <Box>
       <ImageStripContainer ref={scrollContainerRef}>

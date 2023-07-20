@@ -146,7 +146,7 @@ export const fetchSession = async (sessionid: string) => {
   try {
     const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/session/fetchSession?sessionid=${sessionid} `;
     const res = await axios.get(url);
-    console.log("fetchSession", sessionid, res.data.session);
+   // console.log("fetchSession", sessionid, res.data.session);
     return res.data.session;
   } catch (x) {
     console.log("fetchSession", x);
@@ -158,7 +158,7 @@ export const fetchSharedImages = async () => {
   try {
     const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/session/fetchSharedImages`;
     const res = await axios.get(url);
-    console.log("fetchSharedImages", res.data.session);
+   // console.log("fetchSharedImages", res.data.session);
     if(res.data.success)
       return res.data.images;
    
@@ -206,12 +206,12 @@ export const recordEvent = async (sessionid: string, name: string, params: strin
 export const getSessionHistory= async (sessionid: string,num:number) => {
   const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/history/get-session-history?sessionid=${sessionid}&num=${num}`;
   const res = await axios.get(url);
-  console.log("getSessionHistory", sessionid,num, res.data.success,res.data);
+ // console.log("getSessionHistory", sessionid,num, res.data.success,res.data);
   return res.data;
 }
 export const deleteSessionHistories= async (sessionid: string) => {
   const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/history/delete-session-histories?sessionid=${sessionid}`;
   const res = await axios.get(url);
-  console.log("deleteSessionHistories", sessionid, res.data.success,res.data);
+ // console.log("deleteSessionHistories", sessionid, res.data.success,res.data);
   return res.data;
 }

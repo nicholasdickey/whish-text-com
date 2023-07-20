@@ -1081,7 +1081,7 @@ export const getServerSideProps = withSessionSsr(
       prompt5 = prompt5 || options.prompt5 || '';
       num = num || options.num || 1;
       max = max || options.max || 1;
-      //("NUM, MAX:", num, max)
+      
       naive = naive || options.naive || false;
       reflections = reflections || options.reflections || '';
       instructions = instructions || options.instructions || '';
