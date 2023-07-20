@@ -256,7 +256,7 @@ export default function Home({ dark, fresh, fbclid, utm_content, isbot, isfb, se
     Explore what is possible with advanced customization options.`
 
     const line3=`Gift suggestions with no effort.   
-        Happy or sad, the AI assistant will help you find the right gifts. 
+        Happy or sad, the AI assistent will help you find the right gifts. 
     `
     return (
         <>
@@ -368,7 +368,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                                <ReactMarkdown>{line3}</ReactMarkdown>
                             </Subtitle>
                             <CTAButton variant="contained" color="primary" onClick={handleCTAClick}>
-                               Begin Now
+                               Begin Composing Messages!
                             </CTAButton>
                            
                         </BandContainer>

@@ -25,8 +25,22 @@ import { useState, useCallback, useEffect } from "react"
 import { useRouter } from 'next/router'
 import { fetchSession, recordEvent, updateSession, deleteSessionHistories, getSessionHistory } from '../lib/api'
 import styled from 'styled-components';
+import ClearIcon from '@mui/icons-material/Clear';
+import { RWebShare } from "react-web-share";
+import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined';
 import Script from 'next/script'
-import ReactMarkdown from "react-markdown";
+import LooksOneOutlinedIcon from '@mui/icons-material/LooksOneOutlined';
+import LooksTwoOutlinedIcon from '@mui/icons-material/LooksTwoOutlined';
+import LooksThreeOutlinedIcon from '@mui/icons-material/Looks3Outlined';
+import LooksFourOutlinedIcon from '@mui/icons-material/Looks4Outlined';
+import ErrorOutlineOutlinedIcon from '@mui/icons-material/TipsAndUpdatesTwoTone';//'@mui/icons-material/LightbulbCircleTwoTone';//'@mui/icons-material/MarkUnreadChatAltOutlined';//'@mui/icons-material/NextPlanOutlined';//'@mui/icons-material/ErrorOutlineOutlined';
+import NextPlanOutlinedIcon from '@mui/icons-material/NextPlanOutlined';
+import MarkUnreadChatAltOutlinedIcon from '@mui/icons-material/MarkUnreadChatAltOutlined';
+import LightbulbCircleTwoToneIcon from '@mui/icons-material/LightbulbCircleTwoTone';
+import TipsAndUpdatesTwoToneIcon from '@mui/icons-material/TipsAndUpdatesTwoTone';
+import ModeNightTwoToneIcon from '@mui/icons-material/ModeNightOutlined';
+import LightModeTwoToneIcon from '@mui/icons-material/LightModeOutlined';
+
 
 import {
     GetServerSidePropsContext,
@@ -89,7 +103,7 @@ interface FooterProps {
     background-color: ${({darkmode})=>darkmode=="true"?'#999':'rgb(232, 236, 239)'};
   `;
   
-const BandContainer = styled.div<{ darktext?: string,background?:string }>`
+const BandContainer = styled.div<{ darktext?: string }>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -98,10 +112,6 @@ const BandContainer = styled.div<{ darktext?: string,background?:string }>`
   text-align: center;
   color: ${({ darktext }) => (darktext=="true" ? '#fff' : '#2d2b38')};
   background-color: ${({ darktext }) => (darktext=="true" ? '#2d2b38' : '#fff')};
-  background-image: ${({background})=>background?`linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${background})`:null}; 
-  background-repeat: repeat;
-  background-size: 900px 491px;
-
 `;
 
 const Title = styled(Typography)`
@@ -246,18 +256,7 @@ export default function Home({ dark, fresh, fbclid, utm_content, isbot, isfb, se
         return () => matchMedia.removeEventListener("change", modeMe);
     }, [darkMode]);
 
-    const line1=`Find the right words with the assistance of the award winning AI.   
-    Optimized for social media and messengers.   
-    Emojis galore:
-    🎑 🎃 👻 🎅 🎄 🎁   
-    Best of all: It's free!    
-    `
-    const line2=`Begin by simply selecting the occation.   
-    Explore what is possible with advanced customization options.`
 
-    const line3=`Gift suggestions with no effort.   
-        Happy or sad, the AI assistant will help you find the right gifts. 
-    `
     return (
         <>
             <Head>
@@ -330,15 +329,15 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                     </div>
                     <Body>
                         <FirstBandContainer>
-                        Craft Personalized Messages with Ease! 
+                            WISH&nbsp;IT? TEXT&nbsp;IT!
                         </FirstBandContainer>
                         <LineContainer darkmode={"false"}/>
                         <BandContainer darktext={"true"}>
                             <Title variant="h3">
-                            Wish&nbsp;It? Text&nbsp;It!
+                                Generate Personalized Messages And Gift Recommendations For Any Occasion
                             </Title>
                             <Subtitle variant="h5">
-                               <ReactMarkdown>{line1}</ReactMarkdown>
+                                With the assistance of the award winning AI. Optimized for social media and messengers: emoticons!<br /> Best of all: It&apos;s free!
                             </Subtitle>
                             <CTAButton variant="contained" color="primary" onClick={handleCTAClick}>
                                 Get Started
@@ -352,7 +351,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                                 To Comfort, To Encourage.
                             </Title>
                             <Subtitle variant="h5">
-                                <ReactMarkdown>{line2}</ReactMarkdown>
+                                Begin by either selecting or typing the specific occasion. <br /> Explore what is possible with advanced customization options.
                             </Subtitle>
 
                             <CTAButton variant="contained" color="primary" onClick={handleCTAClick}>
@@ -360,20 +359,6 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                             </CTAButton>
                         </SecondBandContainer>
                         <LineContainer darkmode={"false"}/>
-                        <BandContainer darktext={"true"} background={"gifts-candles-wide.jpg"}>
-                            <Title variant="h3">
-                            Gift Recommendations For Any Occasion
-                            </Title>
-                            <Subtitle variant="h5">
-                               <ReactMarkdown>{line3}</ReactMarkdown>
-                            </Subtitle>
-                            <CTAButton variant="contained" color="primary" onClick={handleCTAClick}>
-                               Begin Now
-                            </CTAButton>
-                           
-                        </BandContainer>
-                       
-
                         <BandContainer>
                             <Title variant="h3">
                                 Upload your images and create greeting cards
