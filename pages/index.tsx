@@ -165,7 +165,7 @@ const AppMenu = styled.div<ColorProps>`
   display:flex;
   color:${({ color }) => color};
 `;
-const FirstBandContainer = styled.div`
+const FirstBandContainer = styled.h1`
   display: flex;
   width: 100%;
   align-items: center;
@@ -174,7 +174,7 @@ const FirstBandContainer = styled.div`
   text-align: center;
   background: url('wide-candles.jpg') ; /* Replace with your image URL */
   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('wide-candles.jpg'); /* Replace with your image URL */
- 
+  font-weight:500;
   color: #fff;
   min-height: 380px;
   background-repeat: repeat;
@@ -623,7 +623,7 @@ export default function Home({ sharedImages,dark, num: startNum = 0, max: startM
   return (
     <>
       <Head>
-        <title>Wish Text Composer</title>
+        <title>Wish Text</title>
         <meta name="name" content="Wish Text"/>
         <meta name="slogan" content="Greetings Text"/>
         <meta name="twitter:card" content="summary_large_image" />
