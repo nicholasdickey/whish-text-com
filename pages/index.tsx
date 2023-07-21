@@ -642,8 +642,8 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
         <link rel="icon" href={systemMode ? "/wbLogo.png" : "/bwLogo.png"} sizes="64x63" type="image/png" />
         <meta name="theme-color" content={theme.palette.background.default} />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="canonical" href="https://www.wish-text.com/"/>
 
       </Head>
       <ThemeProvider theme={theme}>

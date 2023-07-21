@@ -282,6 +282,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
+                <link rel="canonical" href="https://www.wish-text.com/landing"/>
 
             </Head>
             <ThemeProvider theme={theme}>
