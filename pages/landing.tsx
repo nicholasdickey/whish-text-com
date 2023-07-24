@@ -342,7 +342,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                                <ReactMarkdown>{line1}</ReactMarkdown>
                             </Subtitle>
                             <CTAButton variant="contained" color="primary" onClick={handleCTAClick}>
-                                Get Started
+                                Create a Message
                             </CTAButton>
 
                         </BandContainer>

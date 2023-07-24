@@ -11,23 +11,20 @@ import * as ga from '../lib/ga';
 import LinearProgress from '@mui/material/LinearProgress';
 import ImageOverlay from "./image-overlay";
 const Headline = styled.div`
-width:100%;
-display:flex;
-
-justify-content:center;
+  width:100%;
+  display:flex;
+  justify-content:center;
   font-size: 22px;
   font-weight: 700;
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
- // color: #fff;
   text-align: center;
   padding: 2px;
- // margin-top: 20px;
-  //margin-bottom: 2px;
+  z-index:100;
   @media (max-width: 990px) {
     font-size: 18px;
   
   }
-  `;
+`;
 interface BodyProps {
   l:number;
 }
@@ -39,18 +36,13 @@ const Body = styled.div<BodyProps>`
   font-weight: 400;
   line-height: 1.7;
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
- // color: #fff;
-
- // padding-left: 20px;
   padding-top:1px;
   padding-bottom:20px;
-  //padding-right:10px;
   margin-bottom: 20px;
-
   @media (max-width: 990px) {
     font-size:${({l})=>l>600?11:l>400?12:l>300?13:l>200?14:16}px;
   }
-  `;
+`;
 
 const BackgroundWrapper = styled.div`
   width: 100%;
@@ -58,18 +50,16 @@ const BackgroundWrapper = styled.div`
   display:flex;
   flex-direction:column;
   height:auto;
-  text-overflow:clip;
-  
+  text-overflow:clip;  
 `;
 const BackgroundFiller = styled.div`
   width: 100%;
   flex-grow: 1;
-  `;
+`;
 interface StyledImageProps {
   height: number;
   width: number;
   div: any;
-
   adjheight: string;
   adjwidth: string;
 }
@@ -79,7 +69,6 @@ const BackgroundImage = styled.img<StyledImageProps>`
   position: absolute;
   top: 0;
   left: 0;
-
   height:auto; 
   width:100%;
   z-index: 1;
@@ -87,9 +76,6 @@ const BackgroundImage = styled.img<StyledImageProps>`
 
 interface InnerOutputProps {
   length: number;
-  //height: number;
- // width: number;
-  //div: any;
   horiz?: string;
   image: string;
   adjheight: string;
@@ -99,18 +85,14 @@ interface InnerOutputProps {
 const InnerOutput = styled.div<InnerOutputProps>`
   
   position: relative;
-  //display: flex;
-  //flex-direction: column;
   white-space: pre-line;
   justify-content: flex-end;
   overflow-wrap: break-word;
   font-size: ${({ length, horiz }) =>{
     const h=horiz=="true";
-    return `${length > 600 ? (h ? '12' : '19') : length > 500 ? (h ? '12' : '20') : length > 100 ? (h? '12' : '12') : h ? '12' : '12'}`}}px;
-  
+    return `${length > 600 ? (h ? '12' : '19') : length > 500 ? (h ? '12' : '20') : length > 100 ? (h? '12' : '12') : h ? '12' : '12'}`}}px;  
   width:'100%';
   height:${({adjheight})=>adjheight};
-
   @media (max-width: 990px) {
     font-weight: 400;
     font-size: ${({ length, horiz }) =>{
@@ -167,7 +149,6 @@ export interface ImageProps {
   thumbnailUrl: string;
   original_filename: string;
 }
-
 export interface TextEditorProps {
   image: ImageProps;
   text: string;
@@ -178,14 +159,10 @@ export interface TextEditorProps {
   onClick:any;
 }
 const editorStyles = {
-  // background:"transparent",// "#262644", // Dark background color
-  //backgroundColor:"rgba(0, 0, 0, 0.5);",
   color: "#fff", // Text color
   zIndex: 4,
-  //marginTop:64,
   minHeight: 250,
   overflow: "auto"
-
 };
 interface MarkProps {
   image:string;
@@ -200,12 +177,9 @@ const MarkdownEditorWrap = styled.div`
   width:100%;
   height:100%;
   & textarea{
-   // background: transparent !important;
-    //background-color:rgba(0, 0, 0, 0.5);
-   background:  #262644 !important; // Dark background color
+    background:  #262644 !important; // Dark background color
     color:#fff !important; // Text color
     overflow:auto;
-
   }
   &.section-container{
     background:  #262644; // Dark background color
