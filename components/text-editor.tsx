@@ -275,7 +275,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ session, image, text, loading, 
             <Mark image={image.url?"true":"false"} onClick={() => handleTextClick()} >
               <Headline className="q-h">
                 <ReactMarkdown>
-                {loading ? "" : headline.replaceAll('#','###')}
+                {loading ? "" : headline.replace('#','###').replace('####','##')}
               </ReactMarkdown>
               </Headline>
            
