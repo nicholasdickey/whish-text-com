@@ -24,6 +24,9 @@ const Headline = styled.div`
     font-size: 18px;
   
   }
+  .h-x{
+    z-index:100;
+  }
 `;
 interface BodyProps {
   l:number;
@@ -265,7 +268,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ session, image, text, loading, 
         
           {!editing ? (
             <Mark image={image.url?"true":"false"} onClick={() => handleTextClick()} >
-              <Headline ><ReactMarkdown>
+              <Headline className="q-h"><ReactMarkdown>
                 {loading ? "" : headline}
               </ReactMarkdown></Headline>
               <div />
