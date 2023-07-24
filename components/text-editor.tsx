@@ -10,7 +10,7 @@ import { useTheme } from '@mui/material/styles';
 import * as ga from '../lib/ga';
 import LinearProgress from '@mui/material/LinearProgress';
 import ImageOverlay from "./image-overlay";
-const Headline = styled.div`
+const Headline = styled.p`
   width:100%;
   display:flex;
   justify-content:center;
@@ -24,9 +24,14 @@ const Headline = styled.div`
     font-size: 18px;
   
   }
-  .h-x{
+  &.q-h{
+
     z-index:100;
+    position:relative
+    
   }
+ 
+  
 `;
 interface BodyProps {
   l:number;
@@ -268,14 +273,19 @@ const TextEditor: React.FC<TextEditorProps> = ({ session, image, text, loading, 
         
           {!editing ? (
             <Mark image={image.url?"true":"false"} onClick={() => handleTextClick()} >
-              <Headline className="q-h"><ReactMarkdown>
-                {loading ? "" : headline}
-              </ReactMarkdown></Headline>
-              <div />
+              <Headline className="q-h">
+                <ReactMarkdown>
+                {loading ? "" : headline.replaceAll('#','###')}
+              </ReactMarkdown>
+              </Headline>
+           
               {loading&&<LinearProgress />}
-             <Body l={text.length}  id='wt-output'> <ReactMarkdown>
+             <Body l={text.length}  id='wt-output'> 
+             <ReactMarkdown>
                 {loading ? "Generating..." : body}
-              </ReactMarkdown></Body>
+              </ReactMarkdown>
+              </Body>
+             
             </Mark>
           ) : (
             <MarkdownEditorWrap><MdEditor

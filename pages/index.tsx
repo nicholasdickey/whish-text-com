@@ -805,19 +805,31 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               onChange={onOccasionChange}
               helperText="Required for a meaningful result. For example: &ldquo;8th Birthday for a boy&rdquo;, &ldquo;Sweet Sixteen&rdquo;, &ldquo;Illness&rdquo; &ldquo;Death in the family&rdquo;, &ldquo;Christmas&rdquo;, &ldquo;Graduation&ldquo;"
             />
-            {session.greeting && !prompt3 ? 
+             <Box sx={{ mb: 4, color: 'primary' }}>
+                  <FormControlLabel
+                    label={<Typography style={{ color: theme.palette.text.secondary }}>Keep it light-hearted, if possible, with emojis.</Typography>}
+                    control={
+                      <Checkbox
+                        sx={{ color: 'secondary' }}
+                        checked={!naive}
+                        onChange={onNaiveChange}
+                      />
+                    }
+                  />
+                </Box>
+            {false&&session.greeting && !prompt3 ? 
               <Box sx={{ mt: 10, width: 1 }}>
                 <Starter onClick={() => setPrompt3(true)}>
                   <ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
                   <StarterMessage>
-                    <Typography fontSize="inherit" color="secondary"/*color="#ffee58"*/>Experiment with inputs to make instructions to AI more specific, for example switch between humours and serious by unchecking &ldquo;Keep it light-hearted&rdquo; in Advanced Inputs:
+                    <Typography fontSize="inherit" color="secondary"/*color="#ffee58"*/>Experiment with advanced inputs to replace the defaults with more specific instructions to AI:
                     </Typography>
                   </StarterMessage>
                 </Starter>
               </Box> 
             : null}
 
-            {virgin && session.greeting ? 
+            {false&&virgin && session.greeting ? 
             <Accordion sx={{ mt: 5, background: theme.palette.background.default }} expanded={expanded === 'custom'} onChange={handleAccordeonChange('custom')}>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
@@ -850,7 +862,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               </AccordionDetails>
             </Accordion> : null}
 
-            {virgin && session.greeting ? <Accordion sx={{ background: theme.palette.background.default }} expanded={expanded === 'advanced'} onChange={handleAccordeonChange('advanced')}>
+            {virgin && session.greeting ? <Accordion sx={{ my:5,background: theme.palette.background.default }} expanded={expanded === 'advanced'} onChange={handleAccordeonChange('advanced')}>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel4bh-content"
@@ -859,18 +871,27 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                 <Typography sx={{ width: '33%', flexShrink: 0 }}>Advanced Inputs</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Box sx={{ mb: 4, color: 'primary' }}>
-                  <FormControlLabel
-                    label={<Typography style={{ color: theme.palette.text.secondary }}>Keep it light-hearted, if possible</Typography>}
-                    control={
-                      <Checkbox
-                        sx={{ color: 'secondary' }}
-                        checked={!naive}
-                        onChange={onNaiveChange}
-                      />
-                    }
+              <Box sx={{ my: 4 }}>
+                  <TextField
+                    sx={{ width: { xs: 1 } }}
+                    id="to"
+                    label="To (Recepient)"
+                    value={to}
+                    onChange={onToChange}
+                    helperText="Examples: &ldquo;Our nephew Billy&rdquo;, &ldquo;My Grandson Evan&rdquo;, &ldquo;My Love&rdquo; &ldquo;Love of My Life&rdquo;, &ldquo;Simpsons&rdquo;, &ldquo;Mr Williams, the postman.&ldquo;"
                   />
                 </Box>
+                <Box sx={{ my: 4 }}>
+                  <TextField
+                    sx={{ width: { xs: 1 } }}
+                    id="from"
+                    label="From"
+                    value={from}
+                    onChange={onFromChange}
+                    helperText="Optional: who is the greeting from? For example - Grandma and Grandpa, Your Dad, etc."
+                  />
+                </Box>
+               
                 <Box sx={{ mb: 4 }}>
                   <TextField
                     sx={{ width: { xs: 1 } }}
@@ -913,15 +934,11 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                 </Box>
               </AccordionDetails>
             </Accordion> : null}
-            {session.greeting && !prompt4 ? <Box sx={{ mt: 10, width: 1, color: 'white', backgroundColor: 'secondary' }}>
-              <Starter onClick={() => setPrompt4(true)}><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
-                <StarterMessage><Typography fontSize="inherit" color="secondary"/*color="#ffee58"*/>Click or tap on  &quot;New Wish Text&quot; to regenerate the text. Upload images to create downloadable greeting cards.</Typography></StarterMessage></Starter></Box> : null}
-
-            {!prompt2 && occasion ? <Box sx={{ mt: 10, width: 1 }}>
+              {!prompt2 && occasion ? <Box sx={{ mt: 10, width: 1 }}>
               <Starter><LooksTwoOutlinedIcon fontSize="inherit" color='success' />
                 <StarterMessage><Typography fontSize="inherit" color="secondary"/*color="#ffee58"*/>Click or tap on the &quot;Suggest Wish Text&quot; button:</Typography></StarterMessage></Starter></Box> : null}
 
-             <GreetingOutput sharedImages={sharedImages} PlayerToolbar={OutputPlayerToolbar} setNum={setNum} setMax={setMax} max={max} num={num} setPrompt5={setPrompt5} prompt5={prompt5} prompt6={prompt6} setPrompt6={setPrompt6} onVirgin={async () => {
+             <GreetingOutput sharedImages={sharedImages} PlayerToolbar={OutputPlayerToolbar} setNum={setNum} setMax={setMax} max={max} num={num} setPrompt5={setPrompt5} prompt4={prompt4} prompt5={prompt5} prompt6={prompt6} setPrompt6={setPrompt6} onVirgin={async () => {
               await recordEvent(session.sessionid, 'virgin wish-text request', `occasion:${occasion}`);
               setVirgin(true);
               setPrompt2(true);
@@ -932,7 +949,15 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               setPrompt4(true);
               updateSession2({ virgin2: true, prompt4: true });
             }} virgin={virgin} virgin2={virgin2} setMissingOccasion={setMissingOccasion} setLoadReady={setLoadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} naive={naive} reflections={reflections} instructions={instructions} inastyleof={inastyleof} language={language} /*authSession={authSession}*/ />
+            
+            {session.greeting && !prompt4 ? <Box sx={{ mt: 10, width: 1, color: 'white', backgroundColor: 'secondary' }}>
+              <Starter onClick={() => setPrompt4(true)}><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
+                <StarterMessage><Typography fontSize="inherit" color="secondary"/*color="#ffee58"*/>
+                Remember, these are only suggestions to get you going! Customize them to fit your personality and style. Try at least several suggestions to see if any of them resonate with you.</Typography></StarterMessage></Starter></Box> : null}
+
+         
             </Container>
+           
             <Container maxWidth="sm">
             {session.greeting && <GiftsOutput loadReady={loadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} reflections={reflections} interests={interests} onInterestsChange={onInterestsChange} />}
             </Container>

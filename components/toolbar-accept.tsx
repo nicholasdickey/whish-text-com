@@ -5,6 +5,7 @@ import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import CheckIcon from '@mui/icons-material/Check';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import TextFieldsIcon from '@mui/icons-material/TextFields';
 import useCopyToClipboard from '../lib/copy-to-clipboard';
 import * as ga from '../lib/ga';
 const ToolbarContainer = styled.div`
@@ -27,6 +28,7 @@ const ToolbarText = styled.span`
 
 interface ToolbarProps {
   text: string;
+  onGenerateClick: () => void;
   onDownloadClick: () => void;
   onCopyClick: () => void;
   onAcceptClick: () => void;
@@ -36,6 +38,7 @@ interface ToolbarProps {
 
 const Toolbar: React.FC<ToolbarProps> = ({
   text,
+  onGenerateClick,
   onDownloadClick,
   onCopyClick,
   onAcceptClick,
@@ -57,6 +60,10 @@ const Toolbar: React.FC<ToolbarProps> = ({
   }, [copied]);
   return (
     <ToolbarContainer>
+      <ToolbarButton   color={"success"} size="large" onClick={onGenerateClick}>
+        <TextFieldsIcon />
+        <ToolbarText> Try Another Suggestion</ToolbarText>
+      </ToolbarButton>
       {selected && <ToolbarButton color="primary" size="large" onClick={onDownloadClick}>
         <CloudDownloadIcon />
         <ToolbarText> Download Card</ToolbarText>

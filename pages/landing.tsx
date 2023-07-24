@@ -375,7 +375,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                         </BandContainer>
                        
 
-                        <BandContainer>
+                        {false&&<BandContainer>
                             <Title variant="h3">
                                 Upload your images and create greeting cards
                             </Title>
@@ -396,7 +396,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                             <CTAButton variant="contained" color="primary" onClick={handleCTAClick}>
                                 Let us show you how!
                             </CTAButton>
-                        </BandContainer>
+                        </BandContainer>}
                      
                     </Body>
                     <Footer darkmode={"false"}>

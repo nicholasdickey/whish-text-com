@@ -126,6 +126,7 @@ export default function Output({
 }) {
   const [value, setValue] = useState('');
   const [loading, setLoading] = useState(false);
+  const [oldOccasion, setOldOccasion] = useState(occasion);
   const [giftSuggestions, setGiftSuggestions] = useState<GiftSuggestion[]>(session.giftSuggestions ? processGiftSuggestions(session.giftSuggestions) : []);
 
   const load = useCallback(async () => {
@@ -146,11 +147,17 @@ export default function Output({
       }
     });
   }, [from, to, occasion, reflections, interests, value, updateSession2, session.sessionid]);
-
   useEffect(() => {
-    if (loadReady && !value) {
+    if(oldOccasion&&occasion!=oldOccasion){
+      setOldOccasion(occasion);
       load();
     }
+  }, [load, oldOccasion, occasion]);
+  useEffect(() => {
+    if (!session.giftSuggestions&&loadReady && !value) {
+      load();
+    }
+    else
     if (session.giftSuggestions && !value) {
       setValue(session.giftSuggestions);
       setGiftSuggestions(processGiftSuggestions(session.giftSuggestions));
