@@ -23,7 +23,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useState, useCallback, useEffect } from "react"
 import { useRouter } from 'next/router'
-import { fetchSession, recordEvent, updateSession, deleteSessionHistories, getSessionHistory } from '../lib/api'
+import { fetchSession, recordEvent, updateSession, deleteSessionHistories, getSessionHistory } from '../../lib/api'
 import styled from 'styled-components';
 import Script from 'next/script'
 import ReactMarkdown from "react-markdown";
@@ -38,10 +38,10 @@ import axios from 'axios';
 import Image from 'next/image'
 //import { useSession, signIn, signOut } from "next-auth/react"
 import { Roboto } from 'next/font/google';
-import { withSessionSsr, Options } from '../lib/with-session';
-import { isbot } from '../lib/isbot';
-import Band from '../components/band';
-import Card from '../components/card';
+import { withSessionSsr, Options } from '../../lib/with-session';
+import { isbot } from '../../lib/isbot';
+import Band from '../../components/band';
+import Card from '../../components/card';
 interface BackgroundMode {
     colorDark: string;
     colorLight: string;
@@ -136,7 +136,7 @@ const FirstBandContainer = styled.h1`
   padding: 5rem 0;
   text-align: center;
   background: url('wide-candles.jpg') ; /* Replace with your image URL */
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('wide-candles.jpg'); /* Replace with your image URL */
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/wide-candles.jpg'); /* Replace with your image URL */
   font-weight:500;
   color: #fff;
   min-height: 380px;
@@ -283,7 +283,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                 <meta name="theme-color" content={theme.palette.background.default} />
                 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-                <meta name="viewport" content="width=device-width, initial-scale=1" />
+                <meta name="viewport" content="width=device-width" />
                 <link rel="canonical" href="https://www.wish-text.com/landing"/>
 
             </Head>
@@ -293,30 +293,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                     <div>
 
                         <CssBaseline />
-                        <AppBar position="absolute" component="nav">
-                            <Toolbar>
-
-                                <WBLogo><Image src="/wbLogo-grey.png" width={32} height={31} alt="Wish Text Composer Logo" /></WBLogo>
-                                <Typography
-                                    variant="h6"
-                                    component="div"
-                                    sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
-                                >
-                                    WISH TEXT COMPOSER
-                                </Typography>
-                                <Typography
-                                    variant="h6"
-                                    component="div"
-                                    sx={{ flexGrow: 1, display: { xs: 'block', sm: 'none' } }}
-                                >
-                                    WISH TEXT
-                                </Typography>
-
-
-                            </Toolbar>
-                        </AppBar>
-
-                        <Toolbar />
+                    
 
                     </div>
                     <div >
@@ -332,41 +309,10 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                         </Script>
                     </div>
                     <Body>
-                        <FirstBandContainer>
-                        Craft Personalized Messages with Ease! 
-                        </FirstBandContainer>
+                      
+                        <Card fresh={fresh} fbclid={fbclid} utm_content={utm_content} isbot={isbot} isfb={isfb} sessionid={sessionid} dark={darkMode?"true":"false"} title="Wish&nbsp;It? Text&nbsp;It!" subtitle={line1} cta="Create a Message"/>
                         <LineContainer darkmode={"false"}/>
-                        <Band fresh={fresh} fbclid={fbclid} utm_content={utm_content} isbot={isbot} isfb={isfb} sessionid={sessionid} dark={"true"} title="Wish&nbsp;It? Text&nbsp;It!" subtitle={line1} cta="Create a Message"/>
-                           
-                        <LineContainer darkmode={"false"}/>
-                        <Card fresh={fresh} fbclid={fbclid} utm_content={utm_content} isbot={isbot} isfb={isfb} sessionid={sessionid} dark={"false"} title="Wish&nbsp;It? Text&nbsp;It!" subtitle={line1} cta="Create a Message"/>
-                        <LineContainer darkmode={"false"}/>
-                        <SecondBandContainer>
-                            <Title variant="h3">
-                                Messages To Celebrate,<br />
-                                To Comfort, To Encourage.
-                            </Title>
-                            <Subtitle variant="h5">
-                                <ReactMarkdown>{line2}</ReactMarkdown>
-                            </Subtitle>
-
-                            <CTAButton variant="contained" color="primary" onClick={handleCTAClick}>
-                                Start Creating Now!
-                            </CTAButton>
-                        </SecondBandContainer>
-                        <LineContainer darkmode={"false"}/>
-                        <BandContainer darktext={"true"} background={"gifts-candles-wide.jpg"}>
-                            <Title variant="h3">
-                            Gift Recommendations For Any Occasion
-                            </Title>
-                            <Subtitle variant="h5">
-                               <ReactMarkdown>{line3}</ReactMarkdown>
-                            </Subtitle>
-                            <CTAButton variant="contained" color="primary" onClick={handleCTAClick}>
-                               Begin Now
-                            </CTAButton>
-                           
-                        </BandContainer>
+                        
                        
 
                         {false&&<BandContainer>
@@ -396,14 +342,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                     <Footer darkmode={"false"}>
                         <Copyright>
 
-                            <Sub>
-                                <Typography variant="caption" gutterBottom>Create the &quot;wishing&quot; or greeting text for you to paste into your favorite messaging app.
-                                    AI will provide the helpful suggestions that you can edit by clicking on the suggestion.
-
-                                    Additionally, Wish Text Composer can generate a &apos;postcard&apos; greeting over an uploaded image. You can download the card and share from any device.
-                                    Utilizing AI, it also provides the gift suggestions.
-                                </Typography>
-                            </Sub>
+                           
                         </Copyright>
                         <Copyright> <Sub> <Typography variant="caption" gutterBottom>
                             Copyright 2023 Wish-Text.Com, All Rights Reserved

@@ -110,6 +110,7 @@ export default function Output({
   const [loading, setLoading] = useState(false);
   const [gift, setGift] = useState('');
   const [openLogin, setOpenLogin] = useState(false);
+  const [selectedOccasion, setSelectedOccasion] = useState<string>('');
   const [selectedImage, setSelectedImage] = useState<ImageData>({
     url: '',
     publicId: '',
@@ -123,7 +124,7 @@ export default function Output({
 
   const canvasRef = useRef<HTMLDivElement>(null);
 
-
+ // console.log("RENDER output",greeting,value)
   const convertDivToPng = async (div: any) => {
     const canvas = await html2canvas(div, {
       useCORS: true,
@@ -178,6 +179,7 @@ export default function Output({
       setMissingOccasion(true);
       return;
     }
+   // console.log("handle generate", occasion)
     setLoading(true);
     setLoadReady(true);
     onVirgin();
@@ -324,13 +326,14 @@ export default function Output({
     setSelectedImage(session.selectedImage ? JSON.parse(session.selectedImage) : { url: "", publicId: "" });
   }, [session.imagesString, session.selectedImage]);
   //console.log('error', occasion?.length>0?false:true)
+  //console.log("OUTPUT",greeting)
   return (
     <>
       {occasion&&!session.greeting&&<ToolbarGenerate error={occasion?.length>0?false:true} onGenerateClick={handleGenerate} onUploadClick={onUpload} hasGreeting={session.greeting ? true : false} />}
      
       <Box sx={{ my: 3,  }} textAlign="center">
        
-      {session.greeting&&PlayerToolbar}
+      {greeting&&PlayerToolbar}
         <TextEditor  onClick={onTextEditorClick} session={session} text={session.greeting || ''} onChange={(text: string) => { updateSession2({ greeting: text }); }} image={selectedImage} loading={loading} canvasRef={canvasRef} />
         <div  />
         {false&&virgin&&!prompt5 && !loading ? <Box sx={{ mt: 0, width: 1 }}>

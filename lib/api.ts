@@ -99,7 +99,7 @@ export const getAmazonSearch = async ({ search }: { search: string }) => {
     return res.data.items as Item[];
   }
   catch (x) {
-    console.log("getAmazonSearch", x);
+    //console.log("getAmazonSearch", x);
   }
 }
 

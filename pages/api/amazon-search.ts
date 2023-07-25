@@ -46,7 +46,7 @@ const amazonSearch = async (
     return res.status(200).json({ items })
   }
   catch (e:any) {
-    console.log("AMAZON search error:", e);
+    //console.log("AMAZON search error:", e);
     return res.status(500).json({ error: e.message })
   }
 }

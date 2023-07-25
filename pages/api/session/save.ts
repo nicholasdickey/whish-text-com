@@ -23,7 +23,7 @@ async function handler(
 
     const body = req.body;
     const session=req.body.session;
-   // console.log("save session",session);
+    console.log("save session",session);
     req.session.sessionid = session.sessionid;
     await updateSession(session.sessionid,session);
    // console.log("save session2", session);

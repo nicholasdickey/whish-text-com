@@ -258,6 +258,7 @@ export default function Home({ sharedImages,dark, num: startNum = 0, max: startM
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [missingOccasion, setMissingOccasion] = useState(false);
+  const [selectedOccasion,setSelectedOccasion]=useState(startOccasion);
   const drawerWidth = 240;
   const navItems = ['Home', 'History', 'Share', 'Contact', 'Login'];
 
@@ -341,14 +342,19 @@ export default function Home({ sharedImages,dark, num: startNum = 0, max: startM
   const container = undefined;
   //saves the changes to the session on the local web server. 
   const updateSession2 = useCallback(async (updSession: object) => {
-    //console.log('===>pdate session:', updSession);
     if (!updSession)
       return;
-    const assigned = { ...Object.assign(session, updSession) }
+    let curSession:any;
+    setSession((session)=> {curSession=session;return {...Object.assign(session, updSession)}});
+    setTimeout(async ()=>{
+      const s=():any=>curSession;
+      const ses=s();
+     // console.log('===>pdate session:', updSession,"exist session",ses);
 
-    setSession(assigned);
-    await axios.post(`/api/session/save`, { session: assigned });
-  }, [session]);
+      await axios.post(`/api/session/save`, { session:ses});
+    },1);
+   
+  }, [session,session.greeting]);
   useEffect(() => {
     if (dark && !modeIsSet) {
       setDarkMode(true);
@@ -568,7 +574,7 @@ export default function Home({ sharedImages,dark, num: startNum = 0, max: startM
   //console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
   const processRecord = async (record: any, num: number) => {
     const { greeting, params } = record;
-    //console.log("PARSE", params, JSON.parse(params));
+   // console.log("PARSE", params, JSON.parse(params));
     const update = Object.assign(JSON.parse(params), { greeting, num });
     updateSession2(update);
     const { to, from, occasion, naive, reflections, instructions, inastyleof, language, interests } = update;
@@ -584,11 +590,12 @@ export default function Home({ sharedImages,dark, num: startNum = 0, max: startM
     setNum(num);
     session.greeting = greeting;
   }
+  //console.log("construct playerToolbar, max=",max)
   const OutputPlayerToolbar = <>{max > 1 ? <PlayerToolbar
     num={num}
     max={max}
     onPrevClick={async () => {
-      //console.log("onPrevClick", num, max)
+    //  console.log("onPrevClick", num, max)
       if (num > 1) {
         const { success, record } = await getSessionHistory(session.sessionid, num - 1);
         //console.log("onPrevClick2", success, record)
@@ -942,6 +949,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               await recordEvent(session.sessionid, 'virgin wish-text request', `occasion:${occasion}`);
               setVirgin(true);
               setPrompt2(true);
+              setSelectedOccasion(occasion);
               updateSession2({ virgin: true, prompt2: true });
             }} greeting={session.greeting || ''} onVirgin2={async () => {
               await recordEvent(session.sessionid, 'virgin2 request', `occasion:${occasion}`);
@@ -959,7 +967,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             </Container>
            
             <Container maxWidth="sm">
-            {session.greeting && <GiftsOutput loadReady={loadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} reflections={reflections} interests={interests} onInterestsChange={onInterestsChange} />}
+            {session.greeting && <GiftsOutput loadReady={loadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={selectedOccasion} reflections={reflections} interests={interests} onInterestsChange={onInterestsChange} />}
             </Container>
             <Container maxWidth="md">  
              </Container>
@@ -1032,9 +1040,9 @@ export const getServerSideProps = withSessionSsr(
       prompt4 = prompt4 || '';
       prompt5 = prompt5 || '';
       prompt6 = prompt6 || '';
-
-      num = num || 1;
-      max = max || 1;
+    //  console.log("SSR SESSION",num,max)
+      //num = num || 1;
+      //max = max || 1;
       dark = dark || false;
       naive = naive || false;
       reflections = reflections || '';
@@ -1057,7 +1065,7 @@ export const getServerSideProps = withSessionSsr(
         imagesString: '',
         selectedImage: '',
       };
-     // console.log("startSession=", startoptions)
+      //console.log("startSession=", startoptions)
       const ua = context.req.headers['user-agent'];
       const botInfo = isbot({ ua });
       if (!botInfo.bot && !context.req.session.sessionid) {
@@ -1084,6 +1092,7 @@ export const getServerSideProps = withSessionSsr(
         context.req.session.sessionid = sessionid;
         //await context.req.session.save();
         try {
+         // console.log("session save")
           await context.req.session.save();
         }
         catch (e) {
@@ -1114,6 +1123,7 @@ export const getServerSideProps = withSessionSsr(
       language = language || options.language || '';
       interests = interests || options.interests || '';
       //console.log("dark=", dark)
+     // console.log("SSR return max=",max)
       return {
         props: {
           from: from,

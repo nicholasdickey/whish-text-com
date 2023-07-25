@@ -135,9 +135,10 @@ export default function Output({
     setLoading(false);
     if (result != value) {
       const valueGiftSuggestions = result;
-      updateSession2({ giftSuggestions: valueGiftSuggestions });
+    
       setGiftSuggestions(processGiftSuggestions(valueGiftSuggestions));
       setValue(result);
+      setTimeout(async ()=>await updateSession2({ giftSuggestions: valueGiftSuggestions }),10);
     }
     ga.event({
       action: "giftSuggestions",

@@ -10,7 +10,7 @@ import { useTheme } from '@mui/material/styles';
 import * as ga from '../lib/ga';
 import LinearProgress from '@mui/material/LinearProgress';
 import ImageOverlay from "./image-overlay";
-const Headline = styled.p`
+const Headline = styled.div`
   width:100%;
   display:flex;
   justify-content:center;

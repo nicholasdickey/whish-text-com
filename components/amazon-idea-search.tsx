@@ -43,7 +43,7 @@ const AmazonIdeaSearch = ({ session, search, text }: { session: any, search: str
   // Fetch Amazon search results using SWR
   const { data: amazonSearch, error } = useSWRImmutable({ search }, getAmazonSearch);
 
-  console.log("AmazonIdeaSearch", search, text, amazonSearch);
+  //console.log("AmazonIdeaSearch", search, text, amazonSearch);
 
   return (
     <Results>
