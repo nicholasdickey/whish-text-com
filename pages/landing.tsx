@@ -339,8 +339,6 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                         <Band fresh={fresh} fbclid={fbclid} utm_content={utm_content} isbot={isbot} isfb={isfb} sessionid={sessionid} dark={"true"} title="Wish&nbsp;It? Text&nbsp;It!" subtitle={line1} cta="Create a Message"/>
                            
                         <LineContainer darkmode={"false"}/>
-                        <Card fresh={fresh} fbclid={fbclid} utm_content={utm_content} isbot={isbot} isfb={isfb} sessionid={sessionid} dark={"false"} title="Wish&nbsp;It? Text&nbsp;It!" subtitle={line1} cta="Create a Message"/>
-                        <LineContainer darkmode={"false"}/>
                         <SecondBandContainer>
                             <Title variant="h3">
                                 Messages To Celebrate,<br />
