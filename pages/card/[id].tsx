@@ -41,7 +41,7 @@ import { Roboto } from 'next/font/google';
 import { withSessionSsr, Options } from '../../lib/with-session';
 import { isbot } from '../../lib/isbot';
 import Band from '../../components/band';
-import Card from '../../components/card';
+import Card from '../../components/card2';
 interface BackgroundMode {
     colorDark: string;
     colorLight: string;
