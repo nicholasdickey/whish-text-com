@@ -9,11 +9,7 @@ import "react-markdown-editor-lite/lib/index.css";
 import { useTheme } from '@mui/material/styles';
 import * as ga from '../lib/ga';
 import LinearProgress from '@mui/material/LinearProgress';
-
-import Typography from '@mui/material/Typography';
-import TextareaAutosize from '@mui/base/TextareaAutosize';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormHelperText from '@mui/material/FormHelperText';
+import ImageOverlay from "./image-overlay";
 const Headline = styled.div`
   width:100%;
   display:flex;
@@ -103,7 +99,7 @@ const InnerOutput = styled.div<InnerOutputProps>`
   font-size: ${({ length, horiz }) =>{
     const h=horiz=="true";
     return `${length > 600 ? (h ? '12' : '19') : length > 500 ? (h ? '12' : '20') : length > 100 ? (h? '12' : '12') : h ? '12' : '12'}`}}px;  
-  width:100%;
+  width:'100%';
   height:${({adjheight})=>adjheight};
   @media (max-width: 990px) {
     font-weight: 400;
@@ -169,8 +165,6 @@ export interface TextEditorProps {
   canvasRef: React.RefObject<HTMLDivElement>;
   session: any,
   onClick:any;
-  editing:boolean;
-  setEditing:(editing:boolean)=>void;
 }
 const editorStyles = {
   color: "#fff", // Text color
@@ -205,30 +199,10 @@ const MarkdownEditorWrap = styled.div`
     overflow:auto;
   }
 `;
-const StyledTextareaAutosize = styled(TextareaAutosize)`
-  background:inherit;
-  color: inherit;
-  padding: 10px; 
-  
- 
-  overflow:auto;
-  width:100%;
-  height:100%;
-  `;
- const EditorBox=styled.div`
-  width:100%;
-  height:100%;
-
-  cursor: text;
-  & textarea{
-    width:100%;
-    overflow:auto;
-  }
-  `; 
-const TextEditor: React.FC<TextEditorProps> = ({  editing, setEditing,session, image, text, loading, onChange, canvasRef,onClick }) => {
+const TextEditor: React.FC<TextEditorProps> = ({ session, image, text, loading, onChange, canvasRef,onClick }) => {
   const horiz: boolean = image.width > image.height;
   const mdParser = new MarkdownIt();
-
+  const [editing, setEditing] = useState(false);
   const theme = useTheme();
   //console.log("texteditor", text);
   const handleTextClick = () => {
@@ -247,8 +221,7 @@ const TextEditor: React.FC<TextEditorProps> = ({  editing, setEditing,session, i
      onChange(value);
    };
  */
-  const handleTextChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)  => {
-    const text = event.target.value;
+  const handleTextChange = ({ text }: { text: string }) => {
     ga.event({
       action: "textEditorChange",
       params: {
@@ -296,11 +269,9 @@ const TextEditor: React.FC<TextEditorProps> = ({  editing, setEditing,session, i
     <div>
       <div data-id="canvas" style={{ position: "relative"}} ref={canvasRef}>
      
+        <InnerOutput image={image.url?"true":"false"} ref={ref} className="inner-output" adjheight={adjHeight}  adjwidth={adjWidth} data-id="GreetingsOutput:InnerOutput" length={text.length} horiz={horiz?"true":"false"}>
         
           {!editing ? (
-             <InnerOutput image={image.url?"true":"false"} ref={ref} className="inner-output" adjheight={adjHeight}  adjwidth={adjWidth} data-id="GreetingsOutput:InnerOutput" length={text.length} horiz={horiz?"true":"false"}>
-       
-            <div>
             <Mark image={image.url?"true":"false"} onClick={() => handleTextClick()} >
               <Headline className="q-h">
                 <ReactMarkdown>
@@ -315,30 +286,18 @@ const TextEditor: React.FC<TextEditorProps> = ({  editing, setEditing,session, i
               </ReactMarkdown>
               </Body>
              
-            </Mark></div>
-            </InnerOutput>
+            </Mark>
           ) : (
-            <EditorBox>
-            <FormControlLabel
-            sx={{ width: 1,m:1,p:0 }}
-              labelPlacement="top"
-              label={<Typography sx={{mb:2}} style={{ color: theme.palette.text.secondary }}></Typography>}
-              control={
-                <StyledTextareaAutosize
-                  aria-label="text editor"
-                  minRows={8}
-                  placeholder="Edit the message"
-                  onChange={handleTextChange}
-                  defaultValue={text}
-                
-                />
-              }     
-            />
-            <FormHelperText  sx={{ width: 1,m:1,p:0 }}>Customize the message, for advanced formatting you can use <a href="https://www.markdownguide.org/cheat-sheet/">the Markdown</a> notation.</FormHelperText>
-          </EditorBox>
-    
+            <MarkdownEditorWrap><MdEditor
+              name={'text-editor'}
+              value={text}
+              style={editorStyles} // Apply custom editor styles
+              renderHTML={(text) => mdParser.render(text)}
+              onChange={handleTextChange}
+              view={{ menu: false, md: true, html: false }}
+            /></MarkdownEditorWrap>
           )}
-       
+        </InnerOutput>
         {image.url&&<BackgroundWrapper>{image && <BackgroundImage adjheight={adjHeight} adjwidth={adjWidth} div={canvasRef.current} height={image.height} width={image.width} src={image.url} />}<BackgroundFiller /></BackgroundWrapper>}
       </div>
     </div>

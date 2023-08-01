@@ -8,6 +8,7 @@ import * as ga from '../lib/ga';
 import Button from '@mui/material/Button';
 import { useRouter } from 'next/router';
 import ReactMarkdown from "react-markdown";
+
 const Image=styled.img`
     max-width: 200px;
     max-height: 300px;
@@ -113,7 +114,7 @@ const BandContainer = styled.div<{ darktext?: string, background?: string }>`
     background-color: ${({ darktext }) => (darktext == "true" ? '#2d2b38' : '#fff')};
     //background-image: ${({ background }) => background ? `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${background})` : null}; 
     background-repeat: repeat;
-    min-height:600px;
+    min-height:300px;
     width:100%;
    // background-size: 900px 491px;
 `;
@@ -121,7 +122,7 @@ const Body=styled.div`
     padding-top:200px;
     display:flex;
     flex-direction:column;
-    height:100%;
+    height:300px;
     //max-height:600px;
     justify-content:space-between;
     `;

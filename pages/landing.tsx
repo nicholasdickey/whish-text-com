@@ -41,7 +41,8 @@ import { Roboto } from 'next/font/google';
 import { withSessionSsr, Options } from '../lib/with-session';
 import { isbot } from '../lib/isbot';
 import Band from '../components/band';
-import Card from '../components/card';
+import BandCard from '../components/band-card';
+import Card from '../components/card4';
 interface BackgroundMode {
     colorDark: string;
     colorLight: string;
@@ -152,6 +153,7 @@ const FirstBandContainer = styled.h1`
 `;
 const SecondBandContainer = styled.div`
   display: flex;
+  position:relative;
   flex-direction: column;
   width: 100%;
   align-items: center;
@@ -316,7 +318,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                             </Toolbar>
                         </AppBar>
 
-                        <Toolbar />
+                       
 
                     </div>
                     <div >
@@ -335,13 +337,12 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                         <FirstBandContainer>
                         Craft Personalized Messages with Ease! 
                         </FirstBandContainer>
-                        <LineContainer darkmode={"false"}/>
-                        <Band fresh={fresh} fbclid={fbclid} utm_content={utm_content} isbot={isbot} isfb={isfb} sessionid={sessionid} dark={"true"} title="Wish&nbsp;It? Text&nbsp;It!" subtitle={line1} cta="Create a Message"/>
-                           
-                        <LineContainer darkmode={"false"}/>
-                        <Card fresh={fresh} fbclid={fbclid} utm_content={utm_content} isbot={isbot} isfb={isfb} sessionid={sessionid} dark={"false"} title="Wish&nbsp;It? Text&nbsp;It!" subtitle={line1} cta="Create a Message"/>
-                        <LineContainer darkmode={"false"}/>
-                        <SecondBandContainer>
+                        {false&&<LineContainer darkmode={"false"}/>}
+                        <Band card={ null} fresh={fresh} fbclid={fbclid} utm_content={utm_content} isbot={isbot} isfb={isfb} sessionid={sessionid} dark={"true"} title="Wish&nbsp;It? Text&nbsp;It!" subtitle={line1} cta="Create a Message"/>
+                        
+                     
+                        
+                         <SecondBandContainer>
                             <Title variant="h3">
                                 Messages To Celebrate,<br />
                                 To Comfort, To Encourage.
@@ -349,13 +350,14 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                             <Subtitle variant="h5">
                                 <ReactMarkdown>{line2}</ReactMarkdown>
                             </Subtitle>
-
+                           
                             <CTAButton variant="contained" color="primary" onClick={handleCTAClick}>
                                 Start Creating Now!
                             </CTAButton>
                         </SecondBandContainer>
-                        <LineContainer darkmode={"false"}/>
-                        <BandContainer darktext={"true"} background={"gifts-candles-wide.jpg"}>
+                       
+                      
+                           <BandContainer darktext={"true"} background={"gifts-candles-wide.jpg"}>
                             <Title variant="h3">
                             Gift Recommendations For Any Occasion
                             </Title>
@@ -368,7 +370,16 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                            
                         </BandContainer>
                        
-
+                        <BandCard 
+                        card={ <Card fbclid={fbclid} utm_content={utm_content}  dark={"true"} text={"🎉 Happy 59th Birthday, old buddy! 🎉 You're halfway to being cool, but we'll still celebrate! Have a fantastic day surrounded by family, friends, and endless amounts of cake 🍰🎈 Keep rocking those dad jokes and conquering life! Cheers! 🍻"}/>} 
+                        fresh={fresh} fbclid={fbclid} utm_content={utm_content} isbot={isbot} isfb={isfb} sessionid={sessionid} dark={"true"} 
+                        title="Create Virtual Greeting Cards" subtitle={"Create beautiful greeting cards"} cta="Create a Greeting Card Now!"/>
+                           
+                      
+                      
+                      
+                     
+                     
                         {false&&<BandContainer>
                             <Title variant="h3">
                                 Upload your images and create greeting cards

@@ -35,7 +35,7 @@ const ButtonContainer = styled.div`
 `;
 
 const OuterWrap = styled.div`
-margin-top: 120px;
+margin-top: 20px;
 `;
 
 const GiftSuggesstionHeader = styled.div`

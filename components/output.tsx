@@ -7,6 +7,7 @@ import { getWishText, saveToHistory } from "../lib/api";
 import { Options } from "../lib/with-session";
 import ToolbarAccept from "./toolbar-accept";
 import ToolbarGenerate from "./toolbar-generate";
+import ToolbarUpdateText from "./toolbar-update-text";
 import ImageStrip from "./image-strip";
 import ImageData from "../lib/image-data";
 import html2canvas from "html2canvas";
@@ -111,6 +112,7 @@ export default function Output({
   const [gift, setGift] = useState('');
   const [openLogin, setOpenLogin] = useState(false);
   const [selectedOccasion, setSelectedOccasion] = useState<string>('');
+  const [editing, setEditing] = useState(false);
   const [selectedImage, setSelectedImage] = useState<ImageData>({
     url: '',
     publicId: '',
@@ -160,7 +162,7 @@ export default function Output({
       }
     }
 
-    setSelectedImage(image);
+    //setSelectedImage(image);
    // if (image?.url)
       updateSession2({ selectedImage: JSON.stringify(image) });
   };
@@ -321,10 +323,10 @@ export default function Output({
     updateSession2({ imagesString: JSON.stringify([...images, newImage]), selectedImage: JSON.stringify(newImage) });
   };
 
-  useEffect(() => {
+  /*useEffect(() => {
     setImages(session.imagesString ? JSON.parse(session.imagesString) : []);
     setSelectedImage(session.selectedImage ? JSON.parse(session.selectedImage) : { url: "", publicId: "" });
-  }, [session.imagesString, session.selectedImage]);
+  }, [session.imagesString, session.selectedImage]);*/
   //console.log('error', occasion?.length>0?false:true)
   //console.log("OUTPUT",greeting)
   return (
@@ -334,13 +336,15 @@ export default function Output({
       <Box sx={{ my: 3,  }} textAlign="center">
        
       {greeting&&PlayerToolbar}
-        <TextEditor  onClick={onTextEditorClick} session={session} text={session.greeting || ''} onChange={(text: string) => { updateSession2({ greeting: text }); }} image={selectedImage} loading={loading} canvasRef={canvasRef} />
+        <TextEditor  editing={editing} setEditing={setEditing} onClick={onTextEditorClick} session={session} text={session.greeting || ''} onChange={(text: string) => { updateSession2({ greeting: text }); }} image={selectedImage} loading={loading} canvasRef={canvasRef} />
         <div  />
         {false&&virgin&&!prompt5 && !loading ? <Box sx={{ mt: 0, width: 1 }}>
             <Starter onClick={()=>setPrompt5(true)}><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
               <StarterMessage><Typography fontSize="inherit"  color="secondary"/*color="#ffee58"*/>Copy message to clipboard to be used with your favorite messenger or social media app.</Typography></StarterMessage></Starter></Box> : null}
              
-        {session.greeting && !loading && <ToolbarAccept session={session} text={session.greeting} selected={selectedImage.url?true:false}  onGenerateClick={handleGenerate} onDownloadClick={handleDownload} onAcceptClick={handleAccept} onCopyClick={handleCopy} />}
+        {!editing&&session.greeting && !loading && <ToolbarAccept session={session} text={session.greeting} selected={selectedImage.url?true:false}  onGenerateClick={handleGenerate} onDownloadClick={handleDownload} onAcceptClick={handleAccept} onCopyClick={handleCopy} />}
+        {editing&&session.greeting && !loading && <ToolbarUpdateText onUpdateClick={()=>setEditing(false)} />}
+      
         {!loading && false && (
           <BottomLink>
             <Link href="https://www.american-outdoorsman.news">Sponsor: www.american-outdoorsman.news</Link>

@@ -41,12 +41,12 @@ export function withSessionSsr<
 }
 export interface Options{
     sessionid:string,
-    dark:number,
+    dark?:number,
     greeting?:string,
     giftSuggestions?:string,
-    noExplain:false,
-    imagesString?:string;
-    selectedImage?:string;
+    noExplain?:false,
+    currentCardString?:string;
+    newCardString?:string;
     from?:string;
     to?:string;
     occasion?:string;
@@ -67,4 +67,8 @@ export interface Options{
     modeIsSet?:boolean;
     num?:number;
     max?:number;
+    cardNum?:number;
+    cardMax?:number;
+    signature?:string;
+    linkid?:string;
  }

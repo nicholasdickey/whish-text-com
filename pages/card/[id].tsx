@@ -41,7 +41,7 @@ import { Roboto } from 'next/font/google';
 import { withSessionSsr, Options } from '../../lib/with-session';
 import { isbot } from '../../lib/isbot';
 import Band from '../../components/band';
-import Card from '../../components/card2';
+import Card from '../../components/card3';
 interface BackgroundMode {
     colorDark: string;
     colorLight: string;
@@ -103,6 +103,7 @@ const BandContainer = styled.div<{ darktext?: string,background?:string }>`
   background-image: ${({background})=>background?`linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${background})`:null}; 
   background-repeat: repeat;
   background-size: 900px 491px;
+  min-height:450px;
 
 `;
 
@@ -192,6 +193,9 @@ margin-top:40px;
 
 const Body = styled.div`
   width:100%;
+  height:100%;
+  min-height:100vh;
+  padding-top:30vh;
 `;
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
@@ -310,9 +314,8 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                     </div>
                     <Body>
                       
-                        <Card fresh={fresh} fbclid={fbclid} utm_content={utm_content} isbot={isbot} isfb={isfb} sessionid={sessionid} dark={darkMode?"true":"false"} title="Wish&nbsp;It? Text&nbsp;It!" subtitle={line1} cta="Create a Message"/>
-                        <LineContainer darkmode={"false"}/>
-                        
+                        <Card large={true} fbclid={fbclid} utm_content={utm_content}  dark={darkMode?"true":"false"} text={"🎉 Happy 59th Birthday, old buddy! 🎉 You're halfway to being cool, but we'll still celebrate! Have a fantastic day surrounded by family, friends, and endless amounts of cake 🍰🎈 Keep rocking those dad jokes and conquering life! Cheers! 🍻"}/>
+                       
                        
 
                         {false&&<BandContainer>

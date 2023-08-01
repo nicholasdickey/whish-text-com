@@ -16,14 +16,16 @@ const ImageStripContainer = styled.div`
   display: flex;
   align-items: center;
   overflow-x: auto;
-  padding: 16px;
-  margin: 0 -8px;
+  padding: 2px;
+  margin: 0 -4px 0px -4px;
+  transition: all 0.8s ease;
 `;
 
 const ImageContainer = styled.div`
   flex-shrink: 0;
-  margin-right: 16px;
+  margin-right:0px;
   cursor: pointer;
+  
   transition: transform 0.3s;
 
   &:hover {

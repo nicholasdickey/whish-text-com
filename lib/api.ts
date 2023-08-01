@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { Options } from './with-session';
+import CardData from './card-data';
+import ImageData from './image-data';
 
 // Retrieves wish text from the server
 export const getWishText = async ({ style, from, to, occasion, naive, reflections, instructions, inastyleof, language, fresh, sessionid }: { style: string, from: string, to: string, occasion: string, naive: boolean, reflections: string, instructions: string, inastyleof: string, language: string, fresh?: boolean, sessionid?: string }):Promise<{content:string,num:number}> => {
@@ -109,7 +111,7 @@ export const getAmazonSearch = async ({ search }: { search: string }) => {
 
 // Updates the user session
 export const updateUserSession = async (userslug: string, options: Options) => {
-  const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/user/updateSession?`;
+  const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/user/update-session?`;
   const res = await axios.post(url, {
     userslug,
     options
@@ -119,7 +121,7 @@ export const updateUserSession = async (userslug: string, options: Options) => {
 
 // Retrieves the user session
 export const getUserSession = async (userslug: string) => {
-  const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/user/fetchSession?`;
+  const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/user/fetch-session?`;
   const res = await axios.post(url, {
     userslug
   });
@@ -129,7 +131,7 @@ export const getUserSession = async (userslug: string) => {
 // Updates the session
 export const updateSession = async (sessionid: string, config: Options) => {
   try {
-    const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/session/updateSession?`;
+    const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/session/update-session?`;
     //console.log("updateSession", url, sessionid, config);
     const res = await axios.post(url, {
       sessionid,
@@ -144,9 +146,9 @@ export const updateSession = async (sessionid: string, config: Options) => {
 // Fetches the session
 export const fetchSession = async (sessionid: string) => {
   try {
-    const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/session/fetchSession?sessionid=${sessionid} `;
+    const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/session/fetch-session?sessionid=${sessionid} `;
     const res = await axios.get(url);
-   // console.log("fetchSession", sessionid, res.data.session);
+    console.log("fetchSession", sessionid, res.data.session);
     return res.data.session;
   } catch (x) {
     console.log("fetchSession", x);
@@ -156,7 +158,7 @@ export const fetchSession = async (sessionid: string) => {
 // Fetches the session
 export const fetchSharedImages = async () => {
   try {
-    const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/session/fetchSharedImages`;
+    const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/session/fetch-shared-images`;
     const res = await axios.get(url);
    // console.log("fetchSharedImages", res.data.session);
     if(res.data.success)
@@ -215,3 +217,37 @@ export const deleteSessionHistories= async (sessionid: string) => {
  // console.log("deleteSessionHistories", sessionid, res.data.success,res.data);
   return res.data;
 }
+export const getSessionCards= async (sessionid: string,cardNum:number):Promise<{success:boolean,record:CardData}> => { 
+  const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/cards/get-session-cards?sessionid=${sessionid}&cardNum=${cardNum}`;
+  console.log("getSessionCards:",url);
+  const res = await axios.get(url);
+ // console.log("getSessionCards", sessionid,num, res.data.success,res.data);
+  return res.data;
+}
+export const deleteSessionCards= async (sessionid: string) => {
+  const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/cards/delete-session-cards?sessionid=${sessionid}`;
+  const res = await axios.get(url);
+ // console.log("deleteSessionCards", sessionid, res.data.success,res.data);
+  return res.data;
+}
+export const recordSessionCard= async (sessionid: string,card:CardData) => {
+  const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/cards/record-session-card?sessionid=${sessionid}`;
+  const res = await axios.post(url,{card});
+ // console.log("recordSessionCard", sessionid, res.data.success,res.data);
+  return res.data;
+}
+export const addSessionImage= async (sessionid: string,image:ImageData):Promise<{success:boolean,images:ImageData[]}> => {
+  const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/images/add-session-image?sessionid=${sessionid}`;
+  const res = await axios.post(url,{image,sessionid});
+ // console.log("recordSessionCard", sessionid, res.data.success,res.data);
+  return res.data;
+}
+export const fetchSessionImages= async (sessionid: string):Promise<{success:boolean,images:ImageData[]}> => { 
+  const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/images/fetch-session-images?sessionid=${sessionid}`;
+  console.log("fetchSessionImages:",url);
+  const res = await axios.get(url);
+ // console.log("getSessionCards", sessionid,num, res.data.success,res.data);
+  return res.data;
+}
+
+
