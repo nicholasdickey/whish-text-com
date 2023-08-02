@@ -23,7 +23,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useState, useCallback, useEffect } from "react"
 import { useRouter } from 'next/router'
-import { fetchSession, fetchSessionImages, recordEvent, updateSession, deleteSessionHistories, getSessionHistory, fetchSharedImages } from '../lib/api'
+import { deleteSessionCards,deleteSessionImages, fetchSession, fetchSessionImages, recordEvent, updateSession, deleteSessionHistories, getSessionHistory, fetchSharedImages } from '../lib/api'
 import styled from 'styled-components';
 import ClearIcon from '@mui/icons-material/Clear';
 import { RWebShare } from "react-web-share";
@@ -101,11 +101,13 @@ const Starter = styled.div`
   justify-content:flex-start;
   font-size:36px;
   align-items:center;
+  margin-bottom:10px;
   `;
 const StarterMessage = styled.div`
   font-size:14px;
   padding-left:10px;
   padding-right:10px;
+
   `;
 
 
@@ -388,7 +390,7 @@ export default function Home({ linkid: startLinkid, card: startCard = false,
     setTimeout(async () => {
       const s = (): any => curSession;
       const ses = s();
-      // console.log('===>pdate session:', updSession,"exist session",ses);
+      console.log('===>pdate session:', updSession,"exist session",ses,curSession,session);
 
       await axios.post(`/api/session/save`, { session: ses });
     }, 1);
@@ -614,7 +616,7 @@ export default function Home({ linkid: startLinkid, card: startCard = false,
   //console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
   const processRecord = async (record: any, num: number) => {
     const { greeting, params } = record;
-    // console.log("PARSE", params, JSON.parse(params));
+     console.log("PARSE processRecord", params, JSON.parse(params));
     const update = Object.assign(JSON.parse(params), { greeting, num });
     updateSession2(update);
     const { to, from, occasion, naive, reflections, instructions, inastyleof, language, interests } = update;
@@ -632,7 +634,9 @@ export default function Home({ linkid: startLinkid, card: startCard = false,
   }
   //console.log("construct playerToolbar, max=",max)
   const setNumPointer = async (num: number) => {
+    console.log("setNumPointer", num)
     const { success, record } = await getSessionHistory(session.sessionid, num);
+    console.log("result:",{ success, record } )
     setNum(num);
     if (success) {
       await processRecord(record, num);
@@ -780,7 +784,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
             {virgin && session.greeting ?
               <ActionContainer>
                 <ClearButton
-                  onClick={() => {
+                  onClick={async () => {
                     updateRoute({
                       from: '',
                       to: '',
@@ -793,6 +797,22 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                       interests: '',
 
                     })
+                    const card: CardData = {
+                      num: 0,
+                      image: emptyImage,
+                      signature: '',
+                      linkid: ''
+                    }
+                    setNewCard(card);
+                    setCurrentCard(card)
+                   
+                    setCardMax(0);  
+                    setCardNum(0);   
+                    await deleteSessionCards(session.sessionid);
+                    await deleteSessionImages(session.sessionid);
+                    // if (image?.url)
+                  //  updateSession2({ cardMax:cm, cardNum:cn,hasNewCard:false,currentCardString: JSON.stringify(card),newCardString: JSON.stringify(card) });
+              
                     updateSession2({
                       from: '',
                       to: '',
@@ -817,9 +837,11 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                       currentCardString: '',
                       num: 1,
                       max: 1,
-                      cardNum: 0,
-                      cardMax: 0,
-                      signature: ''
+                      cardNum: 1,
+                      cardMax: 1,
+                      signature: '',
+                      hasNewCard:true,
+                      card:false,
 
                     });
                     setFrom('');
@@ -1016,8 +1038,26 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                 <StarterMessage><Typography fontSize="inherit" color="secondary"/*color="#ffee58"*/>
                   Remember, these are only suggestions to get you going! Customize them to fit your personality and style. Try at least several suggestions to see if any of them resonate with you.</Typography></StarterMessage></Starter></Box> : null}
           </Container>
-          <Container maxWidth="sm">
-            {session.greeting && <Accordion
+          <Container maxWidth="sm" sx={{mt:10}}>
+            {session.greeting&&!session.card&&<Box sx={{ mt: 1, width: 1 }}>
+              <Button fullWidth variant="contained" onClick={()=>{
+               updateSession2({card:true});
+               setCard(true);
+               updateRoute({
+                 from,
+                 to,
+                 occasion,
+                 naive,
+                 reflections,
+                 instructions,
+                 inastyleof,
+                 language,
+                 interests,
+                 card: true
+               })}}>Create a Greeting Card</Button>
+          </Box>
+            }
+            {session.greeting && session.card &&<Accordion
               sx={{ mt: 5, }}
               expanded={card}
               onChange={() => {
@@ -1244,7 +1284,7 @@ export const getServerSideProps = withSessionSsr(
         context.req.session.sessionid = sessionid;
         //await context.req.session.save();
         try {
-          // console.log("session save")
+          //console.log("session save")
           await context.req.session.save();
         }
         catch (e) {
@@ -1266,8 +1306,8 @@ export const getServerSideProps = withSessionSsr(
       prompt5 = prompt5 || options.prompt5 || '';
       num = num || options.num || 1;
       max = max || options.max || 1;
-      cardNum = cardNum || options.cardNum || 0;
-      cardMax = cardMax || options.cardMax || 0;
+      cardNum = cardNum || options.cardNum || 1;
+      cardMax = cardMax || options.cardMax || 1;
 
       naive = naive || options.naive || false;
       reflections = reflections || options.reflections || '';

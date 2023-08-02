@@ -71,4 +71,6 @@ export interface Options{
     cardMax?:number;
     signature?:string;
     linkid?:string;
+    hasNewCard?:boolean;
+    card?:boolean;
  }

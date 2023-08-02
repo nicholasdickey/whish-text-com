@@ -71,7 +71,7 @@ position:relative;
 //box-shadow: inset 0 0 10px #000000;
 &body {
     text-align: center;
-    background: gray;   
+   // background: gray;   
   }
   .card__container {
     cursor: pointer;
@@ -161,7 +161,7 @@ const BandContainer = styled.div<{ darktext?: string, background?: string, open?
    // padding: 14rem 2rem;
     text-align: center;
     color:#2d2b38;// ${({ darktext }) => (darktext == "true" ? '#fff' : '#2d2b38')};
-    background-color: ${({ darktext }) => (darktext == "true" ? '#2d2b38' : '#fff')};
+   // background-color: ${({ darktext }) => (darktext == "true" ? '#2d2b38' : '#fff')};
     //background-image: ${({ background }) => background ? `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${background})` : null}; 
   //  background-repeat: repeat;
   //  min-height:300px;

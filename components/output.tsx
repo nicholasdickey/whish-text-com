@@ -216,7 +216,7 @@ export default function Output({
     });
     setLoading(false);
     setLoadReady(false);
-    //console.log("handleGenerate", result,num);
+    console.log("handleGenerate", result,num);
     if (result !== value && result) {
       updateSession2({ greeting: result,num ,max:num});
       setValue(result);

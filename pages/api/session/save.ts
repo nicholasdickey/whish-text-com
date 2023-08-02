@@ -20,7 +20,7 @@ async function handler(
         res.status(405).send({ message: 'Only POST requests allowed' });
         return;
     }
-
+    
     const body = req.body;
     const session=req.body.session;
     console.log("save session",session);

@@ -14,7 +14,7 @@ const ToolbarContainer = styled.div`
   align-items: center;
   z-index: 100;
   color:red;
-  background-color: red;
+ // background-color: red;
 `;
 
 const ToolbarButton = styled(IconButton)`

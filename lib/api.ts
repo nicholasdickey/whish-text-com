@@ -249,5 +249,11 @@ export const fetchSessionImages= async (sessionid: string):Promise<{success:bool
  // console.log("getSessionCards", sessionid,num, res.data.success,res.data);
   return res.data;
 }
+export const deleteSessionImages= async (sessionid: string) => {
+  const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/images/delete-session-images?sessionid=${sessionid}`;
+  const res = await axios.get(url);
+ // console.log("deleteSessionCards", sessionid, res.data.success,res.data);
+  return res.data;
+}
 
 
