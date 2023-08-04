@@ -230,7 +230,7 @@ export default function Home({ linkid: startLinkid, card: startCard = false,
   naive: startNaive, from: startFrom, to: startTo, occasion: startOccasion,
   reflections: startReflections, instructions: startInstructions,images:startImages,
   inastyleof: startInastyleof, language: startLanguage, interests: startInterests,
-  ironsession: startSession }:
+  ironsession: startSession}:
   { linkid: string, card: boolean, signature: string, sharedImages: ImageData[], images:ImageData[], dark: boolean, num: number, max: number, cardNum: number, cardMax: number, prompt1: boolean, prompt2: boolean, prompt3: boolean, prompt4: boolean, prompt5: boolean, prompt6: boolean, utm_medium: string, isbot: boolean, isfb: boolean, virgin: boolean, virgin2: boolean, naive: boolean, from: string, to: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string, ironsession: Options }) {
 
   const emptyImage = {
@@ -290,13 +290,14 @@ export default function Home({ linkid: startLinkid, card: startCard = false,
     image: emptyImage,
     signature: '',
   });
-  const [newCard, setNewCard] = useState<CardData>(session.newCardString ? JSON.parse(session.newCardString) : {
+ /* const [newCard, setNewCard] = useState<CardData>(session.newCardString ? JSON.parse(session.newCardString) : {
     num: num,
     image: emptyImage,
     signature: '',
-  });
+  });*/
 
   const [images, setImages] = useState<ImageData[]>(startImages);
+  const [newCardsStack, setNewCardsStack] = useState<CardData[]>(session.newCardStackString?JSON.parse(session.newCardStackString):[]);
   //-----------------------------------------------------------
 
 
@@ -803,9 +804,9 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                       signature: '',
                       linkid: ''
                     }
-                    setNewCard(card);
+                    //setNewCard(card);
                     setCurrentCard(card)
-                   
+                    setNewCardsStack([]);
                     setCardMax(0);  
                     setCardNum(0);   
                     await deleteSessionCards(session.sessionid);
@@ -842,6 +843,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                       signature: '',
                       hasNewCard:true,
                       card:false,
+                      newCardsStackString: '',
 
                     });
                     setFrom('');
@@ -1088,9 +1090,9 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               <AccordionDetails>
                 <Box sx={{ my: 4 }}>
                   <GreetingCard 
-                    newCard={newCard}
+                    newCardsStack={newCardsStack}
                     currentCard ={currentCard}
-                    setNewCard={setNewCard}
+                    setNewCardsStack={setNewCardsStack}
                     setCurrentCard={setCurrentCard}
                     setCardNum={setCardNum}
                     setCardMax={setCardMax}
@@ -1256,6 +1258,7 @@ export const getServerSideProps = withSessionSsr(
         sessionid,
         noExplain: false,
         currentCardString: '',
+        newCardStackString: '',
       } as Options;
       //console.log("startSession=", startoptions)
       const ua = context.req.headers['user-agent'];

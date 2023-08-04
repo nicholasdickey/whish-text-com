@@ -46,7 +46,7 @@ export interface Options{
     giftSuggestions?:string,
     noExplain?:false,
     currentCardString?:string;
-    newCardString?:string;
+   // newCardString?:string;
     from?:string;
     to?:string;
     occasion?:string;
@@ -73,4 +73,5 @@ export interface Options{
     linkid?:string;
     hasNewCard?:boolean;
     card?:boolean;
+    newCardStackString?:string;
  }

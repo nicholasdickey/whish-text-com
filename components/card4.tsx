@@ -289,7 +289,7 @@ const GreetingCard: React.FC<BandProps> = ({ startOpen = false, loading = false,
   }
   console.log("open=", open, ";large=", large, "signature:", signature)
   const signatureText = signature ? signature.split('\n').map(m => <SignatureLine l={signature.length} large={large}>{m}</SignatureLine>) : [];
-  console.log("signatureText=", signatureText)
+  //console.log("signatureText=", signatureText)
   return (
     <BandContainer darktext={dark} open={open} large={large}>
       <Outer>

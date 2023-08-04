@@ -48,10 +48,10 @@ const Toolbar: React.FC<ToolbarProps> = ({
  
   return (
     <ToolbarContainer>
-      <ToolbarButton color="primary" size="large" onClick={onFirstClick} disabled={num==0}>
+      <ToolbarButton color="primary" size="large" onClick={onFirstClick} disabled={num==1}>
         <FirstPageOutlinedIcon />
       </ToolbarButton>
-      <ToolbarButton color="primary" size="large" onClick={onPrevClick} disabled={num==0}>
+      <ToolbarButton color="primary" size="large" onClick={onPrevClick} disabled={num==1}>
        <ChevronLeftOutlinedIcon/>
       </ToolbarButton>
       <ToolbarButton color="primary" size="large" onClick={onNextClick} disabled={num==max}>

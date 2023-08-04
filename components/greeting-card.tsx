@@ -90,9 +90,9 @@ export default function Output({
   setNumPointer,
   loading,
   currentCard,
-  newCard,
+  newCardsStack,
   setCurrentCard,
-  setNewCard,
+  setNewCardsStack,
   setCardNum,
   setCardMax,
   images,
@@ -131,9 +131,9 @@ export default function Output({
   setNumPointer: (num: number) => void;
   loading: boolean;
   currentCard: CardData;
-  newCard: CardData;
+  newCardsStack: CardData[];
   setCurrentCard: (card: CardData) => void;
-  setNewCard: (card: CardData) => void;
+  setNewCardsStack: (cardStack: CardData[]) => void;
   setCardNum: (num: number) => void;
   setCardMax: (num: number) => void;
   images: ImageData[];
@@ -162,24 +162,45 @@ export default function Output({
     const image = canvas.toDataURL("image/png", 1.0);
     return image;
   };
-
+  const handleChange = (card: CardData) => {
+    setCurrentCard(card);
+    const newCardsLength = newCardsStack.length;
+    console.log("handleChange:",newCardsStack)
+    if (newCardsLength) {
+      console.log("111",cardMax,cardNum)
+      const newCardsIndex = cardMax - cardNum-1;
+      console.log("222",newCardsStack);
+      const newCardsStack2 = newCardsStack.splice(newCardsIndex, 1, card);
+      console.log("333",newCardsStack,newCardsStack2);
+      setNewCardsStack(newCardsStack);
+    }
+    let cm = cardMax, cn = cardNum;
+    let newStack = newCardsStack;
+    if (currentCard.linkid) { // if a card from history
+      console.log("handleChange from history", newCardsStack, card)
+      cm = cardMax + 1;
+      cn = cm;
+      setCardMax(cm);
+      setCardNum(cn);
+      newStack = [...newCardsStack, card]
+      setNewCardsStack(newStack);
+    }
+    setTimeout(() => updateSession2({ cardMax: cm, carnNum: cn, hasNewCard: true, currentCardString: JSON.stringify(card), newCardsStackString: JSON.stringify(newStack) }), 1);
+  }
+  /**
+   * When greeting changes, update the current card
+   */
   useEffect(() => {
-    if (greeting !== prevGreeting) {
+    if (prevGreeting&&greeting !== prevGreeting) {
+      setPrevGreeting(greeting)
       const card = currentCard;
       console.log("useEffect greeting changed", num)
       card.greeting = greeting;
       card.num = num;
-      setCurrentCard(card);
-      setNewCard(card);
-
-      let cm = cardMax, cn = cardNum;
-      if (!session.hasNewCard) {
-        cm = 1;//cardMax + 1;
-        cn = 1;//cm;
-        setCardMax(cm);
-        setCardNum(cn);
-      }
-      updateSession2({ cardMax: cm, cardNum: cn, hasNewCard: true, currentCardString: JSON.stringify(card), newCardString: JSON.stringify(card) });
+      handleChange(card);
+    }
+    else if(!prevGreeting&&greeting){
+      setPrevGreeting(greeting);
     }
   }, [greeting]);
 
@@ -194,6 +215,7 @@ export default function Output({
     setCurrentCard(card);
     setCardNum(cardNum);
     setNumPointer(num);
+    setPrevGreeting('');
     updateSession2({ num, cardNum, linkid, currentCardString: JSON.stringify(card) });
   }
   console.log("cardMax:", cardMax)
@@ -201,18 +223,30 @@ export default function Output({
     num={cardNum}
     max={cardMax}
     onPrevClick={async () => {
-      console.log("onPrevClick2=>", cardNum, cardMax)
+      console.log("onPrevClick2=>", newCardsStack, cardNum, cardMax)
       if (cardNum > 1) {
-        const { success, record } = await getSessionCards(session.sessionid, cardNum - 1);
-        console.log("onPrevClick2", success, record)
-        if (success) {
-          await processCardRecord(record, cardNum - 1);
+        const newCardsStackLength = newCardsStack.length;
+        console.log("onPrevClick3=>", cardNum, cardMax, newCardsStackLength)
+        if (cardNum - 1 > cardMax - newCardsStackLength) {
+          console.log("onPrevClick4=>", cardNum, cardMax, newCardsStackLength)
+          const card = newCardsStack[cardMax - (cardNum - 1) - 1];
+          console.log("onPrevClick5=>", card, cardNum - 1, newCardsStack)
+          await processCardRecord(card, cardNum - 1);
+        }
+        else {
+          const { success, record } = await getSessionCards(session.sessionid, cardNum - 1);
+          console.log("onPrevClick222s", success, record)
+          if (success) {
+            await processCardRecord(record, cardNum - 1);
+          }
         }
       }
     }}
     onNextClick={async () => {
-      console.log("onNextClick2=>", cardNum, cardMax)
-      if (!session.hasNewCard || cardNum < cardMax-1) {
+      const newCardsStackLength = newCardsStack.length;
+      console.log("onNextClick2=>", newCardsStack, cardNum, cardMax)
+      if (cardNum + 1 < cardMax - newCardsStackLength) {
+
         const { success, record } = await getSessionCards(session.sessionid, cardNum + 1);
         console.log("onNextClick2", success, record)
         if (success) {
@@ -220,30 +254,40 @@ export default function Output({
         }
       }
       else {
-        if (session.hasNewCard)
-          await processCardRecord(newCard, cardMax);
+        const card = newCardsStack[cardMax - (cardNum + 1)];
+        await processCardRecord(card, cardNum + 1);
 
       }
     }}
 
     onFirstClick={async () => {
-      const { success, record } = await getSessionCards(session.sessionid, 1);
-      console.log("onFirstClick2", success, record)
-      if (success) {
-        await processCardRecord(record, 1);
+      const newCardsStackLength = newCardsStack.length;
+      if (cardMax - newCardsStackLength >= 1) {
+        const { success, record } = await getSessionCards(session.sessionid, 1);
+        console.log("onFirstClick2", success, record)
+        if (success) {
+          await processCardRecord(record, 1);
+        }
+      }
+      else { // not reachable
+        const card = newCardsStack[newCardsStackLength - 1];
+        await processCardRecord(card, 1);
       }
     }}
     onLastClick={async () => {
-      console.log("onLastClick2")
-      if (!session.hasNewCard) {
+      const newCardsStackLength = newCardsStack.length;
+      console.log("onLastClick2", newCardsStack)
+      if (newCardsStackLength == 0) {
         const { success, record } = await getSessionCards(session.sessionid, cardMax);
         console.log("onNextClick2", success, record)
         if (success) {
           await processCardRecord(record, cardMax);
         }
       }
-      else
-        await processCardRecord(newCard, cardMax);
+      else {
+        const card = newCardsStack[0];
+        await processCardRecord(card, cardMax);
+      }
     }}
   /> : <TooblarPlaceholder />}</>
 
@@ -271,24 +315,13 @@ export default function Output({
     }
     console.log("render: setSelectedImage", image);
     // setSelectedImage(image);
-    const card: CardData = {
-      num: session.hasNewCard ? newCard?.num : currentCard?.num,
+    handleChange({
+      num: currentCard?.num,
       image: image,
-      signature: session.hasNewCard ? newCard?.signature : currentCard?.signature,
+      signature: currentCard?.signature,
       linkid: ''
-    }
+    });
 
-    setNewCard(card);
-    setCurrentCard(card)
-    let cm = cardMax, cn = cardNum;
-    if (!session.hasNewCard) {
-      cm = cardMax + 1;
-      cn = cm;
-      setCardMax(cm);
-      setCardNum(cn);
-    }
-    // if (image?.url)
-    updateSession2({ cardMax: cm, cardNum: cn, hasNewCard: true, currentCardString: JSON.stringify(card), newCardString: JSON.stringify(card) });
   };
 
   useEffect(() => {
@@ -304,24 +337,12 @@ export default function Output({
         thumbnailUrl: '',
         original_filename: ''
       }
-      const card: CardData = {
+      handleChange({
         num: 0,
         image: image,
         signature: '',
         linkid: ''
-      }
-      setNewCard(card);
-      setCurrentCard(card)
-      let cm = cardMax, cn = cardNum;
-      if (!session.hasNewCard) {
-        cm = cardMax + 1;
-        cn = cm;
-        setCardMax(cm);
-        setCardNum(cn);
-      }
-      // if (image?.url)
-      updateSession2({ cardMax: cm, cardNum: cn, hasNewCard: false, currentCardString: JSON.stringify(card), newCardString: JSON.stringify(card) });
-
+      })
     }
   }, [greeting]);
 
@@ -331,24 +352,24 @@ export default function Output({
     updateSession2({ prompt5: true });
   }
   const handleCreate: () => void = async () => {
-    console.log("handleCreate:", currentCard, newCard)
+    console.log("handleCreate:", currentCard)
     setCreatingCard(true);
     setTimeout(async () => await recordEvent(session.sessionid, 'create-card', ''), 1000);
     let card: CardData = {
-      num: newCard?.num,
-      image: newCard?.image,
-      signature: newCard?.signature,
+      num: currentCard?.num,
+      image: currentCard?.image,
+      signature: currentCard?.signature,
       greeting: greeting,
     }
     const { success, linkid, cardNum } = await recordSessionCard(session.sessionid, card);
     setCreatingCard(false);
+    setNewCardsStack([]);
     card.linkid = linkid;
     if (success) {
-      setNewCard(card);
       setCurrentCard(card);
       setCardNum(cardNum);
       setCardMax(cardNum);
-      updateSession2({ hasNewCard: false, currentCardString: JSON.stringify(card), newCardString: JSON.stringify(card), cardNum, cardMax: cardNum });
+      updateSession2({ hasNewCard: false, currentCardString: JSON.stringify(card), newCardStackString: '', cardNum, cardMax: cardNum });
     }
   }
 
@@ -377,7 +398,7 @@ export default function Output({
       console.log(e);
     }
   };
-  console.log("====> render greeting-card", num,cardNum,cardMax,session.hasNewCard)
+  console.log("====> render greeting-card", num, cardNum, cardMax, session.hasNewCard)
   const onUpload = (result: any, widget: any) => {
     const { secure_url: url, public_id: publicId, height, width, thumbnail_url: thumbnailUrl, original_filename: originalFilename } = result.info;
     onVirgin2();
@@ -408,48 +429,26 @@ export default function Output({
       // setImages(newImages.);)  
     }, 1);
 
-    const card = {
-      num: session.hasNewCard ? newCard?.num : currentCard.num,
+    handleChange({
+      num: currentCard.num,
       image: newImage,
-      signature: session.hasNewCard ? newCard?.signature : currentCard.signature,
+      signature: currentCard.signature,
       linkid: ''
-
-    }
-    setCurrentCard(card);
-    setNewCard(card);
-    let cm = cardMax, cn = cardNum;
-    if (!session.hasNewCard) {
-      cm = cardMax + 1;
-      cn = cm;
-      setCardMax(cm);
-      setCardNum(cn);
-    }
-    updateSession2({ cardMax: cm, cardNum: cn, hasNewCard: true, imagesString: JSON.stringify([...images, newImage]), currentCardString: JSON.stringify(currentCard), newCardString: JSON.stringify(newCard) });
+    })
   };
 
 
-  console.log("RENDER currentCard:", currentCard);
+  console.log("RENDER currentCard:", currentCard, "newCardStack:", newCardsStack,"num:",num);
 
   const handleSignatureChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const text = event.target.value;
 
-    const card = {
-      num: session.hasNewCard ? newCard?.num : currentCard?.num,
-      image: session.hasNewCard ? newCard.image : currentCard.image,
+    handleChange({
+      num: currentCard.num,
+      image: currentCard.image,
       signature: text,
       linkid: ''
-    }
-    setCurrentCard(card);
-    setNewCard(card);
-    let cm = cardMax, cn = cardNum;
-    if (!session.hasNewCard) {
-      cm = cardMax + 1;
-      cn = cm;
-      setCardMax(cm);
-      setCardNum(cn);
-    }
-    console.log("handleSignatureChange", text);
-    setTimeout(() => updateSession2({ cardMax: cm, carnNum: cn, hasNewCard: true, currentCardString: JSON.stringify(card), newCardString: JSON.stringify(card) }), 1);
+    })
 
   };
   return (
@@ -491,7 +490,7 @@ export default function Output({
       </Box>
       <ToolbarUpload error={greeting?.length > 0 ? false : true} onUploadClick={onUpload} hasGreeting={session.greeting ? true : false} />
       linkid:{currentCard.linkid}
-      {!creatingCard&&!currentCard.linkid && <Box sx={{ mt: 1, width: 1 }}>
+      {!creatingCard && !currentCard.linkid && <Box sx={{ mt: 1, width: 1 }}>
         <Button fullWidth variant="contained" onClick={handleCreate}>Create a public link</Button>
 
       </Box>
