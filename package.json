@@ -10,8 +10,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fontsource/roboto": "^5.0.8",
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.2.6",
+    "@mui/material-next": "^6.0.0-alpha.95",
     "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest",
     "@mui/styled-engine-sc": "latest",
     "@types/node": "20.2.1",

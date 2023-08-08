@@ -57,7 +57,7 @@ const PlaceholderContainer = styled.div`
   margin-top: -6px;
 `;
 
-const PlaceholderText = styled.p`
+const PlaceholderText = styled.div`
   color: white;
   font-size: 12px;
   font-weight: bold;

@@ -205,6 +205,12 @@ export const recordEvent = async (sessionid: string, name: string, params: strin
     return false;
   }
 }
+export const recordSessionHistory= async (sessionid: string,greeting:string,occasion:string,params:string) => {
+  const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/history/record-session-history?sessionid=${sessionid}`;
+  const res = await axios.post(url,{sessionid,greeting,occasion,params});
+ // console.log("recordSessionCard", sessionid, res.data.success,res.data);
+  return res.data;
+}
 export const getSessionHistory= async (sessionid: string,num:number) => {
   const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/history/get-session-history?sessionid=${sessionid}&num=${num}`;
   const res = await axios.get(url);
@@ -221,7 +227,7 @@ export const getSessionCards= async (sessionid: string,cardNum:number):Promise<{
   const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/cards/get-session-cards?sessionid=${sessionid}&cardNum=${cardNum}`;
   console.log("getSessionCards:",url);
   const res = await axios.get(url);
- // console.log("getSessionCards", sessionid,num, res.data.success,res.data);
+  console.log("getSessionCards", sessionid,cardNum, res.data.success,res.data);
   return res.data;
 }
 export const deleteSessionCards= async (sessionid: string) => {

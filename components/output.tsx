@@ -15,7 +15,7 @@ import FileSaver from "file-saver";
 import Typography from '@mui/material/Typography';
 import ReactMarkdown from "react-markdown";
 import TextEditor, { TextEditorProps, ImageProps } from "./text-editor";
-import { recordEvent } from '../lib/api'
+import { recordEvent,recordSessionHistory } from '../lib/api'
 import LooksFiveOutlinedIcon from '@mui/icons-material/Looks5Outlined';
 //import ErrorOutlineOutlinedIcon from '@mui/icons-material/NextPlanOutlined';
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/TipsAndUpdatesTwoTone';
@@ -219,10 +219,10 @@ export default function Output({
     console.log("handleGenerate", result,num);
     if (result !== value && result) {
       updateSession2({ greeting: result,num ,max:num});
+      
       setValue(result);
       setNum(num);
       setMax(num);
-     
       setLoadReady(true);
       const elem = document.getElementById('wt-output');
       //elem?.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -343,7 +343,29 @@ export default function Output({
               <StarterMessage><Typography fontSize="inherit"  color="secondary"/*color="#ffee58"*/>Copy message to clipboard to be used with your favorite messenger or social media app.</Typography></StarterMessage></Starter></Box> : null}
              
         {!editing&&session.greeting && !loading && <ToolbarAccept session={session} text={session.greeting} selected={selectedImage.url?true:false}  onGenerateClick={handleGenerate} onDownloadClick={handleDownload} onAcceptClick={handleAccept} onCopyClick={handleCopy} />}
-        {editing&&session.greeting && !loading && <ToolbarUpdateText onUpdateClick={()=>setEditing(false)} />}
+        {editing&&session.greeting && !loading && <ToolbarUpdateText onUpdateClick={
+          async ()=>{
+            setEditing(false)
+            const params={
+              to:session.to,
+              from:session.from,
+              occasion:session.occasion,
+              reflections:session.reflections,
+              instructions:session.instructions,
+              inastyleof:session.inastyleof,
+              language:session.language,
+              fresh:value?true:false,
+            }
+            const {success,num} = await recordSessionHistory(session.sessionid,session.greeting||'',session.occasion||'',JSON.stringify(params)||'')
+      
+            if(success){
+              setNum(num);
+              setMax(num);
+              updateSession2({num:num,max:num});
+            }
+
+        }}
+        />}
       
         {!loading && false && (
           <BottomLink>

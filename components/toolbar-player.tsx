@@ -45,7 +45,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
 }) => {
  
   return (
-    <ToolbarContainer>
+    <ToolbarContainer> 
       <ToolbarButton color="primary" size="large" onClick={onFirstClick} disabled={num==1}>
         <FirstPageOutlinedIcon />
       </ToolbarButton>

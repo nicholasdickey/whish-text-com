@@ -10,7 +10,7 @@ const ToolbarContainer = styled.div`
   justify-content: center; 
   align-items: center;
  
-  margin-top: 20px;
+  margin-top: 40px;
 
 `;
 

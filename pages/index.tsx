@@ -42,7 +42,7 @@ import ModeNightTwoToneIcon from '@mui/icons-material/ModeNightOutlined';
 import LightModeTwoToneIcon from '@mui/icons-material/LightModeOutlined';
 import ImageData from "../lib/image-data";
 import CardData from "../lib/card-data";
-import GreetingCard from '../components/greeting-card';
+import GreetingCard from '../components/greeting-card/card-editor';
 
 import {
   GetServerSidePropsContext,
@@ -64,7 +64,11 @@ import Combo from "../components/combo-text";
 import { isbot } from '../lib/isbot'
 import PlayerToolbar from "../components/toolbar-player";
 import { link } from 'fs';
+import Backdrop from '@mui/material/Backdrop';
 
+const OvalButton=styled(Button)`
+  border-radius: 14px;
+  `;
 const ModeSwitch = styled.div`
   position:absolute;
   right:200px;
@@ -225,15 +229,15 @@ export default function Home({ linkid: startLinkid, card: startCard = false,
   sharedImages, dark, num: startNum = 0, max: startMax = 0, cardNum: startCardNum, 
   cardMax: startCardMax,
   prompt1: startPrompt1, prompt2: startPrompt2, prompt3: startPrompt3,
-  prompt4: startPrompt4, prompt5: startPrompt5, prompt6: startPrompt6,
+  prompt4: startPrompt4, prompt5: startPrompt5, prompt6: startPrompt6,promptImageStrip:startPromptImageStrip,
   utm_medium, isbot, isfb, virgin: startVirgin, virgin2: startVirgin2,
   naive: startNaive, from: startFrom, to: startTo, occasion: startOccasion,
   reflections: startReflections, instructions: startInstructions,images:startImages,
   inastyleof: startInastyleof, language: startLanguage, interests: startInterests,
   ironsession: startSession}:
-  { linkid: string, card: boolean, signature: string, sharedImages: ImageData[], images:ImageData[], dark: boolean, num: number, max: number, cardNum: number, cardMax: number, prompt1: boolean, prompt2: boolean, prompt3: boolean, prompt4: boolean, prompt5: boolean, prompt6: boolean, utm_medium: string, isbot: boolean, isfb: boolean, virgin: boolean, virgin2: boolean, naive: boolean, from: string, to: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string, ironsession: Options }) {
+  { linkid: string, card: boolean, signature: string, sharedImages: ImageData[], images:ImageData[], dark: boolean, num: number, max: number, cardNum: number, cardMax: number, prompt1: boolean, prompt2: boolean, prompt3: boolean, prompt4: boolean, prompt5: boolean, prompt6: boolean, promptImageStrip:boolean, utm_medium: string, isbot: boolean, isfb: boolean, virgin: boolean, virgin2: boolean, naive: boolean, from: string, to: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string, ironsession: Options }) {
 
-  const emptyImage = {
+  const emptyImage:ImageData = {
     url: '',
     publicId: '',
     height: 0,
@@ -253,7 +257,8 @@ export default function Home({ linkid: startLinkid, card: startCard = false,
   const [prompt4, setPrompt4] = useState(startPrompt4);
   const [prompt5, setPrompt5] = useState(startPrompt5);
   const [prompt6, setPrompt6] = useState(startPrompt6);
-  const [num, setNum] = useState(startNum);
+  const [promptImageStrip, setPromptImageStrip] = useState(startPromptImageStrip);
+
   const [max, setMax] = useState(startMax);
   const [card, setCard] = useState(startCard);
   const [naive, setNaive] = useState(startNaive);
@@ -271,6 +276,10 @@ export default function Home({ linkid: startLinkid, card: startCard = false,
   const [darkMode, setDarkMode] = React.useState(startSession.mode);
   const [modeIsSet, setModeIsSet] = React.useState(startSession.modeIsSet);
   const [systemMode, setSystemMode] = React.useState(false);
+  const [greeting, setGreeting] = useState(session.greeting||'');
+  const [num, setNum] = useState<number>(session.num||0); 
+  
+
 
   //const { data: authSession } = useSession();
   const router = useRouter();
@@ -281,25 +290,17 @@ export default function Home({ linkid: startLinkid, card: startCard = false,
   const [selectedOccasion, setSelectedOccasion] = useState(startOccasion);
 
   //greeting card state:
-  const [signature, setSignature] = useState<string>(startSignature);
+  const [image, setImage] = useState<ImageData>(session.image||emptyImage);
+  const [signature, setSignature] = useState<string>(session.signature||'');
+  const [linkid, setLinkid] = useState<string>(startLinkid);
   const [cardNum, setCardNum] = useState<number>(startCardNum);
   const [cardMax, setCardMax] = useState<number>(startCardMax);
-  const [linkid, setLinkid] = useState<string>(startLinkid);
-  const [currentCard, setCurrentCard] = useState<CardData>(session.currentCardString ? JSON.parse(session.currentCardString) : {
-    num: num,
-    image: emptyImage,
-    signature: '',
-  });
- /* const [newCard, setNewCard] = useState<CardData>(session.newCardString ? JSON.parse(session.newCardString) : {
-    num: num,
-    image: emptyImage,
-    signature: '',
-  });*/
+ 
+
 
   const [images, setImages] = useState<ImageData[]>(startImages);
   const [newCardsStack, setNewCardsStack] = useState<CardData[]>(session.newCardStackString?JSON.parse(session.newCardStackString):[]);
   //-----------------------------------------------------------
-
 
   const drawerWidth = 240;
   const navItems = ['Home', 'History', 'Share', 'Contact', 'Login'];
@@ -394,7 +395,7 @@ export default function Home({ linkid: startLinkid, card: startCard = false,
       console.log('===>pdate session:', updSession,"exist session",ses,curSession,session);
 
       await axios.post(`/api/session/save`, { session: ses });
-    }, 1);
+    }, 200);
 
   }, [session, session.greeting]);
   useEffect(() => {
@@ -414,6 +415,19 @@ export default function Home({ linkid: startLinkid, card: startCard = false,
     // }
   };
   // console.log("_app:darkMode",darkMode,session?.mode||"")
+  React.useEffect(() => {
+    console.log("useEffect greeting",greeting,session?.greeting)
+    if(greeting!=session.greeting){
+      setGreeting(session.greeting||'');
+    }
+  },[greeting,session?.greeting])
+  React.useEffect(() => {
+    console.log("useEffect num",num,session?.num)
+  
+    if(num!=session.num){
+      setNum(session.num||1);
+    }
+  },[num,session?.num])
   React.useEffect(() => {
     const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
     setSystemMode(!!(matchMedia.matches));
@@ -616,8 +630,10 @@ export default function Home({ linkid: startLinkid, card: startCard = false,
   // console.log("virgin", virgin, virgin2);
   //console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
   const processRecord = async (record: any, num: number) => {
+    if(!record) return;
     const { greeting, params } = record;
-     console.log("PARSE processRecord", params, JSON.parse(params));
+    if(!params) return;
+    console.log("PARSE processRecord", params, JSON.parse(params));
     const update = Object.assign(JSON.parse(params), { greeting, num });
     updateSession2(update);
     const { to, from, occasion, naive, reflections, instructions, inastyleof, language, interests } = update;
@@ -805,7 +821,10 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                       linkid: ''
                     }
                     //setNewCard(card);
-                    setCurrentCard(card)
+                    setGreeting('');
+                    setImage(emptyImage);
+                    setSignature('');
+                    setLinkid('');
                     setNewCardsStack([]);
                     setCardMax(0);  
                     setCardNum(0);   
@@ -813,7 +832,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                     await deleteSessionImages(session.sessionid);
                     // if (image?.url)
                   //  updateSession2({ cardMax:cm, cardNum:cn,hasNewCard:false,currentCardString: JSON.stringify(card),newCardString: JSON.stringify(card) });
-              
+                    console.log("clear all",session.sessionid)
                     updateSession2({
                       from: '',
                       to: '',
@@ -832,6 +851,10 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                       language: '',
                       interests: '',
                       greeting: '',
+                      image: emptyImage,
+                      signature: '',
+                      linkid: '',
+
                       giftSuggestions: '',
                       imagesString: '',
                       selectedImage: '',
@@ -840,7 +863,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                       max: 1,
                       cardNum: 1,
                       cardMax: 1,
-                      signature: '',
+                      
                       hasNewCard:true,
                       card:false,
                       newCardsStackString: '',
@@ -889,12 +912,12 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               onChange={onOccasionChange}
               helperText="Required for a meaningful result. For example: &ldquo;8th Birthday for a boy&rdquo;, &ldquo;Sweet Sixteen&rdquo;, &ldquo;Illness&rdquo; &ldquo;Death in the family&rdquo;, &ldquo;Christmas&rdquo;, &ldquo;Graduation&ldquo;"
             />
-            <Box sx={{ mb: 4, color: 'primary' }}>
+            <Box  sx={{ mb: 4, color: 'primary',justifyContent: 'flex-end' }}>
               <FormControlLabel
                 label={<Typography style={{ color: theme.palette.text.secondary }}>Keep it light-hearted, if possible, with emojis.</Typography>}
                 control={
                   <Checkbox
-                    sx={{ color: 'secondary' }}
+                    sx={{ color: 'secondary'}}
                     checked={!naive}
                     onChange={onNaiveChange}
                   />
@@ -914,7 +937,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               : null}
 
             {false && virgin && session.greeting ?
-              <Accordion sx={{ mt: 5, background: theme.palette.background.default }} expanded={expanded === 'custom'} onChange={handleAccordeonChange('custom')}>
+              <Accordion style={{borderRadius:14}} sx={{ mt: 5, background: theme.palette.background.default }} expanded={expanded === 'custom'} onChange={handleAccordeonChange('custom')}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel4bh-content"
@@ -922,7 +945,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                 >
                   <Typography sx={{ width: '33%', flexShrink: 0 }}>Customize</Typography>
                 </AccordionSummary>
-                <AccordionDetails>
+                <AccordionDetails style={{borderRadius:14}}>
                   <Box sx={{ my: 4 }}>
                     <TextField
                       sx={{ width: { xs: 1 } }}
@@ -947,14 +970,14 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               </Accordion> : null}
 
             {virgin && session.greeting ? <Accordion sx={{ my: 5 }} expanded={expanded === 'advanced'} onChange={handleAccordeonChange('advanced')}>
-              <AccordionSummary
+              <AccordionSummary 
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel4bh-content"
                 id="panel4bh-header"
               >
                 <Typography sx={{ width: '33%', flexShrink: 0 }}>Advanced Inputs</Typography>
               </AccordionSummary>
-              <AccordionDetails>
+              <AccordionDetails >
                 <Box sx={{ my: 4 }}>
                   <TextField
                     sx={{ width: { xs: 1 } }}
@@ -1042,7 +1065,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
           </Container>
           <Container maxWidth="sm" sx={{mt:10}}>
             {session.greeting&&!session.card&&<Box sx={{ mt: 1, width: 1 }}>
-              <Button fullWidth variant="contained" onClick={()=>{
+              <OvalButton fullWidth size="small" variant="contained" onClick={()=>{
                updateSession2({card:true});
                setCard(true);
                updateRoute({
@@ -1056,60 +1079,63 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                  language,
                  interests,
                  card: true
-               })}}>Create a Greeting Card</Button>
+               })}}>Open Greeting Card Composer</OvalButton>
+          </Box>}
+          {session.card&&<Box sx={{ mt: 1, width: 1 }}>
+              <OvalButton fullWidth size="small" variant="contained" onClick={()=>{
+               updateSession2({card:false});
+               setCard(false);
+               updateRoute({
+                 from,
+                 to,
+                 occasion,
+                 naive,
+                 reflections,
+                 instructions,
+                 inastyleof,
+                 language,
+                 interests,
+                 card: true
+               })}}>Close Greeting Card Composer</OvalButton>
           </Box>
-            }
-            {session.greeting && session.card &&<Accordion
-              sx={{ mt: 5, }}
-              expanded={card}
-              onChange={() => {
-                setCard(!card);
-                updateRoute({
-                  from,
-                  to,
-                  occasion,
-                  naive,
-                  reflections,
-                  instructions,
-                  inastyleof,
-                  language,
-                  interests,
-                  card: !card
-                })
-                if (!card)
-                  recordEvent(session.sessionid, 'card accordion expand', '');
 
-              }}>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel4bh-content"
-                id="panel4bh-header"
-              >
-                <Typography sx={{ flexShrink: 0 }}>Create a Greeting Card</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Box sx={{ my: 4 }}>
+
+            }
+           
+          
+            {session.greeting && session.card&&
+                <Box sx={{ my: 1 }}>
+                
                   <GreetingCard 
+                    greeting={greeting}
+                    num={num}
+                    image={image}
+                    signature={signature}
+                    linkid={linkid}
+
+                    setImage={setImage}
+                    setSignature={setSignature}
+                    setLinkid={setLinkid}
+                    
                     newCardsStack={newCardsStack}
-                    currentCard ={currentCard}
                     setNewCardsStack={setNewCardsStack}
-                    setCurrentCard={setCurrentCard}
+                    setPromptImageStrip={setPromptImageStrip}
+                    promptImageStrip={promptImageStrip}
+                     
                     setCardNum={setCardNum}
                     setCardMax={setCardMax}
                     setNumPointer={setNumPointer} 
                     cardNum={cardNum} 
                     cardMax={cardMax} 
-                    setNum={setNum} 
                     startOpen={true} 
                     darkMode={darkMode || false} 
                     sessionid={session.sessionid || ''} 
                     fbclid={fbclid} 
                     utm_content={utm_content} 
                     sharedImages={sharedImages} 
-                    setMax={setMax}
+                  
                     loading={false} 
                     max={max} 
-                    num={num} 
                     images={images}
                     setImages={setImages}
                     setPrompt5={setPrompt5} prompt4={prompt4} prompt5={prompt5} prompt6={prompt6} setPrompt6={setPrompt6} 
@@ -1120,7 +1146,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                       setSelectedOccasion(occasion);
                       updateSession2({ virgin: true, prompt2: true });
                     }} 
-                    greeting={session.greeting || ''} 
+                
                     onVirgin2={async () => {
                       await recordEvent(session.sessionid, 'virgin2 request', `occasion:${occasion}`);
                       setVirgin2(true);
@@ -1131,9 +1157,8 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                     setLoadReady={setLoadReady} 
                     session={session} 
                     updateSession2={updateSession2}  /*authSession={authSession}*/ />
-                </Box>
-              </AccordionDetails>
-            </Accordion>}
+                </Box>}
+               
           </Container>
 
           <Container maxWidth="sm">
@@ -1192,8 +1217,8 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps(context: GetServerSidePropsContext): Promise<any> {
     try {
-      let { linkid, card, signature, dark, num, max, cardNum, cardMax, prompt1, prompt2, prompt3, prompt4, prompt5, prompt6, fbclid, utm_medium, utm_campaign, utm_content, virgin, virgin2, from, to, occasion, naive, reflections, instructions, inastyleof, language, age, interests, sex }:
-        { linkid: string, card: boolean, signature: string, dark: boolean, num: number, max: number, cardNum: number, cardMax: number, prompt1: string, prompt2: string, prompt3: string, prompt4: string, prompt5: string, prompt6: string, fbclid: string, utm_medium: string, utm_campaign: string, utm_content: string, virgin: boolean, virgin2: boolean, from: string, to: string, occasion: string, naive: boolean, reflections: string, instructions: string, inastyleof: string, language: string, age: string, interests: string, sex: string } = context.query as any;
+      let { linkid, card, signature, dark, num, max, cardNum, cardMax, prompt1, prompt2, prompt3, prompt4, prompt5, prompt6,promptImageStrip, fbclid, utm_medium, utm_campaign, utm_content, virgin, virgin2, from, to, occasion, naive, reflections, instructions, inastyleof, language, age, interests, sex }:
+        { linkid: string, card: boolean, signature: string, dark: boolean, num: number, max: number, cardNum: number, cardMax: number, prompt1: string, prompt2: string, prompt3: string, prompt4: string, prompt5: string, prompt6: string, fbclid: string, utm_medium: string, utm_campaign: string, utm_content: string, virgin: boolean, virgin2: boolean, from: string, to: string, occasion: string, naive: boolean, reflections: string, instructions: string, inastyleof: string, language: string, age: string, interests: string, sex: string,promptImageStrip:boolean } = context.query as any;
 
       linkid = linkid || '';
       from = from || '';
@@ -1212,6 +1237,7 @@ export const getServerSideProps = withSessionSsr(
       prompt4 = prompt4 || '';
       prompt5 = prompt5 || '';
       prompt6 = prompt6 || '';
+      promptImageStrip = promptImageStrip || false;
       //  console.log("SSR SESSION",num,max)
       //num = num || 1;
       //max = max || 1;
@@ -1245,11 +1271,11 @@ export const getServerSideProps = withSessionSsr(
         startoptions=startoptions2;
         sharedImages=sharedImages2;
         images=imagesData.success?imagesData.images:[];        
-        console.log("Start Options:", startoptions);
-        console.log("Shared Images:", sharedImages);
-        console.log("Images:", images);
+      //  console.log("Start Options:", startoptions);
+      //  console.log("Shared Images:", sharedImages);
+      //  console.log("Images:", images);
     
-        console.log("All fetch operations completed!");
+      //  console.log("All fetch operations completed!");
       } catch (error) {
         console.error("Error occurred:", error);
       }
@@ -1307,10 +1333,12 @@ export const getServerSideProps = withSessionSsr(
       prompt3 = prompt3 || options.prompt3 || '';
       prompt4 = prompt4 || options.prompt4 || '';
       prompt5 = prompt5 || options.prompt5 || '';
+    
+      promptImageStrip = promptImageStrip || options.promptImageStrip || false;
       num = num || options.num || 1;
       max = max || options.max || 1;
-      cardNum = cardNum || options.cardNum || 1;
-      cardMax = cardMax || options.cardMax || 1;
+      cardNum = cardNum || options.cardNum || 0;
+      cardMax = cardMax || options.cardMax || 0;
 
       naive = naive || options.naive || false;
       reflections = reflections || options.reflections || '';
@@ -1336,6 +1364,7 @@ export const getServerSideProps = withSessionSsr(
           prompt3: prompt3,
           prompt4: prompt4,
           prompt5: prompt5,
+          promptImageStrip: promptImageStrip,
 
           num: num,
           max: max,

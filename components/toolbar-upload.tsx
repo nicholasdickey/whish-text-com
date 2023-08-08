@@ -40,7 +40,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
   hasGreeting,
   error
 }) => {
- console.log("Toolbar",hasGreeting)
+ //console.log("Toolbar",hasGreeting)
   return (
     <ToolbarContainer data-id="toolbar-generate">
       {hasGreeting&&<CldUploadWidget onUpload={onUploadClick} uploadPreset="h17xjq8e">

@@ -5,6 +5,7 @@ import {
     GetServerSidePropsResult,
     NextApiHandler,
 } from "next";
+import ImageData from "./image-data";
 
 
 declare module "iron-session" {
@@ -42,7 +43,7 @@ export function withSessionSsr<
 export interface Options{
     sessionid:string,
     dark?:number,
-    greeting?:string,
+    
     giftSuggestions?:string,
     noExplain?:false,
     currentCardString?:string;
@@ -65,13 +66,19 @@ export interface Options{
     interests?:string;
     mode?:boolean;
     modeIsSet?:boolean;
-    num?:number;
     max?:number;
     cardNum?:number;
     cardMax?:number;
-    signature?:string;
-    linkid?:string;
+  
     hasNewCard?:boolean;
     card?:boolean;
     newCardStackString?:string;
+  
+    greeting?:string,
+    image?:ImageData;
+    signature?:string;
+    num?:number;
+    linkid?:string;
+
+    promptImageStrip?:boolean;
  }

@@ -1,16 +1,15 @@
-import React from "react";
-import styled from "styled-components";
 
+import styled from "styled-components";
+import React from "react";
 import Typography from "@mui/material/Typography";
 
 import { useTheme } from '@mui/material/styles';
-import * as ga from '../lib/ga';
+import * as ga from '../../../lib/ga';
 import Button from '@mui/material/Button';
 import { useRouter } from 'next/router';
 import ReactMarkdown from "react-markdown";
 import LinearProgress from '@mui/material/LinearProgress';
-import ImageOverlay from "./image-overlay";
-import ImageData from "../lib/image-data";
+import ImageData from "../../../lib/image-data";
 
 interface BodyProps {
   l: number;
@@ -280,14 +279,14 @@ const GreetingCard: React.FC<BandProps> = ({ startOpen = false, loading = false,
   const handleCTAClick = () => {
     router.push(`/?fbclid=${fbclid}&utm_content=${utm_content}`);
   };
-  //console.log("large=", large, "greeting=", text)
-  text = text.replaceAll('\n\n', '\n');
+  console.log("large=", large, "greeting=", text)
+  text = text.replace(/\n\n/g, '\n');
   const tw = text.split('\n');
   const headline = tw.length > 1 ? tw[0] : '';
   const body = tw.length > 1 ? tw.slice(1).join('\n') : tw[0];
   const handleTextClick = () => {
   }
- //console.log("open=", open, ";large=", large, "signature:", signature)
+  console.log("open=", open, ";large=", large, "signature:", signature)
   const signatureText = signature ? signature.split('\n').map(m => <SignatureLine l={signature.length} large={large}>{m}</SignatureLine>) : [];
   //console.log("signatureText=", signatureText)
   return (
