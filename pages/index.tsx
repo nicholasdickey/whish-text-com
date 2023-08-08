@@ -1,4 +1,20 @@
 import * as React from 'react';
+import { useState, useCallback, useEffect } from "react"
+import { useRouter } from 'next/router'
+import styled from 'styled-components';
+import Script from 'next/script'
+import {
+  GetServerSidePropsContext,
+} from "next";
+import Image from 'next/image'
+import Head from 'next/head'
+import { Roboto } from 'next/font/google';
+
+
+//mui
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { blueGrey } from '@mui/material/colors'
+
 import Container from '@mui/material/Container';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -21,14 +37,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { useState, useCallback, useEffect } from "react"
-import { useRouter } from 'next/router'
-import { deleteSessionCards,deleteSessionImages, fetchSession, fetchSessionImages, recordEvent, updateSession, deleteSessionHistories, getSessionHistory, fetchSharedImages } from '../lib/api'
-import styled from 'styled-components';
 import ClearIcon from '@mui/icons-material/Clear';
-import { RWebShare } from "react-web-share";
 import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined';
-import Script from 'next/script'
 import LooksOneOutlinedIcon from '@mui/icons-material/LooksOneOutlined';
 import LooksTwoOutlinedIcon from '@mui/icons-material/LooksTwoOutlined';
 import LooksThreeOutlinedIcon from '@mui/icons-material/Looks3Outlined';
@@ -40,22 +50,17 @@ import LightbulbCircleTwoToneIcon from '@mui/icons-material/LightbulbCircleTwoTo
 import TipsAndUpdatesTwoToneIcon from '@mui/icons-material/TipsAndUpdatesTwoTone';
 import ModeNightTwoToneIcon from '@mui/icons-material/ModeNightOutlined';
 import LightModeTwoToneIcon from '@mui/icons-material/LightModeOutlined';
+
+//third-party
+import { RWebShare } from "react-web-share";
+import axios from 'axios';
+
+//project
+import { deleteSessionCards, deleteSessionImages, fetchSession, fetchSessionImages, recordEvent, updateSession, deleteSessionHistories, getSessionHistory, fetchSharedImages } from '../lib/api';
 import ImageData from "../lib/image-data";
 import CardData from "../lib/card-data";
 import GreetingCard from '../components/greeting-card/card-editor';
-
-import {
-  GetServerSidePropsContext,
-} from "next";
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import Head from 'next/head'
-import { blueGrey } from '@mui/material/colors'
-import axios from 'axios';
-import Image from 'next/image'
-//import { useSession, signIn, signOut } from "next-auth/react"
-import { Roboto } from 'next/font/google';
 import { withSessionSsr, Options } from '../lib/with-session';
-
 import GreetingOutput from "../components/output";
 import GiftsOutput from "../components/gifts";
 import AvatarMenu from "../components/avatar-menu";
@@ -63,10 +68,9 @@ import * as ga from '../lib/ga'
 import Combo from "../components/combo-text";
 import { isbot } from '../lib/isbot'
 import PlayerToolbar from "../components/toolbar-player";
-import { link } from 'fs';
-import Backdrop from '@mui/material/Backdrop';
+import Section from "../components/greeting-card/editor-section";
 
-const OvalButton=styled(Button)`
+const OvalButton = styled(Button)`
   border-radius: 14px;
   `;
 const ModeSwitch = styled.div`
@@ -113,17 +117,13 @@ const StarterMessage = styled.div`
   padding-right:10px;
 
   `;
-
-
 const Wide = styled.div`
   position:relative;
    width:100%; 
     `;
-
 const Logo = styled.div`
   position:absolute;
-  //width:100%;
-  //height:100%;
+
   display:flex;
   align-items:center;
   justify-content: center;
@@ -224,20 +224,20 @@ background-color: ${({ darkmode }) => darkmode == "true" ? '#999' : 'rgb(232, 23
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 let v = false;
-export default function Home({ linkid: startLinkid, card: startCard = false, 
+export default function Home({ linkid: startLinkid, card: startCard = false,
   signature: startSignature,
-  sharedImages, dark, num: startNum = 0, max: startMax = 0, cardNum: startCardNum, 
+  sharedImages, dark, num: startNum = 0, max: startMax = 0, cardNum: startCardNum,
   cardMax: startCardMax,
   prompt1: startPrompt1, prompt2: startPrompt2, prompt3: startPrompt3,
-  prompt4: startPrompt4, prompt5: startPrompt5, prompt6: startPrompt6,promptImageStrip:startPromptImageStrip,
+  prompt4: startPrompt4, prompt5: startPrompt5, prompt6: startPrompt6, promptImageStrip: startPromptImageStrip,
   utm_medium, isbot, isfb, virgin: startVirgin, virgin2: startVirgin2,
   naive: startNaive, from: startFrom, to: startTo, occasion: startOccasion,
-  reflections: startReflections, instructions: startInstructions,images:startImages,
+  reflections: startReflections, instructions: startInstructions, images: startImages,
   inastyleof: startInastyleof, language: startLanguage, interests: startInterests,
-  ironsession: startSession}:
-  { linkid: string, card: boolean, signature: string, sharedImages: ImageData[], images:ImageData[], dark: boolean, num: number, max: number, cardNum: number, cardMax: number, prompt1: boolean, prompt2: boolean, prompt3: boolean, prompt4: boolean, prompt5: boolean, prompt6: boolean, promptImageStrip:boolean, utm_medium: string, isbot: boolean, isfb: boolean, virgin: boolean, virgin2: boolean, naive: boolean, from: string, to: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string, ironsession: Options }) {
+  ironsession: startSession }:
+  { linkid: string, card: boolean, signature: string, sharedImages: ImageData[], images: ImageData[], dark: boolean, num: number, max: number, cardNum: number, cardMax: number, prompt1: boolean, prompt2: boolean, prompt3: boolean, prompt4: boolean, prompt5: boolean, prompt6: boolean, promptImageStrip: boolean, utm_medium: string, isbot: boolean, isfb: boolean, virgin: boolean, virgin2: boolean, naive: boolean, from: string, to: string, occasion: string, reflections: string, instructions: string, inastyleof: string, language: string, interests: string, ironsession: Options }) {
 
-  const emptyImage:ImageData = {
+  const emptyImage: ImageData = {
     url: '',
     publicId: '',
     height: 0,
@@ -276,9 +276,9 @@ export default function Home({ linkid: startLinkid, card: startCard = false,
   const [darkMode, setDarkMode] = React.useState(startSession.mode);
   const [modeIsSet, setModeIsSet] = React.useState(startSession.modeIsSet);
   const [systemMode, setSystemMode] = React.useState(false);
-  const [greeting, setGreeting] = useState(session.greeting||'');
-  const [num, setNum] = useState<number>(session.num||0); 
-  
+  const [greeting, setGreeting] = useState(session.greeting || '');
+  const [num, setNum] = useState<number>(session.num || 0);
+
 
 
   //const { data: authSession } = useSession();
@@ -290,16 +290,16 @@ export default function Home({ linkid: startLinkid, card: startCard = false,
   const [selectedOccasion, setSelectedOccasion] = useState(startOccasion);
 
   //greeting card state:
-  const [image, setImage] = useState<ImageData>(session.image||emptyImage);
-  const [signature, setSignature] = useState<string>(session.signature||'');
+  const [image, setImage] = useState<ImageData>(session.image || emptyImage);
+  const [signature, setSignature] = useState<string>(session.signature || '');
   const [linkid, setLinkid] = useState<string>(startLinkid);
   const [cardNum, setCardNum] = useState<number>(startCardNum);
   const [cardMax, setCardMax] = useState<number>(startCardMax);
- 
+
 
 
   const [images, setImages] = useState<ImageData[]>(startImages);
-  const [newCardsStack, setNewCardsStack] = useState<CardData[]>(session.newCardStackString?JSON.parse(session.newCardStackString):[]);
+  const [newCardsStack, setNewCardsStack] = useState<CardData[]>(session.newCardStackString ? JSON.parse(session.newCardStackString) : []);
   //-----------------------------------------------------------
 
   const drawerWidth = 240;
@@ -392,7 +392,7 @@ export default function Home({ linkid: startLinkid, card: startCard = false,
     setTimeout(async () => {
       const s = (): any => curSession;
       const ses = s();
-      console.log('===>pdate session:', updSession,"exist session",ses,curSession,session);
+      console.log('===>pdate session:', updSession, "exist session", ses, curSession, session);
 
       await axios.post(`/api/session/save`, { session: ses });
     }, 200);
@@ -416,18 +416,18 @@ export default function Home({ linkid: startLinkid, card: startCard = false,
   };
   // console.log("_app:darkMode",darkMode,session?.mode||"")
   React.useEffect(() => {
-    console.log("useEffect greeting",greeting,session?.greeting)
-    if(greeting!=session.greeting){
-      setGreeting(session.greeting||'');
+    console.log("useEffect greeting", greeting, session?.greeting)
+    if (greeting != session.greeting) {
+      setGreeting(session.greeting || '');
     }
-  },[greeting,session?.greeting])
+  }, [greeting, session?.greeting])
   React.useEffect(() => {
-    console.log("useEffect num",num,session?.num)
-  
-    if(num!=session.num){
-      setNum(session.num||1);
+    console.log("useEffect num", num, session?.num)
+
+    if (num != session.num) {
+      setNum(session.num || 1);
     }
-  },[num,session?.num])
+  }, [num, session?.num])
   React.useEffect(() => {
     const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
     setSystemMode(!!(matchMedia.matches));
@@ -630,9 +630,9 @@ export default function Home({ linkid: startLinkid, card: startCard = false,
   // console.log("virgin", virgin, virgin2);
   //console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
   const processRecord = async (record: any, num: number) => {
-    if(!record) return;
+    if (!record) return;
     const { greeting, params } = record;
-    if(!params) return;
+    if (!params) return;
     console.log("PARSE processRecord", params, JSON.parse(params));
     const update = Object.assign(JSON.parse(params), { greeting, num });
     updateSession2(update);
@@ -653,7 +653,7 @@ export default function Home({ linkid: startLinkid, card: startCard = false,
   const setNumPointer = async (num: number) => {
     console.log("setNumPointer", num)
     const { success, record } = await getSessionHistory(session.sessionid, num);
-    console.log("result:",{ success, record } )
+    console.log("result:", { success, record })
     setNum(num);
     if (success) {
       await processRecord(record, num);
@@ -826,13 +826,13 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                     setSignature('');
                     setLinkid('');
                     setNewCardsStack([]);
-                    setCardMax(0);  
-                    setCardNum(0);   
+                    setCardMax(0);
+                    setCardNum(0);
                     await deleteSessionCards(session.sessionid);
                     await deleteSessionImages(session.sessionid);
                     // if (image?.url)
-                  //  updateSession2({ cardMax:cm, cardNum:cn,hasNewCard:false,currentCardString: JSON.stringify(card),newCardString: JSON.stringify(card) });
-                    console.log("clear all",session.sessionid)
+                    //  updateSession2({ cardMax:cm, cardNum:cn,hasNewCard:false,currentCardString: JSON.stringify(card),newCardString: JSON.stringify(card) });
+                    console.log("clear all", session.sessionid)
                     updateSession2({
                       from: '',
                       to: '',
@@ -863,9 +863,9 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                       max: 1,
                       cardNum: 1,
                       cardMax: 1,
-                      
-                      hasNewCard:true,
-                      card:false,
+
+                      hasNewCard: true,
+                      card: false,
                       newCardsStackString: '',
 
                     });
@@ -896,7 +896,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                 </ClearButton>
               </ActionContainer> : null}
             {!prompt1 ?
-              <Box sx={{ mt: 5, width: 1, }}>
+              <Box sx={{ mt: 0, width: 1, }}>
                 <Starter>
                   <LooksOneOutlinedIcon fontSize="inherit" color='success' />
                   <StarterMessage>
@@ -912,12 +912,12 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               onChange={onOccasionChange}
               helperText="Required for a meaningful result. For example: &ldquo;8th Birthday for a boy&rdquo;, &ldquo;Sweet Sixteen&rdquo;, &ldquo;Illness&rdquo; &ldquo;Death in the family&rdquo;, &ldquo;Christmas&rdquo;, &ldquo;Graduation&ldquo;"
             />
-            <Box  sx={{ mb: 4, color: 'primary',justifyContent: 'flex-end' }}>
+            <Box sx={{ mb: 4, color: 'primary', justifyContent: 'flex-end' }}>
               <FormControlLabel
                 label={<Typography style={{ color: theme.palette.text.secondary }}>Keep it light-hearted, if possible, with emojis.</Typography>}
                 control={
                   <Checkbox
-                    sx={{ color: 'secondary'}}
+                    sx={{ color: 'secondary' }}
                     checked={!naive}
                     onChange={onNaiveChange}
                   />
@@ -937,7 +937,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
               : null}
 
             {false && virgin && session.greeting ?
-              <Accordion style={{borderRadius:14}} sx={{ mt: 5, background: theme.palette.background.default }} expanded={expanded === 'custom'} onChange={handleAccordeonChange('custom')}>
+              <Accordion style={{ borderRadius: 14 }} sx={{ mt: 5, background: theme.palette.background.default }} expanded={expanded === 'custom'} onChange={handleAccordeonChange('custom')}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel4bh-content"
@@ -945,7 +945,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                 >
                   <Typography sx={{ width: '33%', flexShrink: 0 }}>Customize</Typography>
                 </AccordionSummary>
-                <AccordionDetails style={{borderRadius:14}}>
+                <AccordionDetails style={{ borderRadius: 14 }}>
                   <Box sx={{ my: 4 }}>
                     <TextField
                       sx={{ width: { xs: 1 } }}
@@ -969,196 +969,198 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                 </AccordionDetails>
               </Accordion> : null}
 
-            {virgin && session.greeting ? <Accordion sx={{ my: 5 }} expanded={expanded === 'advanced'} onChange={handleAccordeonChange('advanced')}>
-              <AccordionSummary 
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel4bh-content"
-                id="panel4bh-header"
-              >
-                <Typography sx={{ width: '33%', flexShrink: 0 }}>Advanced Inputs</Typography>
-              </AccordionSummary>
-              <AccordionDetails >
-                <Box sx={{ my: 4 }}>
-                  <TextField
-                    sx={{ width: { xs: 1 } }}
-                    id="to"
-                    label="To (Recepient)"
-                    value={to}
-                    onChange={onToChange}
-                    helperText="Examples: &ldquo;Our nephew Billy&rdquo;, &ldquo;My Grandson Evan&rdquo;, &ldquo;My Love&rdquo; &ldquo;Love of My Life&rdquo;, &ldquo;Simpsons&rdquo;, &ldquo;Mr Williams, the postman.&ldquo;"
-                  />
-                </Box>
-                <Box sx={{ my: 4 }}>
-                  <TextField
-                    sx={{ width: { xs: 1 } }}
-                    id="from"
-                    label="From"
-                    value={from}
-                    onChange={onFromChange}
-                    helperText="Optional: who is the greeting from? For example - Grandma and Grandpa, Your Dad, etc."
-                  />
-                </Box>
+            {virgin && session.greeting ?
+              <Accordion sx={{ my: 5 }} expanded={expanded === 'advanced'} onChange={handleAccordeonChange('advanced')}>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel4bh-content"
+                  id="panel4bh-header"
+                >
+                  <Typography sx={{ width: '33%', flexShrink: 0 }}>Advanced Inputs</Typography>
+                </AccordionSummary>
+                <AccordionDetails >
+                  <Box sx={{ my: 4 }}>
+                    <TextField
+                      sx={{ width: { xs: 1 } }}
+                      id="to"
+                      label="To (Recepient)"
+                      value={to}
+                      onChange={onToChange}
+                      helperText="Examples: &ldquo;Our nephew Billy&rdquo;, &ldquo;My Grandson Evan&rdquo;, &ldquo;My Love&rdquo; &ldquo;Love of My Life&rdquo;, &ldquo;Simpsons&rdquo;, &ldquo;Mr Williams, the postman.&ldquo;"
+                    />
+                  </Box>
+                  <Box sx={{ my: 4 }}>
+                    <TextField
+                      sx={{ width: { xs: 1 } }}
+                      id="from"
+                      label="From"
+                      value={from}
+                      onChange={onFromChange}
+                      helperText="Optional: who is the greeting from? For example - Grandma and Grandpa, Your Dad, etc."
+                    />
+                  </Box>
 
-                <Box sx={{ mb: 4 }}>
-                  <TextField
-                    sx={{ width: { xs: 1 } }}
-                    id="reflections"
-                    label="Additional Reflections,Thoughts"
-                    value={reflections}
-                    onChange={onReflectionsChange}
-                    helperText="Any thoughts that you have about what should be reflected in the greeting. For example: 'Always thinking of you', 'We miss you', 'We are so proud of you', 'We are so happy for you', 'We are so sorry for your loss', 'Say Hi to your family'"
-                  />
+                  <Box sx={{ mb: 4 }}>
+                    <TextField
+                      sx={{ width: { xs: 1 } }}
+                      id="reflections"
+                      label="Additional Reflections,Thoughts"
+                      value={reflections}
+                      onChange={onReflectionsChange}
+                      helperText="Any thoughts that you have about what should be reflected in the greeting. For example: 'Always thinking of you', 'We miss you', 'We are so proud of you', 'We are so happy for you', 'We are so sorry for your loss', 'Say Hi to your family'"
+                    />
+                  </Box>
+                  <Box sx={{ my: 4 }}>
+                    <TextField
+                      sx={{ width: { xs: 1 } }}
+                      id="instructions"
+                      label="Instructions to AI"
+                      value={instructions}
+                      onChange={onInstructionsChange}
+                      helperText="Example: 'Keep it very short', 'Create a headline and plenty of emoticons', 'Do not wish cake', ' As a methodist prayer', 'As a Hebrew prayer', 'No special day'"
+                    />
+                  </Box>
+                  <Box sx={{ my: 4 }}>
+                    <TextField
+                      sx={{ width: { xs: 1 } }}
+                      id="inastyleof"
+                      label="Use AI to write in the style of"
+                      value={inastyleof}
+                      onChange={onInastyleofChange}
+                      helperText="Example: 'Mark Twain'.'Dr Seuss', 'Shakespeare', 'King David', 'The Simpsons', 'The Bible'. You can upload an image of a character or a person to go with the styled greeting."
+                    />
+                  </Box>
+                  <Box sx={{ my: 4 }}>
+                    <TextField
+                      sx={{ width: { xs: 1 } }}
+                      id="language"
+                      label="Language"
+                      value={language}
+                      onChange={onLanguageChange}
+                      helperText="Example: 'French', 'Ukrainian', 'Middle-English', 'Canadian'"
+                    />
+                  </Box>
+                </AccordionDetails>
+              </Accordion> : null}
+            {!prompt2 && occasion ?
+                <Box sx={{ mt: 10, width: 1 }}>
+                  <Starter><LooksTwoOutlinedIcon fontSize="inherit" color='success' />
+                    <StarterMessage><Typography fontSize="inherit" color="secondary"/*color="#ffee58"*/>Click or tap on the &quot;Suggest Wish Text&quot; button:</Typography></StarterMessage></Starter>
                 </Box>
-                <Box sx={{ my: 4 }}>
-                  <TextField
-                    sx={{ width: { xs: 1 } }}
-                    id="instructions"
-                    label="Instructions to AI"
-                    value={instructions}
-                    onChange={onInstructionsChange}
-                    helperText="Example: 'Keep it very short', 'Create a headline and plenty of emoticons', 'Do not wish cake', ' As a methodist prayer', 'As a Hebrew prayer', 'No special day'"
-                  />
-                </Box>
-                <Box sx={{ my: 4 }}>
-                  <TextField
-                    sx={{ width: { xs: 1 } }}
-                    id="inastyleof"
-                    label="Use AI to write in the style of"
-                    value={inastyleof}
-                    onChange={onInastyleofChange}
-                    helperText="Example: 'Mark Twain'.'Dr Seuss', 'Shakespeare', 'King David', 'The Simpsons', 'The Bible'. You can upload an image of a character or a person to go with the styled greeting."
-                  />
-                </Box>
-                <Box sx={{ my: 4 }}>
-                  <TextField
-                    sx={{ width: { xs: 1 } }}
-                    id="language"
-                    label="Language"
-                    value={language}
-                    onChange={onLanguageChange}
-                    helperText="Example: 'French', 'Ukrainian', 'Middle-English', 'Canadian'"
-                  />
-                </Box>
-              </AccordionDetails>
-            </Accordion> : null}
-            {!prompt2 && occasion ? <Box sx={{ mt: 10, width: 1 }}>
-              <Starter><LooksTwoOutlinedIcon fontSize="inherit" color='success' />
-                <StarterMessage><Typography fontSize="inherit" color="secondary"/*color="#ffee58"*/>Click or tap on the &quot;Suggest Wish Text&quot; button:</Typography></StarterMessage></Starter></Box> : null}
+                :null}
+                <GreetingOutput darkMode={darkMode} sharedImages={sharedImages} PlayerToolbar={OutputPlayerToolbar} setNum={setNum} setMax={setMax} max={max} num={num} setPrompt4={setPrompt4} setPrompt5={setPrompt5} prompt4={prompt4} prompt5={prompt5} prompt6={prompt6} setPrompt6={setPrompt6} onVirgin={async () => {
+                  await recordEvent(session.sessionid, 'virgin wish-text request', `occasion:${occasion}`);
+                  setVirgin(true);
+                  setPrompt2(true);
+                  setSelectedOccasion(occasion);
+                  updateSession2({ virgin: true, prompt2: true });
+                }} greeting={session.greeting || ''} onVirgin2={async () => {
+                  await recordEvent(session.sessionid, 'virgin2 request', `occasion:${occasion}`);
+                  setVirgin2(true);
+                  setPrompt4(true);
+                  updateSession2({ virgin2: true, prompt4: true });
+                }} virgin={virgin} virgin2={virgin2} setMissingOccasion={setMissingOccasion} setLoadReady={setLoadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} naive={naive} reflections={reflections} instructions={instructions} inastyleof={inastyleof} language={language} /*authSession={authSession}*/ />
 
-            <GreetingOutput sharedImages={sharedImages} PlayerToolbar={OutputPlayerToolbar} setNum={setNum} setMax={setMax} max={max} num={num} setPrompt5={setPrompt5} prompt4={prompt4} prompt5={prompt5} prompt6={prompt6} setPrompt6={setPrompt6} onVirgin={async () => {
-              await recordEvent(session.sessionid, 'virgin wish-text request', `occasion:${occasion}`);
-              setVirgin(true);
-              setPrompt2(true);
-              setSelectedOccasion(occasion);
-              updateSession2({ virgin: true, prompt2: true });
-            }} greeting={session.greeting || ''} onVirgin2={async () => {
-              await recordEvent(session.sessionid, 'virgin2 request', `occasion:${occasion}`);
-              setVirgin2(true);
-              setPrompt4(true);
-              updateSession2({ virgin2: true, prompt4: true });
-            }} virgin={virgin} virgin2={virgin2} setMissingOccasion={setMissingOccasion} setLoadReady={setLoadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} naive={naive} reflections={reflections} instructions={instructions} inastyleof={inastyleof} language={language} /*authSession={authSession}*/ />
-
-            {session.greeting && !prompt4 ? <Box sx={{ mt: 10, width: 1, color: 'white', backgroundColor: 'secondary' }}>
-              <Starter onClick={() => setPrompt4(true)}><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
-                <StarterMessage><Typography fontSize="inherit" color="secondary"/*color="#ffee58"*/>
-                  Remember, these are only suggestions to get you going! Customize them to fit your personality and style. Try at least several suggestions to see if any of them resonate with you.</Typography></StarterMessage></Starter></Box> : null}
+               
           </Container>
-          <Container maxWidth="sm" sx={{mt:10}}>
-            {session.greeting&&!session.card&&<Box sx={{ mt: 1, width: 1 }}>
-              <OvalButton fullWidth size="small" variant="contained" onClick={()=>{
-               updateSession2({card:true});
-               setCard(true);
-               updateRoute({
-                 from,
-                 to,
-                 occasion,
-                 naive,
-                 reflections,
-                 instructions,
-                 inastyleof,
-                 language,
-                 interests,
-                 card: true
-               })}}>Open Greeting Card Composer</OvalButton>
-          </Box>}
-          {session.card&&<Box sx={{ mt: 1, width: 1 }}>
-              <OvalButton fullWidth size="small" variant="contained" onClick={()=>{
-               updateSession2({card:false});
-               setCard(false);
-               updateRoute({
-                 from,
-                 to,
-                 occasion,
-                 naive,
-                 reflections,
-                 instructions,
-                 inastyleof,
-                 language,
-                 interests,
-                 card: true
-               })}}>Close Greeting Card Composer</OvalButton>
-          </Box>
+          <Container maxWidth="sm" sx={{ mt: 10 }}>
+            {session.greeting && !session.card && <Box sx={{ mt: 1, width: 1 }}>
+              <OvalButton fullWidth size="small" variant="contained" onClick={() => {
+                updateSession2({ card: true });
+                setCard(true);
+                updateRoute({
+                  from,
+                  to,
+                  occasion,
+                  naive,
+                  reflections,
+                  instructions,
+                  inastyleof,
+                  language,
+                  interests,
+                  card: true
+                })
+              }}>Open Greeting Card Composer</OvalButton>
+            </Box>}
+            {session.card && <Box sx={{ mt: 1, width: 1 }}>
+              <OvalButton fullWidth size="small" variant="contained" onClick={() => {
+                updateSession2({ card: false });
+                setCard(false);
+                updateRoute({
+                  from,
+                  to,
+                  occasion,
+                  naive,
+                  reflections,
+                  instructions,
+                  inastyleof,
+                  language,
+                  interests,
+                  card: true
+                })
+              }}>Close Greeting Card Composer</OvalButton>
+            </Box>
+            }
 
+            {session.greeting && session.card &&
+
+              <Box sx={{ my: 1 }}>
+
+                <GreetingCard
+                  greeting={greeting}
+                  num={num}
+                  image={image}
+                  signature={signature}
+                  linkid={linkid}
+
+                  setImage={setImage}
+                  setSignature={setSignature}
+                  setLinkid={setLinkid}
+
+                  newCardsStack={newCardsStack}
+                  setNewCardsStack={setNewCardsStack}
+                  setPromptImageStrip={setPromptImageStrip}
+                  promptImageStrip={promptImageStrip}
+
+                  setCardNum={setCardNum}
+                  setCardMax={setCardMax}
+                  setNumPointer={setNumPointer}
+                  cardNum={cardNum}
+                  cardMax={cardMax}
+                  startOpen={true}
+                  darkMode={darkMode || false}
+                  sessionid={session.sessionid || ''}
+                  fbclid={fbclid}
+                  utm_content={utm_content}
+                  sharedImages={sharedImages}
+
+                  loading={false}
+                  max={max}
+                  images={images}
+                  setImages={setImages}
+                  setPrompt5={setPrompt5} prompt4={prompt4} prompt5={prompt5} prompt6={prompt6} setPrompt6={setPrompt6}
+                  onVirgin={async () => {
+                    await recordEvent(session.sessionid, 'virgin wish-text request', `occasion:${occasion}`);
+                    setVirgin(true);
+                    setPrompt2(true);
+                    setSelectedOccasion(occasion);
+                    updateSession2({ virgin: true, prompt2: true });
+                  }}
+
+                  onVirgin2={async () => {
+                    await recordEvent(session.sessionid, 'virgin2 request', `occasion:${occasion}`);
+                    setVirgin2(true);
+                    setPrompt4(true);
+                    updateSession2({ virgin2: true, prompt4: true });
+                  }}
+                  virgin={virgin} virgin2={virgin2}
+                  setLoadReady={setLoadReady}
+                  session={session}
+                  updateSession2={updateSession2}  /*authSession={authSession}*/ />
+              </Box>
 
             }
-           
-          
-            {session.greeting && session.card&&
-                <Box sx={{ my: 1 }}>
-                
-                  <GreetingCard 
-                    greeting={greeting}
-                    num={num}
-                    image={image}
-                    signature={signature}
-                    linkid={linkid}
 
-                    setImage={setImage}
-                    setSignature={setSignature}
-                    setLinkid={setLinkid}
-                    
-                    newCardsStack={newCardsStack}
-                    setNewCardsStack={setNewCardsStack}
-                    setPromptImageStrip={setPromptImageStrip}
-                    promptImageStrip={promptImageStrip}
-                     
-                    setCardNum={setCardNum}
-                    setCardMax={setCardMax}
-                    setNumPointer={setNumPointer} 
-                    cardNum={cardNum} 
-                    cardMax={cardMax} 
-                    startOpen={true} 
-                    darkMode={darkMode || false} 
-                    sessionid={session.sessionid || ''} 
-                    fbclid={fbclid} 
-                    utm_content={utm_content} 
-                    sharedImages={sharedImages} 
-                  
-                    loading={false} 
-                    max={max} 
-                    images={images}
-                    setImages={setImages}
-                    setPrompt5={setPrompt5} prompt4={prompt4} prompt5={prompt5} prompt6={prompt6} setPrompt6={setPrompt6} 
-                    onVirgin={async () => {
-                      await recordEvent(session.sessionid, 'virgin wish-text request', `occasion:${occasion}`);
-                      setVirgin(true);
-                      setPrompt2(true);
-                      setSelectedOccasion(occasion);
-                      updateSession2({ virgin: true, prompt2: true });
-                    }} 
-                
-                    onVirgin2={async () => {
-                      await recordEvent(session.sessionid, 'virgin2 request', `occasion:${occasion}`);
-                      setVirgin2(true);
-                      setPrompt4(true);
-                      updateSession2({ virgin2: true, prompt4: true });
-                    }} 
-                    virgin={virgin} virgin2={virgin2} 
-                    setLoadReady={setLoadReady} 
-                    session={session} 
-                    updateSession2={updateSession2}  /*authSession={authSession}*/ />
-                </Box>}
-               
           </Container>
 
           <Container maxWidth="sm">
@@ -1217,8 +1219,8 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps(context: GetServerSidePropsContext): Promise<any> {
     try {
-      let { linkid, card, signature, dark, num, max, cardNum, cardMax, prompt1, prompt2, prompt3, prompt4, prompt5, prompt6,promptImageStrip, fbclid, utm_medium, utm_campaign, utm_content, virgin, virgin2, from, to, occasion, naive, reflections, instructions, inastyleof, language, age, interests, sex }:
-        { linkid: string, card: boolean, signature: string, dark: boolean, num: number, max: number, cardNum: number, cardMax: number, prompt1: string, prompt2: string, prompt3: string, prompt4: string, prompt5: string, prompt6: string, fbclid: string, utm_medium: string, utm_campaign: string, utm_content: string, virgin: boolean, virgin2: boolean, from: string, to: string, occasion: string, naive: boolean, reflections: string, instructions: string, inastyleof: string, language: string, age: string, interests: string, sex: string,promptImageStrip:boolean } = context.query as any;
+      let { linkid, card, signature, dark, num, max, cardNum, cardMax, prompt1, prompt2, prompt3, prompt4, prompt5, prompt6, promptImageStrip, fbclid, utm_medium, utm_campaign, utm_content, virgin, virgin2, from, to, occasion, naive, reflections, instructions, inastyleof, language, age, interests, sex }:
+        { linkid: string, card: boolean, signature: string, dark: boolean, num: number, max: number, cardNum: number, cardMax: number, prompt1: string, prompt2: string, prompt3: string, prompt4: string, prompt5: string, prompt6: string, fbclid: string, utm_medium: string, utm_campaign: string, utm_content: string, virgin: boolean, virgin2: boolean, from: string, to: string, occasion: string, naive: boolean, reflections: string, instructions: string, inastyleof: string, language: string, age: string, interests: string, sex: string, promptImageStrip: boolean } = context.query as any;
 
       linkid = linkid || '';
       from = from || '';
@@ -1255,31 +1257,31 @@ export const getServerSideProps = withSessionSsr(
       //console.log("naive1=", naive)
       var randomstring = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
       let sessionid = context.req.session?.sessionid || randomstring();
-      let startoptions: Options|null=null;// = await fetchSession(sessionid);
-      let sharedImages: ImageData[]|null=null;// = await fetchSharedImages();
-      let images:ImageData[]|null=null;//=await fetchSessionImages();
+      let startoptions: Options | null = null;// = await fetchSession(sessionid);
+      let sharedImages: ImageData[] | null = null;// = await fetchSharedImages();
+      let images: ImageData[] | null = null;//=await fetchSessionImages();
 
       try {
-        let startoptions2: Options|null=null;
-        let sharedImages2: ImageData[]|null=null;
-        let imagesData:{success:boolean,images:ImageData[]}|null=null;
+        let startoptions2: Options | null = null;
+        let sharedImages2: ImageData[] | null = null;
+        let imagesData: { success: boolean, images: ImageData[] } | null = null;
         [startoptions2, sharedImages2, imagesData] = await Promise.all([
           fetchSession(sessionid),
           fetchSharedImages(),
           fetchSessionImages(sessionid),
         ]);
-        startoptions=startoptions2;
-        sharedImages=sharedImages2;
-        images=imagesData.success?imagesData.images:[];        
-      //  console.log("Start Options:", startoptions);
-      //  console.log("Shared Images:", sharedImages);
-      //  console.log("Images:", images);
-    
-      //  console.log("All fetch operations completed!");
+        startoptions = startoptions2;
+        sharedImages = sharedImages2;
+        images = imagesData.success ? imagesData.images : [];
+        //  console.log("Start Options:", startoptions);
+        //  console.log("Shared Images:", sharedImages);
+        //  console.log("Images:", images);
+
+        //  console.log("All fetch operations completed!");
       } catch (error) {
         console.error("Error occurred:", error);
       }
-    
+
       startoptions = startoptions || {
         sessionid,
         noExplain: false,
@@ -1333,7 +1335,7 @@ export const getServerSideProps = withSessionSsr(
       prompt3 = prompt3 || options.prompt3 || '';
       prompt4 = prompt4 || options.prompt4 || '';
       prompt5 = prompt5 || options.prompt5 || '';
-    
+
       promptImageStrip = promptImageStrip || options.promptImageStrip || false;
       num = num || options.num || 1;
       max = max || options.max || 1;

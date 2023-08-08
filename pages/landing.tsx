@@ -371,7 +371,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                         </BandContainer>
                        
                         <BandCard 
-                        card={ <Card fbclid={fbclid} utm_content={utm_content}  dark={"true"} text={"🎉 Happy 59th Birthday, old buddy! 🎉 You're halfway to being cool, but we'll still celebrate! Have a fantastic day surrounded by family, friends, and endless amounts of cake 🍰🎈 Keep rocking those dad jokes and conquering life! Cheers! 🍻"}/>} 
+                        card={ <Card signature="Demo" fbclid={fbclid} utm_content={utm_content}  dark={"true"} text={"🎉 Happy 59th Birthday, old buddy! 🎉 You're halfway to being cool, but we'll still celebrate! Have a fantastic day surrounded by family, friends, and endless amounts of cake 🍰🎈 Keep rocking those dad jokes and conquering life! Cheers! 🍻"}/>} 
                         fresh={fresh} fbclid={fbclid} utm_content={utm_content} isbot={isbot} isfb={isfb} sessionid={sessionid} dark={"true"} 
                         title="Create Virtual Greeting Cards" subtitle={"Create beautiful greeting cards"} cta="Create a Greeting Card Now!"/>
                            

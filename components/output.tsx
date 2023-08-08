@@ -19,13 +19,15 @@ import { recordEvent,recordSessionHistory } from '../lib/api'
 import LooksFiveOutlinedIcon from '@mui/icons-material/Looks5Outlined';
 //import ErrorOutlineOutlinedIcon from '@mui/icons-material/NextPlanOutlined';
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/TipsAndUpdatesTwoTone';
+import LinearProgress from '@mui/material/LinearProgress';
 import * as ga from '../lib/ga'
+import Section from './greeting-card/editor-section';
 const Starter = styled.div`
   display:flex;
   justify-content:flex-start;
   font-size:36px;
   align-items:center;
-  margin-top:24px;
+
   
   `;
 const StarterMessage = styled.div`
@@ -68,10 +70,12 @@ export default function Output({
   inastyleof,
   language,
   greeting,
+  setPrompt4,
   setPrompt5,
   setPrompt6,
   PlayerToolbar,
-  sharedImages
+  sharedImages,
+  darkMode,
  // authSession
 }: {
   setNum:any;
@@ -98,11 +102,12 @@ export default function Output({
   inastyleof: string;
   language: string;
   greeting: string;
-  
+  setPrompt4:any;
   setPrompt5: any;
   setPrompt6:any;
   PlayerToolbar: any;
   sharedImages:ImageData[];
+  darkMode?:boolean;
 //  authSession: any;
 }) {
   const [value, setValue] = useState("");
@@ -332,10 +337,19 @@ export default function Output({
   return (
     <>
       {occasion&&!session.greeting&&<ToolbarGenerate error={occasion?.length>0?false:true} onGenerateClick={handleGenerate} onUploadClick={onUpload} hasGreeting={session.greeting ? true : false} />}
+      {loading&&!session.greeting && <LinearProgress />}
+     
+     
+      {greeting&&<Section darkMode={darkMode ? true : false}>
+      {!prompt5&&session.greeting&&!loading  ? <Box sx={{ mt: 1,mb:1, width: 1 }}>
+            <Starter onClick={()=>setPrompt5(true)}><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
+              <StarterMessage><Typography fontSize="inherit"  color="secondary"/*color="#ffee58"*/>Click or tap on message to manually edit. </Typography></StarterMessage></Starter></Box> : null}
      
       <Box sx={{ my: 3,  }} textAlign="center">
        
       {greeting&&PlayerToolbar}
+      
+            
         <TextEditor  editing={editing} setEditing={setEditing} onClick={onTextEditorClick} session={session} text={session.greeting || ''} onChange={(text: string) => { updateSession2({ greeting: text }); }} image={selectedImage} loading={loading} canvasRef={canvasRef} />
         <div  />
         {false&&virgin&&!prompt5 && !loading ? <Box sx={{ mt: 0, width: 1 }}>
@@ -373,6 +387,13 @@ export default function Output({
           </BottomLink>
         )}
       </Box>
+      {session.greeting && !prompt4 ? <Box sx={{ mt: 1, width: 1, color: 'white', backgroundColor: 'secondary' }}>
+                  <Starter onClick={() => setPrompt4(true)}><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
+                    <StarterMessage><Typography fontSize="inherit" color="secondary"/*color="#ffee58"*/>
+                      Remember, these are only suggestions to get you going! Customize them to fit your personality and style. Try at least several suggestions to see if any of them resonate with you.</Typography></StarterMessage></Starter></Box> : null}
+             
+          
+      </Section>}
       {false&&<div>
       {!prompt6&&value&&virgin&&!loading  ? <Box sx={{ mt: 0, width: 1 }}>
             <Starter onClick={()=>setPrompt6(true)}><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
@@ -383,10 +404,6 @@ export default function Output({
         {(images.length > 0 ||sharedImages.length>0)&& session.greeting&&<ImageStrip sharedImages={sharedImages} images={images} onImageClick={stripClickHandler} />}
       </Box>
       </div>}
-      {!prompt5&&prompt4&&session.greeting&&!loading  ? <Box sx={{ mt: 10, width: 1 }}>
-            <Starter onClick={()=>setPrompt5(true)}><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
-              <StarterMessage><Typography fontSize="inherit"  color="secondary"/*color="#ffee58"*/>Click or tap on message to manually edit. </Typography></StarterMessage></Starter></Box> : null}
-     
      
         </>
   );

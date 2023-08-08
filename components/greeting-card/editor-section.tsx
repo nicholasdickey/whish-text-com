@@ -8,7 +8,7 @@ height:100%;
 display:flex;
 background:${({darkMode})=>darkMode?'#444':'#eee'};
 padding:30px;
-margin-bottom:30px;
+//margin-bottom:30px;
 //border:1px solid #ccc;
 border-radius: 20px;
 font-size:6px;

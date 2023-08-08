@@ -507,8 +507,9 @@ export default function CardEditor({
         {greeting && OutputPlayerToolbar}
       </div>
       <Signature image={image} greeting={greeting} signature={signature} num={num} fbclid={fbclid} utm_content={utm_content} sessionid={sessionid} darkMode={darkMode} handleChange={handleChange} handleCreate={handleCreate} />
+      <Box sx={{mt:10}}>
       <Section darkMode={darkMode}>
-        <Box sx={{ mt: 0, width: 1 }}>
+        <Box sx={{ mt: 0,  width: 1 }}>
         <Typography variant="caption" gutterBottom color="textSecondary"
          >Use stock images or upload your own:</Typography><br/><br/>
            <Box sx={{ mt: 1, pr: 0, width: { xs: 1 } }} textAlign="center">
@@ -518,6 +519,7 @@ export default function CardEditor({
        
         </Box>
       </Section>
+      </Box>
       <Card image={image} greeting={greeting} signature={signature} num={num} fbclid={fbclid} utm_content={utm_content} sessionid={sessionid} darkMode={darkMode} handleChange={handleChange} handleCreate={handleCreate} />
       cardNum:{cardNum} &nbsp;cardMax:{cardMax}&nbsp;
       linkid:{linkid}
