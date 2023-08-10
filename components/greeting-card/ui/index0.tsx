@@ -10,8 +10,7 @@ import { useRouter } from 'next/router';
 import ReactMarkdown from "react-markdown";
 import LinearProgress from '@mui/material/LinearProgress';
 import ImageData from "../../../lib/image-data";
-import PopoutCard from "./popout-card";
-import EmptyImage from "../empty-image";
+
 interface BodyProps {
   l: number;
   large?: boolean;
@@ -28,7 +27,7 @@ const Headline = styled.div<BodyProps>`
   z-index:100;
 
   @media (max-width: 990px) {
-    font-size: 10px;
+    font-size: 18px;
   }
   &.q-h{
     z-index:100;
@@ -40,7 +39,7 @@ const TextBody = styled.div<BodyProps>`
   width:100%;
   display:flex;
   justify-content:center;
-  font-size:${({ l, large }) => large ? (l > 600 ? 11 : l > 400 ? 12 : l > 300 ? 13 : l > 200 ? 14 : 16) : (l > 600 ? 5 : l > 400 ? 6 : l > 300 ? 7 : l > 200 ? 9 : 10)}px;
+  font-size:${({ l, large }) => large ? (l > 600 ? 11 : l > 400 ? 12 : l > 300 ? 13 : l > 200 ? 14 : 16) : (l > 600 ? 7 : l > 400 ? 8 : l > 300 ? 9 : l > 200 ? 11 : 12)}px;
   font-weight: 400;
   line-height: 1.7;
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
@@ -48,7 +47,7 @@ const TextBody = styled.div<BodyProps>`
   //padding-bottom:20px;
   //margin-bottom: 40px;
   @media (max-width: 990px) {
-    font-size:${({ l, large }) => large ? (l > 600 ? 5 : l > 400 ? 6 : l > 300 ? 7 : l > 200 ? 8 : 10) : (l > 600 ?4 : l > 400 ? 5 : l > 300 ? 6 : l > 200 ? 7 : 8)}px;
+    font-size:${({ l, large }) => large ? (l > 600 ? 11 : l > 400 ? 12 : l > 300 ? 13 : l > 200 ? 14 : 16) : (l > 600 ? 9 : l > 400 ? 10 : l > 300 ? 11 : l > 200 ? 13 : 14)}px;
   }
 `;
 
@@ -303,7 +302,7 @@ const GreetingCard: React.FC<BandProps> = ({ delayOpen=false,startOpen = false, 
     <BandContainer darktext={dark} open={open} large={large}>
       <Outer>
         <Body>
-          {false?<PopoutCard card={{text,image:image||EmptyImage,signature}} close={()=>setLarge(false)} />:<Card large={large} open={open} dark={dark}>
+          <Card large={large} open={open} dark={dark}>
             <div className={`card__container js-card-opener ${open ? "open" : ""}`}>
               <div className={`card ${open ? "open" : ""}`} onClick={() => setLarge(!large)}>
                 <div className={`card__panel card__panel--front ${open ? "open" : ""}`}>
@@ -339,7 +338,7 @@ const GreetingCard: React.FC<BandProps> = ({ delayOpen=false,startOpen = false, 
 
             </div>
 
-          </Card>}
+          </Card>
 
 
         </Body>

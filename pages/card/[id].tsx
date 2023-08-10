@@ -21,12 +21,16 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import ModeNightTwoToneIcon from '@mui/icons-material/ModeNightOutlined';
+import LightModeTwoToneIcon from '@mui/icons-material/LightModeOutlined';
 import { useState, useCallback, useEffect } from "react"
 import { useRouter } from 'next/router'
-import { fetchSession, recordEvent, updateSession, deleteSessionHistories, getSessionHistory } from '../../lib/api'
+import { getSharedCard, fetchSession, recordEvent, updateSession, deleteSessionHistories, getSessionHistory } from '../../lib/api'
 import styled from 'styled-components';
 import Script from 'next/script'
 import ReactMarkdown from "react-markdown";
+import CardData from "../../lib/card-data";
+import ImageData from "../../lib/image-data";
 
 import {
     GetServerSidePropsContext,
@@ -41,7 +45,22 @@ import { Roboto } from 'next/font/google';
 import { withSessionSsr, Options } from '../../lib/with-session';
 import { isbot } from '../../lib/isbot';
 import Band from '../../components/band';
-import Card from '../../components/card3';
+import Card from '../../components/greeting-card/ui';
+
+const ModeSwitch = styled.div`
+  position:absolute;
+  right:200px;
+  top:20px;  
+  z-index:100; 
+ // color:white; 
+ 
+  @media (max-width: 700px) {
+    top:0px;
+    right:0px;
+    font-size:3rem;;
+    min-height: 120px;
+  }
+  `;
 interface BackgroundMode {
     colorDark: string;
     colorLight: string;
@@ -70,17 +89,17 @@ const Sub = styled.div`
 
 interface FooterProps {
     darkmode: string;
-  };
-  const Footer=styled.div<FooterProps>`
+};
+const Footer = styled.div<FooterProps>`
     padding:10px 10rem;
     width:100%;
     color:rgb(44, 46, 56);
-    background-color: ${({darkmode})=>darkmode=="true"?'#252330':'rgb(232, 236, 239)'};
+    background-color: ${({ darkmode }) => darkmode == "true" ? '#252330' : 'rgb(232, 236, 239)'};
     @media (max-width:990px){
         padding:10px;
     }
     `;
-  const LineContainer=styled.div<FooterProps>`
+const LineContainer = styled.div<FooterProps>`
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -88,19 +107,19 @@ interface FooterProps {
     padding:8px;  
     text-align: center;
     color:#2d2b38;
-    background-color: ${({darkmode})=>darkmode=="true"?'#999':'rgb(232, 236, 239)'};
+    background-color: ${({ darkmode }) => darkmode == "true" ? '#999' : 'rgb(232, 236, 239)'};
   `;
-  
-const BandContainer = styled.div<{ darktext?: string,background?:string }>`
+
+const BandContainer = styled.div<{ darktext?: string, background?: string }>`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 4rem 2rem;
   text-align: center;
-  color: ${({ darktext }) => (darktext=="true" ? '#fff' : '#2d2b38')};
-  background-color: ${({ darktext }) => (darktext=="true" ? '#2d2b38' : '#fff')};
-  background-image: ${({background})=>background?`linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${background})`:null}; 
+  color: ${({ darktext }) => (darktext == "true" ? '#fff' : '#2d2b38')};
+  background-color: ${({ darktext }) => (darktext == "true" ? '#2d2b38' : '#fff')};
+  background-image: ${({ background }) => background ? `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${background})` : null}; 
   background-repeat: repeat;
   background-size: 900px 491px;
   min-height:450px;
@@ -173,7 +192,10 @@ const SecondBandContainer = styled.div`
   }
   
 `;
-
+const Wide = styled.div`
+   position:relative;
+   width:100%; 
+`;
 
 const ImageDemo = styled.div`
 //max-width: 100%;
@@ -195,16 +217,18 @@ const Body = styled.div`
   width:100%;
   height:100%;
   min-height:100vh;
-  padding-top:30vh;
+  padding-top:10vh;
 `;
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['300', '400', '700'], style: ['normal', 'italic'] })
 let v = false;
-export default function Home({ dark, fresh, fbclid, utm_content, isbot, isfb, sessionid }:
-    { dark: number, fresh: boolean, fbclid: string, utm_content: string, isbot: number, isfb: number, sessionid: string }) {
+export default function Home({ id, card, dark, fresh, fbclid, utm_content, isbot, isfb, sessionid,ironsession:startSession }:
+    { id: string, card: CardData, dark: number, fresh: boolean, fbclid: string, utm_content: string, isbot: number, isfb: number, sessionid: string,ironsession:Options }) {
 
-    const [darkMode, setDarkMode] = React.useState(true);
+    const [session, setSession] = useState(startSession);
     const [systemMode, setSystemMode] = React.useState(false);
+    const [darkMode, setDarkMode] = React.useState(startSession.mode);
+    const [modeIsSet, setModeIsSet] = React.useState(startSession.modeIsSet);
     const router = useRouter();
     const handleCTAClick = () => {
         router.push(`/?fbclid=${fbclid}&utm_content=${utm_content}`);
@@ -212,58 +236,73 @@ export default function Home({ dark, fresh, fbclid, utm_content, isbot, isfb, se
 
     let theme: any;
     if (darkMode) {
-        theme = createTheme({
-            palette: {
-                mode: 'dark',
-                background: {
-                    default: '#2d2b38',//' blueGrey[900],
-                    paper: blueGrey[600],
-                }
-            },
-        })
+      theme = createTheme({
+        palette: {
+          mode: 'dark',
+          background: {
+            default: '#2d2b38',//' blueGrey[900],
+            paper: blueGrey[600],
+          }
+        },
+      })
     }
     else {
-        theme = createTheme({
-            palette: {
-                mode: 'light',
-            },
-        })
+      theme = createTheme({
+        palette: {
+          mode: 'light',
+        },
+      })
     }
-    useEffect(() => {
-        if (dark) {
-            setDarkMode(true);
+    
+    const updateSession2 = useCallback(async (updSession: object) => {
+        if (!updSession)
+          return;
+        let curSession: any;
+        setSession((session) => { curSession = session; return { ...Object.assign(session, updSession) } });
+        setTimeout(async () => {
+          const s = (): any => curSession;
+          const ses = s();
+          console.log('===>pdate session:', updSession, "exist session", ses, curSession, session);
+    
+          await axios.post(`/api/session/save`, { session: ses });
+        }, 200);
+    
+      }, [session]);
+      useEffect(() => {
+        if (dark && !modeIsSet) {
+          setDarkMode(true);
+          setModeIsSet(true)
+          updateSession2({ mode: true, modeIsSet: true, blah: 'pblah' });
+          // setSystemMode(true);
         }
-    }, [dark]);
-    const modeMe = (e: any) => {
+      }, [modeIsSet, dark, session?.mode]);  
+      const modeMe = (e: any) => {
+        //if(!modeIsSet){
         setDarkMode(!!(e.matches));
+        updateSession2({ mode: e.matches, blah: 'bleh', modeIsSet: false });
         setSystemMode(!!(e.matches));
-    };
-
-    React.useEffect(() => {
+        // }
+      };
+  
+      React.useEffect(() => {
         const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
-        setSystemMode(matchMedia.matches);
+        setSystemMode(!!(matchMedia.matches));
         if (matchMedia.matches != darkMode) {
-            document.body.setAttribute("data-theme", matchMedia.matches ? 'dark' : 'light');
+          //const assigned = { ...Object.assign(session ? session : {}, { mode: matchMedia.matches }) }
+          //  setSystemMode(matchMedia.matches);
+          document.body.setAttribute("data-theme", matchMedia.matches ? 'dark' : 'light');
+          if (!modeIsSet) {
             setDarkMode(!!(matchMedia.matches));
+            updateSession2({ mode: matchMedia.matches, blah: 'blah' });
+          }
         }
         // setDarkMode(matchMedia.matches);
         matchMedia.addEventListener("change", modeMe);
-
+    
         return () => matchMedia.removeEventListener("change", modeMe);
-    }, [darkMode]);
+      }, [systemMode, darkMode, session?.mode, modeIsSet]);
+    const { signature, greeting, image } = card;
 
-    const line1=`Find the right words with the assistance of the award winning AI.   
-    Optimized for social media and messengers.   
-    Emojis galore:
-    🎑 🎃 👻 🎅 🎄 🎁   
-    Best of all: It's free!    
-    `
-    const line2=`Begin by simply selecting the occasion.   
-    Explore what is possible with advanced customization options.`
-
-    const line3=`Gift suggestions with no effort.   
-        Happy or sad, the AI assistant will help you find the right gifts. 
-    `
     return (
         <>
             <Head>
@@ -288,7 +327,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
                 <meta name="viewport" content="width=device-width" />
-                <link rel="canonical" href="https://www.wish-text.com/landing"/>
+                <link rel="canonical" href="https://www.wish-text.com/landing" />
 
             </Head>
             <ThemeProvider theme={theme}>
@@ -297,7 +336,7 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                     <div>
 
                         <CssBaseline />
-                    
+
 
                     </div>
                     <div >
@@ -313,39 +352,23 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                         </Script>
                     </div>
                     <Body>
-                      
-                        <Card large={true} fbclid={fbclid} utm_content={utm_content}  dark={darkMode?"true":"false"} text={"🎉 Happy 59th Birthday, old buddy! 🎉 You're halfway to being cool, but we'll still celebrate! Have a fantastic day surrounded by family, friends, and endless amounts of cake 🍰🎈 Keep rocking those dad jokes and conquering life! Cheers! 🍻"}/>
-                       
-                       
-
-                        {false&&<BandContainer>
-                            <Title variant="h3">
-                                Upload your images and create greeting cards
-                            </Title>
-                            <Subtitle variant="h5">
-                                Download on your device<br /> and use in social networks <br />and messengers
-                                with the direct upload.
-                                <ImageDemo>
-                                    <img src="/demo-card1-small.png" width="100%" alt="Wish Text Composer Logo" />
-                                </ImageDemo>
-                                <ImageDemo>
-                                    <img src="/demo-card5-small.png" width="100%" alt="Wish Text Composer Logo" />
-                                </ImageDemo>
-                                <ImageDemo>
-                                    <img src="/demo-card3-small.png" width="100%" alt="Wish Text Composer Logo" />
-                                </ImageDemo>
-
-                            </Subtitle>
-                            <CTAButton variant="contained" color="primary" onClick={handleCTAClick}>
-                                Let us show you how!
-                            </CTAButton>
-                        </BandContainer>}
-                     
+                       <Wide>
+                        <ModeSwitch>
+                            <Button color={"inherit"} onClick={() => {
+                                setDarkMode(!darkMode);
+                                setModeIsSet(true);
+                                updateSession2({ mode: !darkMode, modeIsSet: true });
+                            }}>
+                                {darkMode ? <LightModeTwoToneIcon /> : <ModeNightTwoToneIcon />}
+                            </Button>
+                        </ModeSwitch>
+                        </Wide>
+                        <Card delayOpen={true} large={true} signature={signature} fbclid={fbclid} utm_content={utm_content} dark={darkMode ? "true" : "false"} text={greeting || ''} image={image} />
                     </Body>
                     <Footer darkmode={"false"}>
                         <Copyright>
 
-                           
+
                         </Copyright>
                         <Copyright> <Sub> <Typography variant="caption" gutterBottom>
                             Copyright 2023 Wish-Text.Com, All Rights Reserved
@@ -368,38 +391,61 @@ export const getServerSideProps = withSessionSsr(
     async function getServerSideProps(context: GetServerSidePropsContext): Promise<any> {
         try {
             let { fbclid, utm_content, dark }:
-                { fbclid: string, utm_content: string, dark: number } = context.query as any;
+                { fbclid: string, utm_content: string, dark: boolean } = context.query as any;
 
+            let id: string = (context.params?.id || '') as string;
             utm_content = utm_content || '';
-
+            dark = dark || false;
             fbclid = fbclid || '';
+            console.log("!!!!!!!!!!!!!!!!!!!!!!")
+            const emptyImage: ImageData = {
+                url: '',
+                publicId: '',
+                height: 0,
+                width: 0,
+                thumbnailUrl: '',
+                original_filename: ''
+            };
             const ua = context.req.headers['user-agent'];
             const botInfo = isbot({ ua });
 
             var randomstring = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
             let sessionid = context.req.session?.sessionid || randomstring();
+            const data = await getSharedCard(sessionid, id);
+            let card: CardData = { signature: '', greeting: '', image: emptyImage };
+            if (data?.success) {
+                card = data.card;
+            }
+
             const fresh = !context.req.session.sessionid;
             if (!botInfo.bot && fresh) {
                 console.log('ssr-landing-init');
                 try {
-                    recordEvent(sessionid, 'ssr-landing-init', `{"fbclid":"${fbclid}","ua":"${ua}","utm_content":"${utm_content}"}`);
+                    recordEvent(sessionid, 'ssr-card-init', `{id:"${id}","fbclid":"${fbclid}","ua":"${ua}","utm_content":"${utm_content}"}`);
                 } catch (x) {
                     console.log('ssr-landing-init-error', x);
                 }
-
             }
+
             if (botInfo.bot && fresh) {
                 try {
-                    await recordEvent(sessionid, 'ssr-bot-landing-init', `{"fbclid":"${fbclid}","ua":"${ua}","utm_content":"${utm_content}"}`);
+                    await recordEvent(sessionid, 'ssr-bot-card-init', `{{id:"${id}","fbclid":"${fbclid}","ua":"${ua}","utm_content":"${utm_content}"}`);
                 } catch (x) {
                     console.log('ssr-bot-landing-init-error', x);
                 }
             }
+
             if (fresh || context.req.session.sessionid != sessionid) {
                 context.req.session.sessionid = sessionid;
-
                 await context.req.session.save();
             }
+            let ironsession:Options=await fetchSession(sessionid);
+            ironsession = ironsession || {
+                sessionid,
+                noExplain: false,
+               
+              } as Options;
+            console.log('session',ironsession);  
             return {
                 props: {
                     sessionid,
@@ -408,7 +454,10 @@ export const getServerSideProps = withSessionSsr(
                     utm_content,
                     isbot: botInfo.bot,
                     isfb: botInfo.fb || fbclid ? 1 : 0,
-                    dark: dark || 0
+                    dark: dark || 0,
+                    id,
+                    card,
+                    ironsession
                 }
             }
         } catch (x) {

@@ -16,6 +16,7 @@ import * as ga from '../../lib/ga'
 import CardPlayerToolbar from "../toolbar-card-player";
 import Section from "./editor-section";
 //mui
+import TextField from '@mui/material/TextField';
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Typography from '@mui/material/Typography';
@@ -27,40 +28,9 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormHelperText from '@mui/material/FormHelperText';
 import Button from '@mui/material/Button';
 
-const Starter = styled.div`
-  display:flex;
-  justify-content:flex-start;
-  font-size:36px;
-  align-items:center;
-  margin-top:24px;  
-  `;
-const StarterMessage = styled.div`
-  font-size:14px;
-  padding-left:10px;
-  padding-right:10px;
-  `;
+//third party
+import {DefaultCopyField} from '@eisberg-labs/mui-copy-field';
 
-const StyledTextareaAutosize = styled(TextareaAutosize)`
-  background:inherit;
-  color: inherit;
-  padding: 10px;  
-  overflow:auto;
-  width:100%;
-  height:100%;
-  `;
-
-const CursiveEditorBox = styled.div`
-  width:100%;
-  height:100%;
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-start;
-  text-align:left;
-  & textarea{
-    width:100%;
-    overflow:auto;
-  } 
-  `;
 const TooblarPlaceholder = styled.div`
   height: 48px;
 `;
@@ -69,6 +39,19 @@ const SignatureLabel = styled.div`
   text-align:left !important;
   justify-content:flex-start;
 `;
+
+const CopyField = styled(DefaultCopyField)`
+  width:100%;
+`;
+const Divider = styled.div`
+display:none;
+@media (max-width: 768px) {
+    display:block;
+}
+
+
+`;
+
 export default function CardEditor({
   num,
   greeting,
@@ -212,7 +195,7 @@ export default function CardEditor({
      if (!signature)
        signature = currentSignature; */
     if (card_Num != num)
-      setNumPointer(card_Num);
+      setNumPointer(card_Num||0);
     if (cardImage != image)
       setImage(cardImage);
     if (cardSignature != signature)
@@ -276,7 +259,7 @@ export default function CardEditor({
     console.log("processCardRecord", { cardNum, record })
     setCardNum(cardNum);
     setPrevGreeting("_");
-    setNumPointer(num);
+    setNumPointer(num||0);
     setSignature(signature);
     setImage(image);
     setLinkid(linkid || '');
@@ -507,8 +490,10 @@ export default function CardEditor({
         {greeting && OutputPlayerToolbar}
       </div>
       <Signature image={image} greeting={greeting} signature={signature} num={num} fbclid={fbclid} utm_content={utm_content} sessionid={sessionid} darkMode={darkMode} handleChange={handleChange} handleCreate={handleCreate} />
+     
       <Box sx={{mt:10}}>
       <Section darkMode={darkMode}>
+
         <Box sx={{ mt: 0,  width: 1 }}>
         <Typography variant="caption" gutterBottom color="textSecondary"
          >Use stock images or upload your own:</Typography><br/><br/>
@@ -518,11 +503,14 @@ export default function CardEditor({
           <ToolbarUpload error={greeting?.length > 0 ? false : true} onUploadClick={onUpload} hasGreeting={session.greeting ? true : false} />
        
         </Box>
+        <Divider ><hr/></Divider>
       </Section>
       </Box>
       <Card image={image} greeting={greeting} signature={signature} num={num} fbclid={fbclid} utm_content={utm_content} sessionid={sessionid} darkMode={darkMode} handleChange={handleChange} handleCreate={handleCreate} />
-      cardNum:{cardNum} &nbsp;cardMax:{cardMax}&nbsp;
-      linkid:{linkid}
+    
+      {linkid&&<CopyField
+        label="Share Card Link"
+        value={`${process.env.NEXT_PUBLIC_SERVER}/card/${linkid}`} />}
       {!creatingCard && !linkid && <Box sx={{ mt: 1, width: 1 }}>
     
         <Button fullWidth variant="contained" onClick={handleCreate}>Create a public link</Button>
@@ -530,9 +518,7 @@ export default function CardEditor({
       </Box>
       }
 
-      {!prompt5 && prompt4 && session.greeting && !loading ? <Box sx={{ mt: 10, width: 1 }}>
-        <Starter onClick={() => setPrompt5(true)}><ErrorOutlineOutlinedIcon fontSize="inherit" color='success' />
-          <StarterMessage><Typography fontSize="inherit" color="secondary"/*color="#ffee58"*/>Click or tap on message to manually edit. </Typography></StarterMessage></Starter></Box> : null}
+     
     </>
   );
 }

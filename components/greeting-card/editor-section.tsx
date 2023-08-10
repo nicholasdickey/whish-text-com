@@ -19,6 +19,14 @@ text-align:left;
     width:100%;
     overflow:auto;
 } 
+@media (max-width: 768px) {
+    background:inherit; 
+    padding:0px;
+    border:0px; 
+    border-bottom:3px;
+    border-radius: 0px;
+    //background:${({darkMode})=>darkMode?'#eee':'#333'};
+}
 `;
 
 export default Section;

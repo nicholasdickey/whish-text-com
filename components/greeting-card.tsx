@@ -216,7 +216,7 @@ export default function Output({
     }
     setCurrentCard(card);
     setCardNum(cardNum);
-    setNumPointer(num);
+    setNumPointer(num||0);
     updateSession2({ num, cardNum, linkid, currentCardString: JSON.stringify(card) });
   }
   console.log("cardMax:", cardMax)

@@ -4,7 +4,7 @@ import CardData from './card-data';
 import ImageData from './image-data';
 
 // Retrieves wish text from the server
-export const getWishText = async ({ style, from, to, occasion, naive, reflections, instructions, inastyleof, language, fresh, sessionid }: { style: string, from: string, to: string, occasion: string, naive: boolean, reflections: string, instructions: string, inastyleof: string, language: string, fresh?: boolean, sessionid?: string }):Promise<{content:string,num:number}> => {
+export const getWishText = async ({ style, from, to, occasion, naive, reflections, instructions, inastyleof, language, fresh, sessionid }: { style: string, from: string, to: string, occasion: string, naive: boolean, reflections: string, instructions: string, inastyleof: string, language: string, fresh?: boolean, sessionid?: string }): Promise<{ content: string, num: number }> => {
   try {
     // Encode the URL parameters
     from = encodeURIComponent(from || '');
@@ -19,11 +19,11 @@ export const getWishText = async ({ style, from, to, occasion, naive, reflection
     fresh = fresh || false;
 
     if (!from && !to && !occasion)
-      return {content:'',num:0};
+      return { content: '', num: 0 };
 
     // Construct the URL
     let url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/openai/wish-text?sessionid=${sessionid}&from=${from}&to=${to}&occasion=${occasion}&naive=${naive}&reflections=${reflections}&instructions=${instructions}&inastyleof=${inastyleof}&language=${language}${fresh ? '&fresh=1' : ''}`;
-   // console.log("url:", url);
+    // console.log("url:", url);
 
     let recovery = '';
     while (true) {
@@ -32,7 +32,7 @@ export const getWishText = async ({ style, from, to, occasion, naive, reflection
           url = url + recovery;
         }
         const res = await axios.get(url);
-        return {content:res.data.result,num:res.data.num};
+        return { content: res.data.result, num: res.data.num };
       } catch (x) {
         console.log("SLEEP", x);
         await new Promise(r => setTimeout(r, 1000));
@@ -42,7 +42,7 @@ export const getWishText = async ({ style, from, to, occasion, naive, reflection
   }
   catch (x) {
     console.log("getWishText", x);
-    return {content:'error',num:0}  ;
+    return { content: 'error', num: 0 };
   }
 }
 
@@ -62,7 +62,7 @@ export const getGiftsText = async ({ from, to, occasion, reflections, interests,
 
     // Construct the URL
     let url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/openai/gifts-text?sessionid=${sessionid || ''}&from=${from}&to=${to}&occasion=${occasion}&reflections=${reflections}&interests=${interests}${fresh ? '&fresh=1' : ''}`;
-  //  console.log("url:", url);
+    //  console.log("url:", url);
 
     let recovery = '';
     while (true) {
@@ -139,7 +139,7 @@ export const updateSession = async (sessionid: string, config: Options) => {
     });
     return res.data.success;
   } catch (x) {
-   // console.log("updateSession", x);
+    // console.log("updateSession", x);
   }
 }
 
@@ -160,10 +160,10 @@ export const fetchSharedImages = async () => {
   try {
     const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/session/fetch-shared-images`;
     const res = await axios.get(url);
-   // console.log("fetchSharedImages", res.data.session);
-    if(res.data.success)
+    // console.log("fetchSharedImages", res.data.session);
+    if (res.data.success)
       return res.data.images;
-   
+
   } catch (x) {
     console.log("fetchSession", x);
   }
@@ -205,60 +205,67 @@ export const recordEvent = async (sessionid: string, name: string, params: strin
     return false;
   }
 }
-export const recordSessionHistory= async (sessionid: string,greeting:string,occasion:string,params:string) => {
+export const recordSessionHistory = async (sessionid: string, greeting: string, occasion: string, params: string) => {
   const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/history/record-session-history?sessionid=${sessionid}`;
-  const res = await axios.post(url,{sessionid,greeting,occasion,params});
- // console.log("recordSessionCard", sessionid, res.data.success,res.data);
+  const res = await axios.post(url, { sessionid, greeting, occasion, params });
+  // console.log("recordSessionCard", sessionid, res.data.success,res.data);
   return res.data;
 }
-export const getSessionHistory= async (sessionid: string,num:number) => {
+export const getSessionHistory = async (sessionid: string, num: number) => {
   const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/history/get-session-history?sessionid=${sessionid}&num=${num}`;
   const res = await axios.get(url);
- // console.log("getSessionHistory", sessionid,num, res.data.success,res.data);
+  // console.log("getSessionHistory", sessionid,num, res.data.success,res.data);
   return res.data;
 }
-export const deleteSessionHistories= async (sessionid: string) => {
+export const deleteSessionHistories = async (sessionid: string) => {
   const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/history/delete-session-histories?sessionid=${sessionid}`;
   const res = await axios.get(url);
- // console.log("deleteSessionHistories", sessionid, res.data.success,res.data);
+  // console.log("deleteSessionHistories", sessionid, res.data.success,res.data);
   return res.data;
 }
-export const getSessionCards= async (sessionid: string,cardNum:number):Promise<{success:boolean,record:CardData}> => { 
+export const getSessionCards = async (sessionid: string, cardNum: number): Promise<{ success: boolean, record: CardData }> => {
   const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/cards/get-session-cards?sessionid=${sessionid}&cardNum=${cardNum}`;
-  console.log("getSessionCards:",url);
+  console.log("getSessionCards:", url);
   const res = await axios.get(url);
-  console.log("getSessionCards", sessionid,cardNum, res.data.success,res.data);
+  console.log("getSessionCards", sessionid, cardNum, res.data.success, res.data);
   return res.data;
 }
-export const deleteSessionCards= async (sessionid: string) => {
+export const deleteSessionCards = async (sessionid: string) => {
   const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/cards/delete-session-cards?sessionid=${sessionid}`;
   const res = await axios.get(url);
- // console.log("deleteSessionCards", sessionid, res.data.success,res.data);
+  // console.log("deleteSessionCards", sessionid, res.data.success,res.data);
   return res.data;
 }
-export const recordSessionCard= async (sessionid: string,card:CardData) => {
+export const recordSessionCard = async (sessionid: string, card: CardData) => {
   const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/cards/record-session-card?sessionid=${sessionid}`;
-  const res = await axios.post(url,{card});
- // console.log("recordSessionCard", sessionid, res.data.success,res.data);
+  const res = await axios.post(url, { card });
+  // console.log("recordSessionCard", sessionid, res.data.success,res.data);
   return res.data;
 }
-export const addSessionImage= async (sessionid: string,image:ImageData):Promise<{success:boolean,images:ImageData[]}> => {
+export const addSessionImage = async (sessionid: string, image: ImageData): Promise<{ success: boolean, images: ImageData[] }> => {
   const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/images/add-session-image?sessionid=${sessionid}`;
-  const res = await axios.post(url,{image,sessionid});
- // console.log("recordSessionCard", sessionid, res.data.success,res.data);
+  const res = await axios.post(url, { image, sessionid });
+  // console.log("recordSessionCard", sessionid, res.data.success,res.data);
   return res.data;
 }
-export const fetchSessionImages= async (sessionid: string):Promise<{success:boolean,images:ImageData[]}> => { 
+export const fetchSessionImages = async (sessionid: string): Promise<{ success: boolean, images: ImageData[] }> => {
   const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/images/fetch-session-images?sessionid=${sessionid}`;
-  console.log("fetchSessionImages:",url);
+  console.log("fetchSessionImages:", url);
   const res = await axios.get(url);
- // console.log("getSessionCards", sessionid,num, res.data.success,res.data);
+  // console.log("getSessionCards", sessionid,num, res.data.success,res.data);
   return res.data;
 }
-export const deleteSessionImages= async (sessionid: string) => {
+export const deleteSessionImages = async (sessionid: string) => {
   const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/images/delete-session-images?sessionid=${sessionid}`;
   const res = await axios.get(url);
- // console.log("deleteSessionCards", sessionid, res.data.success,res.data);
+  // console.log("deleteSessionCards", sessionid, res.data.success,res.data);
+  return res.data;
+}
+export const getSharedCard = async (sessionid: string, id: string=''): Promise<{ success: boolean, card: CardData }> => {
+  const url = `${process.env.NEXT_PUBLIC_LAKEAPI}/api/v1/wishtext/cards/get-shared-card?sessionid=${sessionid}&id=${id}`;
+  console.log("getSharedCard:", url);
+  const res = await axios.get(url);
+  console.log("getSessionCards", sessionid, id, res.data.success, res.data);
   return res.data;
 }
 

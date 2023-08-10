@@ -14,6 +14,8 @@ const ToolbarContainer = styled.div`
   align-items: center;
   z-index: 100;
   color:red;
+  margin-top:40px;
+  margin-bottom:20px;
  // background-color: red;
 `;
 

@@ -720,7 +720,17 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="canonical" href="https://www.wish-text.com/" />
-
+        <link
+          rel="stylesheet"
+          type="text/css"
+          //charset="UTF-8"
+          href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css"
+        />
+        <link
+          rel="stylesheet"
+          type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
+        />
       </Head>
       <ThemeProvider theme={theme}>
         <main className={roboto.className} >
@@ -1043,25 +1053,25 @@ Whether it's birthdays, graduations, holidays, or moments of illness or loss, WI
                 </AccordionDetails>
               </Accordion> : null}
             {!prompt2 && occasion ?
-                <Box sx={{ mt: 10, width: 1 }}>
-                  <Starter><LooksTwoOutlinedIcon fontSize="inherit" color='success' />
-                    <StarterMessage><Typography fontSize="inherit" color="secondary"/*color="#ffee58"*/>Click or tap on the &quot;Suggest Wish Text&quot; button:</Typography></StarterMessage></Starter>
-                </Box>
-                :null}
-                <GreetingOutput darkMode={darkMode} sharedImages={sharedImages} PlayerToolbar={OutputPlayerToolbar} setNum={setNum} setMax={setMax} max={max} num={num} setPrompt4={setPrompt4} setPrompt5={setPrompt5} prompt4={prompt4} prompt5={prompt5} prompt6={prompt6} setPrompt6={setPrompt6} onVirgin={async () => {
-                  await recordEvent(session.sessionid, 'virgin wish-text request', `occasion:${occasion}`);
-                  setVirgin(true);
-                  setPrompt2(true);
-                  setSelectedOccasion(occasion);
-                  updateSession2({ virgin: true, prompt2: true });
-                }} greeting={session.greeting || ''} onVirgin2={async () => {
-                  await recordEvent(session.sessionid, 'virgin2 request', `occasion:${occasion}`);
-                  setVirgin2(true);
-                  setPrompt4(true);
-                  updateSession2({ virgin2: true, prompt4: true });
-                }} virgin={virgin} virgin2={virgin2} setMissingOccasion={setMissingOccasion} setLoadReady={setLoadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} naive={naive} reflections={reflections} instructions={instructions} inastyleof={inastyleof} language={language} /*authSession={authSession}*/ />
+              <Box sx={{ mt: 10, width: 1 }}>
+                <Starter><LooksTwoOutlinedIcon fontSize="inherit" color='success' />
+                  <StarterMessage><Typography fontSize="inherit" color="secondary"/*color="#ffee58"*/>Click or tap on the &quot;Suggest Wish Text&quot; button:</Typography></StarterMessage></Starter>
+              </Box>
+              : null}
+            <GreetingOutput darkMode={darkMode} sharedImages={sharedImages} PlayerToolbar={OutputPlayerToolbar} setNum={setNum} setMax={setMax} max={max} num={num} setPrompt4={setPrompt4} setPrompt5={setPrompt5} prompt4={prompt4} prompt5={prompt5} prompt6={prompt6} setPrompt6={setPrompt6} onVirgin={async () => {
+              await recordEvent(session.sessionid, 'virgin wish-text request', `occasion:${occasion}`);
+              setVirgin(true);
+              setPrompt2(true);
+              setSelectedOccasion(occasion);
+              updateSession2({ virgin: true, prompt2: true });
+            }} greeting={session.greeting || ''} onVirgin2={async () => {
+              await recordEvent(session.sessionid, 'virgin2 request', `occasion:${occasion}`);
+              setVirgin2(true);
+              setPrompt4(true);
+              updateSession2({ virgin2: true, prompt4: true });
+            }} virgin={virgin} virgin2={virgin2} setMissingOccasion={setMissingOccasion} setLoadReady={setLoadReady} session={session} updateSession2={updateSession2} from={from} to={to} occasion={occasion} naive={naive} reflections={reflections} instructions={instructions} inastyleof={inastyleof} language={language} /*authSession={authSession}*/ />
 
-               
+
           </Container>
           <Container maxWidth="sm" sx={{ mt: 10 }}>
             {session.greeting && !session.card && <Box sx={{ mt: 1, width: 1 }}>

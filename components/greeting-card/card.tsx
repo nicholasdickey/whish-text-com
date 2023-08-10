@@ -12,7 +12,7 @@ import CardControl from './ui';
 import Box from "@mui/material/Box";
 
 const OuterWrapper = styled.div`
-  
+    margin-top:60px;
     margin-bottom:120px;
     `;
 /**
@@ -45,8 +45,7 @@ const Card: React.FC<CardProps> = ({
 
     return <OuterWrapper>
         
-        <Box sx={{ mt: 2, mb: 2 }} textAlign="center">
-           
+        <Box sx={{ mt: 2, mb: 2 }} textAlign="center">         
             <CardControl startOpen={true} large={true} fbclid={fbclid} utm_content={utm_content} dark={darkMode ? "true" : "false"} text={greeting || ""} image={image} signature={signature} />
         </Box>
     </OuterWrapper>
